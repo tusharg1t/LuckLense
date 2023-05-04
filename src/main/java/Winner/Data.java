@@ -85,7 +85,7 @@ public class Data {
 	Data(){
 		skip_beat_counter = 0;
 		doToggle = true;
-		win_counter = 500;
+		win_counter = 1275;
 		committ_win = 0;
 		committ_win = 0;
 		committ_side="";

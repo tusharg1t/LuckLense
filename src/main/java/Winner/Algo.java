@@ -305,7 +305,7 @@ public class Algo {
 							
 								
 							if(continuity_counter_main >= 8) {
-								win_counter = 500;
+								win_counter = 2000;
 							}
 							
 							if(continuity_counter_main >= 7) {
@@ -521,18 +521,6 @@ public class Algo {
 					
 					//perfect stop to died
 					if(!committ_side.equals("") ){
-						if(committ_seq.charAt(committ_seq.length()-6) == 'W'&&
-								committ_seq.charAt(committ_seq.length()-1) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-							&& committ_seq.charAt(committ_seq.length()-5) == 'L'							
-							){
-									Thread.sleep(1200000);
-									System.out.println("Ready to triumph!");
-						}
-						
-						
 						committ_side = "";
 					}
 					
