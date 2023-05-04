@@ -308,6 +308,14 @@ public class Algo {
 								win_counter = 500;
 							}
 							
+							if(continuity_counter_main >= 7) {
+								if(toggle)
+									toggle = false;
+								else
+									toggle = true;
+								System.out.println("\n==============Skipping the Switch================\n\n");
+							}
+								
 									continuity_counter_main = 1;
 							
 						}
@@ -740,15 +748,15 @@ public class Algo {
 							
 							if(!committ_side.equals(""))
 							System.out.println(
-									",{\"Time\":\""+ java.time.LocalDateTime.now() +
+									",\n{\"Time\":\""+ java.time.LocalDateTime.now() +
 									"\",\"Prediction\":\""+committ_side+
 									"\",\"Total_Riskers\":\""+(Integer.parseInt(ct_count)+Integer.parseInt(t_count))+
-									"\",\"Committ Seq\":\""+committ_seq
+									"\",\n\"Committ Seq\":\""+committ_seq
 									+
-									"\",\"Win Countdown\":\""+win_counter+
+									"\",\n\"Win Countdown\":\""+win_counter+
 									"\",\"Committ_W\":\""+committ_win+
 									"\",\"Committ_L\":\""+committ_lost+
-									"\",\"Main_W\":\""+main_W+
+									"\",\n\"Main_W\":\""+main_W+
 									"\",\"Main_L\":\""+main_L+
 									"\",\"Wallet\":\""+wallet_together+
 									"\",\"Putting Amount\":\""+bet_amount+
@@ -764,7 +772,7 @@ public class Algo {
 									"\",\"Ten\":\""+number_of_tens_main+
 									"\",\"WC\":\""+number_of_worst_cases_main+
 									
-									"\"}");	
+									"\"\n}");	
 							}
 							else{
 									prediction_final="";
