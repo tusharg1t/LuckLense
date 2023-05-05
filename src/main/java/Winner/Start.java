@@ -16,11 +16,9 @@ public class Start {
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		System.out.println("5+3 :: Colateral = 1022");
-		System.out.println("Please Enter Your Capability : ");
-		double multiplier = sc.nextDouble();
+		
 		Data data = new Data();
-		data.multiplier = multiplier;
+		
 		new Algo().run(data, driver);
 	}
 
