@@ -16,7 +16,7 @@ public class Start {
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		System.out.println("5+3 :: Colateral = 1022 :: SKIP SWITCH :: No Sleep");
+		System.out.println("Riskers > 10 :: Scanning all :: 5+3 :: Colateral = 1022 :: SKIP SWITCH :: No Sleep :: On Count :: No Limiters :: Acquiring All");
 		System.out.println("Please Enter Your Capability : ");
 		double multiplier = sc.nextDouble();
 		Data data = new Data();

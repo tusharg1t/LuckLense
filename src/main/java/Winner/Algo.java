@@ -94,6 +94,7 @@ public class Algo {
 		boolean halt = false;
 		boolean was_onhalt = false;
 		boolean toggle = false;
+		double bet_amount = 1;
 		try {
 //			WebElement account_amount = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[2]/div[2]/div/div[1]/div/div/span/span/div/span"));
 			
@@ -131,7 +132,7 @@ public class Algo {
 			String together_predict="";
 			String dynamic_together_predict="";
 			Bookie coingobbler = new Bookie();
-			double bet_amount = 1;
+			
 			String prediction_type_G_or_L = "L";
 			String fixed_betsOn = "";
 			while(true) {
@@ -142,7 +143,10 @@ public class Algo {
 				
 				if(Double.parseDouble(timer)<15 && Double.parseDouble(timer)>0 && update==false) {
 					
-					
+					if(wallet_together >= 1000*data.multiplier) {
+						driver.close();
+						break;
+					}
 						
 					
 						List<WebElement> current_coin_elements = driver.findElements(By.xpath("//div[@class='previous-rolls-item']"));
@@ -304,11 +308,11 @@ public class Algo {
 																		number_of_worst_cases_main++;
 							
 								
-							if(continuity_counter_main >= 8) {
-								win_counter = 2000;
+							if(continuity_counter_main > 8) {
+								win_counter = 5000;
 							}
 							
-							if(continuity_counter_main >= 7) {
+							if(continuity_counter_main >= 6) {
 								if(toggle)
 									toggle = false;
 								else
@@ -444,7 +448,7 @@ public class Algo {
 						&& committ_seq.charAt(committ_seq.length()-7) == 'L'
 						&& committ_seq.charAt(committ_seq.length()-8) == 'L'
 						){
-								bet_amount = 511 ;
+								bet_amount = 0 ;
 					}
 					else 
 						if(
@@ -456,7 +460,7 @@ public class Algo {
 							&& committ_seq.charAt(committ_seq.length()-6) == 'L'
 							&& committ_seq.charAt(committ_seq.length()-7) == 'L'
 							){
-									bet_amount = 255;
+									bet_amount = 0;
 						}
 					else 
 						if(
@@ -578,9 +582,9 @@ public class Algo {
 					}			
 							if( 
 									count_seq.charAt(count_seq.length()-1) != 'B'
-							&& predict_amount == predict_count
-//							&&
-//							Integer.parseInt(ct_count)+Integer.parseInt(t_count) > 10
+//							&& predict_amount == predict_count
+							&&
+							Integer.parseInt(ct_count)+Integer.parseInt(t_count) > 10
 							){
 						
 								double g_ratio = ((double)main_win_cause_g/(double)main_count_g) ;
@@ -592,7 +596,7 @@ public class Algo {
 									 {
 										 if(toggle){
 											 //G
-											 if(predict_amount.equals("ct") ) {
+											 if(predict_count.equals("ct") ) {
 											
 												 if( main_seq.length() > 25 ) {
 													coingobbler.placeBet(driver, "ct", bet_amount);
@@ -614,7 +618,7 @@ public class Algo {
 										 }else{
 											 
 											 //L
-											 if(predict_amount.equals("ct") ) {
+											 if(predict_count.equals("ct") ) {
 												 if(main_seq.length() > 25 ) {
 													coingobbler.placeBet(driver, "t", bet_amount);
 													committ_side = "t";
@@ -808,6 +812,7 @@ public class Algo {
 			System.out.println("Supreme Refresh");
 			data.committ_lost = committ_lost;
 			data.committ_win = committ_win;
+			data.bet_amount = bet_amount;
 			data.doToggle = doToggle;
 			data.committ_side = committ_side;
 			data.main_checker = main_checker;

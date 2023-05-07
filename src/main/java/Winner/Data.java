@@ -67,6 +67,7 @@ public class Data {
 	int spikey_amount;
 	int smooth_amount;
 	int spikey_count;
+	double bet_amount;
 	
 	int main_count_g;
 	int main_count_l;
@@ -85,7 +86,8 @@ public class Data {
 	Data(){
 		skip_beat_counter = 0;
 		doToggle = true;
-		win_counter = 1275;
+		win_counter = 5000;
+		bet_amount = 1;
 		committ_win = 0;
 		committ_win = 0;
 		committ_side="";
