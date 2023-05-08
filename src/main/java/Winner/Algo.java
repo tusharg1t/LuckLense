@@ -309,10 +309,10 @@ public class Algo {
 							
 								
 							if(continuity_counter_main > 8) {
-								win_counter = 5000;
+								win_counter = 500;
 							}
 							
-							if(continuity_counter_main >= 6) {
+							if(continuity_counter_main >= 5) {
 								if(toggle)
 									toggle = false;
 								else
@@ -448,7 +448,7 @@ public class Algo {
 						&& committ_seq.charAt(committ_seq.length()-7) == 'L'
 						&& committ_seq.charAt(committ_seq.length()-8) == 'L'
 						){
-								bet_amount = 0 ;
+								bet_amount = 511 ;
 					}
 					else 
 						if(
@@ -460,7 +460,7 @@ public class Algo {
 							&& committ_seq.charAt(committ_seq.length()-6) == 'L'
 							&& committ_seq.charAt(committ_seq.length()-7) == 'L'
 							){
-									bet_amount = 0;
+									bet_amount = 255;
 						}
 					else 
 						if(

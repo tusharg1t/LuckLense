@@ -86,7 +86,7 @@ public class Data {
 	Data(){
 		skip_beat_counter = 0;
 		doToggle = true;
-		win_counter = 5000;
+		win_counter = 0;
 		bet_amount = 1;
 		committ_win = 0;
 		committ_win = 0;
