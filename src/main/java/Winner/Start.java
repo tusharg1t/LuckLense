@@ -16,7 +16,7 @@ public class Start {
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		
+		System.out.println("Smart Bot Aiming for Continuity");
 		Data data = new Data();
 		
 		new Algo().run(data, driver);

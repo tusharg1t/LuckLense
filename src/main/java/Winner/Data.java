@@ -22,7 +22,7 @@ public class Data {
 	int wallet_dynamic;
 	double goal_amount;
 	
-	float wallet_together;
+	double wallet_together;
 	float wallet_together_max;
 	float wallet_together_min;
 	

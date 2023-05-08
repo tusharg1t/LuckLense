@@ -24,6 +24,7 @@ public class Algo {
 		String main_seq = data.main_seq;
 		int win_count = data.main_W;
 		int lost_count = data.main_L;
+		double wallet = data.wallet_together;
 		try {	
 			
 			
@@ -51,16 +52,29 @@ public class Algo {
 					current_coin=current_coin_elements.get(9).getAttribute("innerHTML").contains("-ct")?"ct":
 						current_coin_elements.get(9).getAttribute("innerHTML").contains("-t")?"t":"bonus";
 				
+					
 				
 					if(predicted.equals(current_coin)) {
+						if(main_seq.charAt(main_seq.length()-1) == 'W')
+							wallet += 1;
+						else
+							wallet -= 1;
 						System.out.println("Won");
 						main_seq+="W";
 						win_count++;
+						
+						
 					}else {
+						if(main_seq.charAt(main_seq.length()-1) == 'L')
+							wallet += 1;
+						else
+							wallet -= 1;
 						System.out.println("Lost ");
 						main_seq+="L";
 						lost_count++;
 					}
+					
+					
 					
 					Map<String, Integer> ct_name_rank_map = new HashMap<String,Integer>();
 					Map<String, Integer> t_name_rank_map = new HashMap<String,Integer>();
@@ -95,11 +109,13 @@ public class Algo {
 							predicted = "t";
 							
 					
+					
 					System.out.println("\n\n\n\nt_xp : "+ct_xp);
 					System.out.println("t_xp : "+t_xp);
 					System.out.println("Predicted : "+predicted);
 					System.out.println("W : L Ratio = "+win_count + " : "+lost_count);
 					System.out.println("Sequence : "+ main_seq);
+					System.out.println("Wallet : "+ wallet);
 						
 					update=true;
 					
@@ -114,6 +130,7 @@ public class Algo {
 			data.main_seq = main_seq;
 			data.main_W = win_count;
 			data.main_L = lost_count;
+			data.wallet_together = wallet;
 			new Algo().run(data,driver);
 		}
 		finally{
