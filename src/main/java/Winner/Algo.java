@@ -122,7 +122,7 @@ public class Algo {
 							wallet -= data.multiplier;
 						}
 						int continuous;
-						if(main_seq.charAt(main_seq.length()) == 'L') {
+						if(main_seq.charAt(main_seq.length()-1) == 'L') {
 							continuous = (new Algo()).countOfCharFromLast(main_seq,'W');
 							if(continuous>0)
 							data.expoPR.replace(continuous, data.expoPR.get(continuous)+1);
@@ -253,7 +253,7 @@ public class Algo {
 	
 	public int countOfCharFromLast(String toCheckIn, char toCheck) {
 		int cnt = 0;
-			for(int i = toCheckIn.length()-1 ; i >= 0 ; i--) {
+			for(int i = toCheckIn.length()-2 ; i >= 0 ; i--) {
 				if(toCheckIn.charAt(i) == toCheck) {
 					cnt++;
 				}else
