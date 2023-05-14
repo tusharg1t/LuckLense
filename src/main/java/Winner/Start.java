@@ -13,7 +13,6 @@ public class Start {
 		options.addArguments("start-maximized");
 		options.addArguments("--incognito");
 		options.addArguments("--remote-allow-origins=*");
-		options.addArguments("--disable-dev-shm-usage");
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");

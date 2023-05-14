@@ -33,6 +33,10 @@ public class Data {
 		expoPR.put(9,0);
 		expoPR.put(10,0);
 		expoPR.put(11,0);
+		expoPR.put(12,0);
+		expoPR.put(13,0);
+		expoPR.put(14,0);
+		expoPR.put(15,0);
 		isRefreshed = false;
 		multiplier = 1;
 		pitstop = 25;

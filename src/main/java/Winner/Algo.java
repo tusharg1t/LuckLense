@@ -121,15 +121,17 @@ public class Algo {
 							lost_count++;
 							wallet -= data.multiplier;
 						}
-						
-						int continuous = (new Algo()).countOfCharFromLast(main_seq,'L');
-						if(continuous>0)
-						data.expoPR.replace(continuous, data.expoPR.get(continuous)+1);
-						
-						continuous = (new Algo()).countOfCharFromLast(main_seq,'W');
-						if(continuous>0)
-						data.expoPR.replace(continuous, data.expoPR.get(continuous)+1);
-						
+						int continuous;
+						if(main_seq.charAt(main_seq.length()) == 'L') {
+							continuous = (new Algo()).countOfCharFromLast(main_seq,'W');
+							if(continuous>0)
+							data.expoPR.replace(continuous, data.expoPR.get(continuous)+1);
+						}else {
+							continuous = (new Algo()).countOfCharFromLast(main_seq,'L');
+							if(continuous>0)
+							data.expoPR.replace(continuous, data.expoPR.get(continuous)+1);
+							
+						}
 						
 					}
 					
@@ -234,8 +236,7 @@ public class Algo {
 				
 			}
 		}catch(Exception e) {
-			Throwable underlyingException = e.getCause();
-            underlyingException.printStackTrace();
+			e.printStackTrace(System.out);
 			data.displacement = displacement;
 			data.main_seq = main_seq;
 			data.main_W = win_count;
