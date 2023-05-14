@@ -13,14 +13,19 @@ public class Bookie {
 		WebElement input = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[4]/div/div[1]/input"));
 		WebElement ct = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[5]/div[1]/button"));
 		WebElement t = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[5]/div[3]/button"));
+		WebElement bonus = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[5]/div[2]/button"));
 		if((amount) != 0) {
 			input.clear();
 			input.sendKeys(Double.toString(amount));
 			
-			if(side.equals("ct"))
-				ct.click();
-			else
-				t.click();
+//			if(side.equals("bonus"))
+//				bonus.click();
+//			else
+//			if(side.equals("ct"))
+//				ct.click();
+//			else
+//			if(side.equals("t"))
+//				t.click();
 			
 			input.clear();
 		}

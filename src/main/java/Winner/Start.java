@@ -13,12 +13,13 @@ public class Start {
 		options.addArguments("start-maximized");
 		options.addArguments("--incognito");
 		options.addArguments("--remote-allow-origins=*");
+		options.addArguments("--disable-dev-shm-usage");
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		System.out.println("Smart Bot Aiming for Continuity");
+		System.out.println("Smart Bot Black Box Implementation: Put the multiplier : ");
 		Data data = new Data();
-		
+		data.multiplier = sc.nextDouble();
 		new Algo().run(data, driver);
 	}
 
