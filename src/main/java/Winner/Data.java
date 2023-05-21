@@ -21,26 +21,29 @@ public class Data {
 	
 	Map<String,Integer> targets = new HashMap<String,Integer>();
 	Map<Integer,Integer> expoPR = new HashMap<Integer,Integer>();
+	Map<Integer,Integer> expoL = new HashMap<Integer,Integer>();
+	Map<Integer,Integer> expoW = new HashMap<Integer,Integer>();
+	
+		// < number of players, count>
+	Map<Integer,Integer> players_L = new HashMap<Integer,Integer>();
+	Map<Integer,Integer> players_W = new HashMap<Integer,Integer>();
+	
+	int continuous_algo;
+	int switching_algo;
+	
+	int bonus_counter;
 	Data(){
-		expoPR.put(1,0);
-		expoPR.put(2,0);
-		expoPR.put(3,0);
-		expoPR.put(4,0);
-		expoPR.put(5,0);
-		expoPR.put(6,0);
-		expoPR.put(7,0);
-		expoPR.put(8,0);
-		expoPR.put(9,0);
-		expoPR.put(10,0);
-		expoPR.put(11,0);
-		expoPR.put(12,0);
-		expoPR.put(13,0);
-		expoPR.put(14,0);
-		expoPR.put(15,0);
+		
+		for(int i = 1 ; i <= 15; i++) {
+			expoPR.put(i, 0);
+			expoL.put(i, 0);
+			expoW.put(i,0);
+		}
+		
 		isRefreshed = false;
 		multiplier = 1;
 		pitstop = 25;
-		main_seq="LLWL";
+		main_seq="OOmMahaLakshmiNamoNamahWW";
 		main_L=0;
 		main_W=0;
 		
