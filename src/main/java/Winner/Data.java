@@ -1,13 +1,15 @@
 package Winner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Data {
 	
 	String main_seq;
 	
-	
+	List<Double> wallet_graph_data = new ArrayList<Double>();
 	double wallet_together;
 	double wallet_max;
 	double wallet_min;
@@ -42,12 +44,12 @@ public class Data {
 		
 		isRefreshed = false;
 		multiplier = 1;
-		pitstop = 25;
-		main_seq="OOmMahaLakshmiNamoNamahWW";
+		pitstop = 17;
+		main_seq="OOmMahaLakshmiNamoNamah || Om Hrim Aaim Hrim Om Saraswate Namah || Jai Mata Di || W";
 		main_L=0;
 		main_W=0;
 		
-		wallet_together=0;
+		wallet_together=0.8;
 		wallet_max=-9999;
 		wallet_min=9999;
 		

@@ -18,16 +18,17 @@ public class Bookie {
 			input.clear();
 			input.sendKeys(Double.toString(amount));
 			
-//			if(side.equals("bonus"))
-//				bonus.click();
-//			else
-//			if(side.equals("ct"))
-//				ct.click();
-//			else
-//			if(side.equals("t"))
-//				t.click();
+			if(side.equals("bonus"))
+				bonus.click();
+			else
+			if(side.equals("ct"))
+				ct.click();
+			else
+			if(side.equals("t"))
+				t.click();
 			
 			input.clear();
+			input.sendKeys(Double.toString(0.00));
 		}
 		
 			return false;

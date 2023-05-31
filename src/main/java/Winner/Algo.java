@@ -37,6 +37,7 @@ public class Algo {
 		boolean bonus_placed = true;
 		int ct_betters;
 		int t_betters;
+		boolean fargate = false;
 		boolean toggle = true;
 		try {	
 			
@@ -108,12 +109,16 @@ public class Algo {
 				t_betters = Integer.parseInt(t_overview.getText().toString().split(" ")[0]);
 				ct_betters = Integer.parseInt(ct_overview.getText().toString().split(" ")[0]);
 					
-					if(!predicted.equals("") && data.pitstop <= 0) {
+					if(!predicted.equals("") ) {
 						if(predicted.equals(current_coin)) {
-							System.out.println("Won");
+							
 							main_seq+="W";
-							win_count++;
-							wallet += data.multiplier;
+							
+							if(data.pitstop <= 0 && fargate) {
+
+								win_count++;
+								wallet += data.multiplier;
+							}
 							
 							int total = t_betters+ct_betters;
 							data.players_W.putIfAbsent(total, 0);
@@ -123,11 +128,13 @@ public class Algo {
 							
 						}else {
 							
-							System.out.println("Lost ");
-							main_seq+="L";
-							lost_count++;
-							wallet -= data.multiplier;
 							
+							main_seq+="L";
+							
+							if(data.pitstop <= 0 && fargate) {
+								lost_count++;
+								wallet -= data.multiplier;
+							}
 							int total = t_betters+ct_betters;
 							data.players_L.putIfAbsent(total, 0);
 							data.players_L.replace(total, data.players_L.get(total)+1);
@@ -167,28 +174,56 @@ public class Algo {
 						
 					}
 					
-					
-					if(main_seq.charAt(main_seq.length()-1) == 'L'
-							&& main_seq.charAt(main_seq.length()-2) == 'L'
-							&& main_seq.charAt(main_seq.length()-3) == 'W'
-							)
-						if(toggle)
-							toggle = false;
-						else
-							toggle = true;
+					fargate = false;
 					
 					
 					if(main_seq.charAt(main_seq.length()-1) == 'W'
 							&& main_seq.charAt(main_seq.length()-2) == 'W'
 							&& main_seq.charAt(main_seq.length()-3) == 'W'
-									&& main_seq.charAt(main_seq.length()-4) == 'W'
-											&& main_seq.charAt(main_seq.length()-5) == 'W'
-							&& main_seq.charAt(main_seq.length()-6) == 'L'
+							)
+						fargate = true;
+					
+					if(main_seq.charAt(main_seq.length()-1) == 'L'
+							&& main_seq.charAt(main_seq.length()-2) == 'L'
+							&& main_seq.charAt(main_seq.length()-3) == 'L'
+							&& main_seq.charAt(main_seq.length()-4) == 'W'
+							)
+						fargate = true;
+				
+					if(main_seq.charAt(main_seq.length()-1) == 'W'
+							&& main_seq.charAt(main_seq.length()-2) == 'W'
+							&& main_seq.charAt(main_seq.length()-3) == 'W'
+							&& main_seq.charAt(main_seq.length()-4) == 'L'
 							)
 						if(toggle)
 							toggle = false;
 						else
 							toggle = true;
+					
+					if(main_seq.charAt(main_seq.length()-1) == 'L'
+							&& main_seq.charAt(main_seq.length()-2) == 'L'
+							&& main_seq.charAt(main_seq.length()-3) == 'L'
+							&& main_seq.charAt(main_seq.length()-4) == 'L'
+							&& main_seq.charAt(main_seq.length()-5) == 'L'
+							&& main_seq.charAt(main_seq.length()-6) == 'W')
+						if(toggle)
+							toggle = false;
+						else
+							toggle = true;	
+					
+					if(main_seq.charAt(main_seq.length()-1) == 'W'
+							&& main_seq.charAt(main_seq.length()-2) == 'L')
+						if(toggle)
+							toggle = false;
+						else
+							toggle = true;	
+					
+					if(main_seq.charAt(main_seq.length()-1) == 'L')
+						if(toggle)
+							toggle = false;
+						else
+							toggle = true;	
+					
 					
 					if(wallet > wallet_max)
 						wallet_max = wallet;
@@ -243,23 +278,23 @@ public class Algo {
 						data.bonus_counter++;
 					}
 					
-					if(wallet >= 5*data.multiplier) {
-						System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n*******************************************************************************\n\n\n\n");
-						System.out.println("Won!");
-						System.out.println("\n\n\n\n\n*******************************************************************************\n\n\\n\n\n\n\n\n\n\n\n");
-						driver.close();
-						return;
-					}
+//					if(wallet >= 5*data.multiplier) {
+//						System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n*******************************************************************************\n\n\n\n");
+//						System.out.println("Won!");
+//						System.out.println("\n\n\n\n\n*******************************************************************************\n\n\\n\n\n\n\n\n\n\n\n");
+//						driver.close();
+//						return;
+//					}
+//					
+//					if(wallet <= -5*data.multiplier) {
+//						System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n*******************************************************************************\n\n\n\n");
+//						System.out.println("Lost.....");
+//						System.out.println("\n\n\n\n\n*******************************************************************************\n\n\\n\n\n\n\n\n\n\n\n");
+//						driver.close();
+//						return;
+//					}
 					
-					if(wallet <= -5*data.multiplier) {
-						System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n*******************************************************************************\n\n\n\n");
-						System.out.println("Lost.....");
-						System.out.println("\n\n\n\n\n*******************************************************************************\n\n\\n\n\n\n\n\n\n\n\n");
-						driver.close();
-						return;
-					}
-					
-					if(data.pitstop--<=0 && t_targets != ct_targets && (t_targets+ct_targets >= 10)) {
+					if(data.pitstop--<0 && t_targets != ct_targets ) {
 						
 						if(toggle == true) {
 							if( t_targets > ct_targets ) {
@@ -284,7 +319,17 @@ public class Algo {
 							else
 								predicted = "ct";
 						
-						placer.placeBet(driver, predicted , data.multiplier);
+						
+						int size = data.wallet_graph_data.size();
+						if( size >= 5) {
+							
+							if(data.wallet_graph_data.get(size-1) < data.wallet_graph_data.get(size-2)) {
+								fargate = false;
+							}
+						}
+						
+						if(fargate)
+						placer.placeBet(driver, predicted , Double.parseDouble(df.format( data.multiplier).toString()));
 						
 					}else {
 						predicted = "";
@@ -294,31 +339,34 @@ public class Algo {
 					
 					
 					if(predicted.equals("")) {
-						System.out.println("=================================================================================\n\n");
-						System.out.println("In PitStop || "+data.pitstop);
-						System.out.println("=================================================================================\n\n");
-					}else {
-						System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+						System.out.println("\n\n\n\n\n");
+						System.out.println("In PitStop || current coin : "+ current_coin);
+						System.out.println("In PitStop || current coin : "+ main_seq.substring(main_seq.length()-57));
+						System.out.println("\n\n\n\n\n");
+					}else
+					{
+						System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 						System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
 						System.out.println("Total betters = "+(t_betters+ct_betters));
-						System.out.println("ct_targets : "+ct_targets);
-						System.out.println("t_targets : "+t_targets);
-						System.out.println("Current Coin is : "+current_coin);
-						System.out.println("Predicted : "+predicted);
+						System.out.println("ct_targets : "+ct_targets+"  :: "+"t_targets : "+t_targets);
+						System.out.println("=======================================================================================================");
+						System.out.println("Current Coin is : "+current_coin+"  ::  "+"Predicted : "+predicted);
 						System.out.println("W : L Ratio = "+win_count + " : "+lost_count+" : "+data.bonus_counter);
-						System.out.println("Sequence : "+ main_seq);
-						System.out.println("Wallet : "+ df.format(wallet));
-						System.out.println("Displacement : "+df.format(displacement));
-						System.out.println("Wallet Max : "+df.format( wallet_max));
-						System.out.println("Wallet Min : "+df.format( wallet_min));
-						System.out.println("\nContinus Algo Result : "+ data.continuous_algo);
-						System.out.println("Switching Algo Result : "+ data.switching_algo);
+						System.out.println("Sequence : "+ main_seq.substring(main_seq.length()-57));
+						System.out.println("=======================================================================================================");
+						System.out.println("Wallet : "+ df.format(wallet) +"  :: "
+						+"Displacement:"+df.format(displacement)+"  ::  "
+						+"Wallet Max:"+df.format( wallet_max)+"  ::  "
+						+"Wallet Min : "+df.format( wallet_min));
+						System.out.println("\nContinus Algo Result : "+ data.continuous_algo+"  ::  "+"Switching Algo Result : "+ data.switching_algo);
 					
 						System.out.println("\nExponential W : "+data.expoW);
 						System.out.println("Exponential L : "+data.expoL);
 						System.out.println("\nPlayer Heat Map L : "+ data.players_L);
-						System.out.println("\nPlayer Heat Map W : "+ data.players_W);
+						System.out.println("Player Heat Map W : "+ data.players_W);
 						
+						if(fargate )
+						data.wallet_graph_data.add(Double.parseDouble( df.format(wallet).toString()) );
 					}
 					
 					update=true;
@@ -332,6 +380,7 @@ public class Algo {
 			}
 		}catch(Exception e) {
 			e.printStackTrace(System.out);
+			System.out.println(data.wallet_graph_data.toString());
 			data.displacement = displacement;
 			data.main_seq = main_seq;
 			data.main_W = win_count;
@@ -340,6 +389,7 @@ public class Algo {
 			data.wallet_max = wallet_max;
 			data.wallet_min = wallet_min;
 			new Algo().run(data,driver);
+			System.out.println("\nMain Sequence : "+main_seq);
 			return;
 		}
 		
