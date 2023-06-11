@@ -13,6 +13,9 @@ public class Data {
 	double wallet_together;
 	double wallet_max;
 	double wallet_min;
+	double fargate_wallet;
+	
+	String fargate_seq;
 	
 	int main_L;
 	int main_W;
@@ -42,17 +45,23 @@ public class Data {
 			expoW.put(i,0);
 		}
 		
+		for(int i = 5 ; i <= 55; i++) {
+			players_L.put(i,0);
+			players_W.put(i,0);
+		}
+		
+		fargate_seq = "W";
 		isRefreshed = false;
 		multiplier = 1;
 		pitstop = 17;
-		main_seq="OOmMahaLakshmiNamoNamah || Om Hrim Aaim Hrim Om Saraswate Namah || Jai Mata Di || W";
+		main_seq="OOmMahaLakshmiNamoNamah || Om Hrim Aaim Hrim Om Saraswate Namah || Jai Mata Di || TUSHAR IS THE BEST ||W";
 		main_L=0;
 		main_W=0;
 		
-		wallet_together=0.8;
+		wallet_together=0.0;
 		wallet_max=-9999;
 		wallet_min=9999;
-		
+		fargate_wallet = 0;
 		displacement = 0;
 		
 	}
