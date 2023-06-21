@@ -35,10 +35,11 @@ public class Data {
 	
 	int continuous_algo;
 	int switching_algo;
+	boolean fargate;
 	
 	int bonus_counter;
 	Data(){
-		
+		fargate = true;
 		for(int i = 1 ; i <= 15; i++) {
 			expoPR.put(i, 0);
 			expoL.put(i, 0);
@@ -54,7 +55,7 @@ public class Data {
 		isRefreshed = false;
 		multiplier = 1;
 		pitstop = 17;
-		main_seq="OOmMahaLakshmiNamoNamah || Om Hrim Aaim Hrim Om Saraswate Namah || Jai Mata Di || TUSHAR IS THE BEST ||W";
+		main_seq="^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T  Vijay Bhawah ||W";
 		main_L=0;
 		main_W=0;
 		

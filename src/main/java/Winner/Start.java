@@ -16,9 +16,11 @@ public class Start {
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		System.out.println("Smart Bot Black Box Implementation: Put the multiplier : ");
+	
+		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
+		System.out.println("AllTheBest:) Before Prod v14: ");
 		new Algo().run(data, driver);
 	}
 
