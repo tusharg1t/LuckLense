@@ -50,8 +50,8 @@ public class Data {
 			players_L.put(i,0);
 			players_W.put(i,0);
 		}
-		
-		fargate_seq = "W";
+		wallet_graph_data.add(0.0);
+		fargate_seq = "^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^L";
 		isRefreshed = false;
 		multiplier = 1;
 		pitstop = 17;

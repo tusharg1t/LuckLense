@@ -20,7 +20,7 @@ public class Start {
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
-		System.out.println("AllTheBest:) Before Prod v14: ");
+		System.out.println(":) v40Pro: ");
 		new Algo().run(data, driver);
 	}
 
