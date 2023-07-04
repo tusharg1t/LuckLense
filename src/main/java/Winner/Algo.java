@@ -60,7 +60,7 @@ public class Algo {
 			while (true) {
 
 				WebElement count_down_element = driver
-						.findElement(By.xpath("//*[@id=\"page-scroll\"]/div[1]/div[2]/div/div[2]/div[3]/div/div[2]"));
+						.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[2]/div[3]/div/div[2]"));
 				timer = count_down_element.getAttribute("innerText").toString();
 
 				if (Double.parseDouble(timer) < 17 && Double.parseDouble(timer) > 10 && !bonus_placed) {
@@ -98,16 +98,16 @@ public class Algo {
 
 				}
 
-				if (Double.parseDouble(timer) < 5 && Double.parseDouble(timer) > 0 && !update) {
+				if (Double.parseDouble(timer) < 3 && Double.parseDouble(timer) > 0 && !update) {
 
+					// Sample Fetch : 71 Bets Total
 					WebElement ct_overview = driver.findElement(
-							By.xpath("//*[@id=\"page-scroll\"]/div[1]/div[2]/div/div[6]/div[1]/div/div[1]"));
+							By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[1]"));
 					WebElement t_overview = driver.findElement(
-							By.xpath("//*[@id=\"page-scroll\"]/div[1]/div[2]/div/div[6]/div[3]/div/div[1]"));
+							By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[1]/div[1]"));
 
 					t_betters = Integer.parseInt(t_overview.getText().toString().split(" ")[0]);
 					ct_betters = Integer.parseInt(ct_overview.getText().toString().split(" ")[0]);
-
 					if (!predicted.equals("")) {
 						if (predicted.equals(current_coin)) {
 
@@ -140,6 +140,8 @@ public class Algo {
 							data.switching_algo++;
 
 						int continuous;
+						
+						if(fargate)
 						if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'L') {
 							continuous = (new Algo()).countOfCharFromLastAfterSwitch(data.fargate_seq, 'W');
 							if (continuous > 0)
@@ -193,73 +195,33 @@ public class Algo {
 
 					if (data.pitstop < 0 && fargate && !predict_l2.equals("")) {
 
+						if (current_coin.equals("bonus") ) {
+							data.fargate_seq += "B";
+							data.bonus_counter++;
+							
+							wallet -= bet_amount;
+							
+						}else
 						if (current_coin.equals(predict_l2)) {
 
 							data.fargate_seq += "W";
 							wallet += bet_amount;
 							win_count++;
 						} else {
-							if (!current_coin.equals("bonus"))
+							
 							data.fargate_seq += "L";
-							else
-							data.fargate_seq += "B";
-							
 							wallet -= bet_amount;
-							
-							if (!current_coin.equals("bonus"))
 							lost_count++;
 						}
 
 					}
-					
-//					if(wallet >= 10*data.multiplier) {
-//						for(int i = 0 ; i < 5 ; i++)System.out.println("*");
-//						System.out.println("WON");
-//						for(int i = 0 ; i < 5 ; i++)System.out.println("*");
-//						driver.close();
-//						return;
-//					}
-					
-//					if(wallet < -25*data.multiplier) {
-//						for(int i = 0 ; i < 5 ; i++)System.out.println("*");
-//						System.out.println("Lost! Dont waste whats remaining! Correct yourself and take a better path!");
-//						for(int i = 0 ; i < 5 ; i++)System.out.println("*");
-//						driver.close();
-//						return;
-//					}
-					
-					
-					if (current_coin.equals("bonus") && fargate && data.pitstop < 0) {
-
-						data.bonus_counter++;
-					}
-//
-//					if (data.fargate_wallet >= 5*data.multiplier && fargate) {
-//						fargate = false;
-//						data.fargate_wallet = 0;
-//					}
-//
-//					if ((data.fargate_wallet >= 4*data.multiplier || data.fargate_wallet <= -10*data.multiplier) && !fargate
-//							&& main_seq.charAt(main_seq.length() - 1) == 'W') {
-//						fargate = true;
-//						data.fargate_wallet = 0;
-//					}
-//
-//					if (data.fargate_wallet <= -5*data.multiplier && fargate) {
-//						fargate = false;
-//						data.fargate_wallet = 0;
-//					}
-					
-					
-					
-				
-
+		
 					
 					if(!fargate && current_coin.equals("bonus"))
 							driver.navigate().refresh();
 						
 					predict_l2 = "";
-
+					fargate = true;
 
 					if (wallet > wallet_max)
 						wallet_max = wallet;
@@ -269,12 +231,25 @@ public class Algo {
 
 					if (wallet_max - wallet > displacement)
 						displacement = wallet_max - wallet;
+					
+					
+					if(wallet >= data.multiplier*10) {
+						for(int i = 0 ; i < 25 ; i++)
+							System.out.println("*");
+						System.out.println("WON");
+						for(int i = 0 ; i < 25 ; i++)
+							System.out.println("*");
+						return;
+					}
 
+					// the top level non altering div which shows the players which have placed bets
 					WebElement t_bet_container = driver.findElement(
-							By.xpath("//*[@id=\"page-scroll\"]/div[1]/div[2]/div/div[6]/div[3]/div/div[2]"));
+							By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[2]"));
 					String[] t_players = t_bet_container.getAttribute("innerText").trim().split("\n");
+					
 					WebElement ct_bet_container = driver.findElement(
-							By.xpath("//*[@id=\"page-scroll\"]/div[1]/div[2]/div/div[6]/div[1]/div/div[2]"));
+							By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[2]"));
+				
 					String[] ct_players = ct_bet_container.getAttribute("innerText").trim().split("\n");
 					int ct_xp = 0;
 					int t_xp = 0;
@@ -297,13 +272,13 @@ public class Algo {
 
 					for (String x : ct_name_rank_map.keySet()) {
 						if (data.targets.containsKey(x))
-							if (data.targets.get(x) >= 1)
+							if (data.targets.get(x) > 1)
 								ct_targets++;
 					}
 
 					for (String x : t_name_rank_map.keySet()) {
 						if (data.targets.containsKey(x))
-							if (data.targets.get(x) >= 1)
+							if (data.targets.get(x) > 1)
 								t_targets++;
 					}
 
@@ -341,43 +316,45 @@ public class Algo {
 						if (fargate) {
 							int degree = 1;
 							
-//									if(data.fargate_seq.charAt(data.fargate_seq.length()-1) == 'W'
-//											&& data.fargate_seq.charAt(data.fargate_seq.length()-2) != 'W')
-//										degree = 1;
-									
+									if(data.fargate_seq.charAt(data.fargate_seq.length()-1) == 'W'
+											&& data.fargate_seq.charAt(data.fargate_seq.length()-2) != 'W')
+										degree = 1;
+							
 										
 											
 														
-							bet_amount = Double.parseDouble(df.format(data.multiplier*degree));
+							
 							int l_cnt = countOfCharFromLastTen(main_seq,'L');
 							int w_cnt = countOfCharFromLastTen(main_seq,'W');
+							
 							System.out.println("L_count : W_count ==> "+l_cnt+" : "+w_cnt);
-							if(l_cnt > 13)
+//							if(l_cnt > w_cnt)
+//								predict_l2 = predicted.equals("ct") ? "t":"ct";
+//							else
+//							if(l_cnt < w_cnt)
+//								predict_l2 = predicted;
+							
+							if(data.fargate_seq.charAt(data.fargate_seq.length()-1) == 'L')
 								predict_l2 = predicted.equals("ct") ? "t":"ct";
 							else
 								predict_l2 = predicted;
 							
-							if(predict_l2.equals("ct")) {
-								predict_l2 = "t";
-							}else
-								predict_l2 = "ct";
 							
+							bet_amount = Double.parseDouble(df.format(data.multiplier*degree));
+							placer.placeBet(driver, predict_l2, bet_amount);	
+								
 							
-				
-								
-								
-							placer.placeBet(driver, predict_l2, bet_amount);
 						}
 					} else {
 						predicted = "";
 					}
 
 					System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
-					System.out.println("Total betters = " + (t_betters + ct_betters));
-					System.out.println("ct_targets : " + ct_targets + "  :: " + "t_targets : " + t_targets);
+//					System.out.println("Total betters = " + (t_betters + ct_betters));
+//					System.out.println("ct_targets : " + ct_targets + "  :: " + "t_targets : " + t_targets);
 					if (predict_l2.equals("")) {
 						System.out.println("In PitStop || current coin : " + current_coin);
-						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
+//						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
 						System.out.println("Fargate wallet : " +  data.fargate_wallet +"  ::  "+"Wallet : " + df.format(wallet) + "  :: " + "Displacement:"
 								+ df.format(displacement) + "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  "
 								+ "Wallet Min : " + df.format(wallet_min));
@@ -456,11 +433,22 @@ public class Algo {
 	
 	public int countOfCharFromLastTen(String toCheckIn, char toCheck) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length()-21; i--) {
+		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length()-3; i--) {
 			if (toCheckIn.charAt(i) == toCheck) {
 				cnt++;
 			}
 		}
 		return cnt;
 	}
+	
+	public int continuousCountForLastTwenty(String toCheckIn) {
+		int cnt = 0;
+		for (int i = toCheckIn.length() - 11; i >= toCheckIn.length()-31; i--) {
+			if (toCheckIn.charAt(i) == toCheckIn.charAt(i-1)) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+	
 }

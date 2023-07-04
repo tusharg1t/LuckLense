@@ -10,9 +10,10 @@ public class Bookie {
 	
 	boolean placeBet(WebDriver driver, String side, double amount) {
 		try {
-		WebElement input = driver.findElement(By.xpath("//*[@id=\"page-scroll\"]/div[1]/div[2]/div/div[4]/div/div[1]/input"));
-		WebElement ct = driver.findElement(By.xpath("//*[@id=\"page-scroll\"]/div[1]/div[2]/div/div[5]/div[1]/button"));
-		WebElement t = driver.findElement(By.xpath("//*[@id=\"page-scroll\"]/div[1]/div[2]/div/div[5]/div[3]/button"));
+		WebElement input = driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[4]/div/div[1]/input"));
+		WebElement ct = driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[5]/div[1]/button"));
+		WebElement t = driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[5]/div[3]/button"));
+		WebElement bonus = driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[5]/div[2]/button"));
 		
 		if((amount) != 0) {
 			input.clear();
@@ -24,7 +25,7 @@ public class Bookie {
 			else
 			if(side.equals("t"))
 				t.click();
-			
+//			bonus.click();
 			
 		}
 		
@@ -38,7 +39,7 @@ public class Bookie {
 	
 	public void  clearAmount(WebDriver driver) {
 		
-		WebElement input = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[4]/div/div[1]/input"));
+		WebElement input = driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[4]/div/div[1]/input"));
 		input.clear();
 		input.sendKeys(Double.toString(0.00));
 	}	

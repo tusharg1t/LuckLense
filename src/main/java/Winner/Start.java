@@ -20,7 +20,7 @@ public class Start {
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
-		System.out.println(":) v40Pro: ");
+		System.out.println("All The Best Trispher:v3 ");
 		new Algo().run(data, driver);
 	}
 
