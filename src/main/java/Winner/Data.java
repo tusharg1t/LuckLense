@@ -36,10 +36,13 @@ public class Data {
 	int continuous_algo;
 	int switching_algo;
 	boolean fargate;
-	
+	double wallet_l3;
+	String predict_l3;
 	int bonus_counter;
 	Data(){
-		fargate = true;
+		predict_l3 ="";
+		wallet_l3 = 0;
+		fargate = false;
 		for(int i = 1 ; i <= 15; i++) {
 			expoPR.put(i, 0);
 			expoL.put(i, 0);

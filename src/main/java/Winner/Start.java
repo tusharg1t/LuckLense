@@ -20,7 +20,7 @@ public class Start {
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
-		System.out.println("All The Best Trispher:v3 ");
+		System.out.println("ALL THE BEST: OM HRIM AIM HRIM OM SARASWATE NAMAH:  ");
 		new Algo().run(data, driver);
 	}
 

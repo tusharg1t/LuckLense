@@ -59,8 +59,8 @@ public class Algo {
 
 			while (true) {
 
-				WebElement count_down_element = driver
-						.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[2]/div[3]/div/div[2]"));
+				WebElement count_down_element = driver.findElement(
+						By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[2]/div[3]/div/div[2]"));
 				timer = count_down_element.getAttribute("innerText").toString();
 
 				if (Double.parseDouble(timer) < 17 && Double.parseDouble(timer) > 10 && !bonus_placed) {
@@ -101,10 +101,10 @@ public class Algo {
 				if (Double.parseDouble(timer) < 3 && Double.parseDouble(timer) > 0 && !update) {
 
 					// Sample Fetch : 71 Bets Total
-					WebElement ct_overview = driver.findElement(
-							By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[1]"));
-					WebElement t_overview = driver.findElement(
-							By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[1]/div[1]"));
+					WebElement ct_overview = driver.findElement(By.xpath(
+							"//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[1]"));
+					WebElement t_overview = driver.findElement(By.xpath(
+							"//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[1]/div[1]"));
 
 					t_betters = Integer.parseInt(t_overview.getText().toString().split(" ")[0]);
 					ct_betters = Integer.parseInt(ct_overview.getText().toString().split(" ")[0]);
@@ -120,9 +120,9 @@ public class Algo {
 						} else {
 
 							if (!current_coin.equals("bonus"))
-							main_seq += "L";
+								main_seq += "L";
 							else
-							main_seq += "B";
+								main_seq += "B";
 
 							int total = t_betters + ct_betters;
 							data.players_L.putIfAbsent(total, 0);
@@ -140,89 +140,113 @@ public class Algo {
 							data.switching_algo++;
 
 						int continuous;
-						
-						if(fargate)
-						if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'L') {
-							continuous = (new Algo()).countOfCharFromLastAfterSwitch(data.fargate_seq, 'W');
-							if (continuous > 0)
-								data.expoPR.replace(continuous, data.expoPR.get(continuous) + 1);
 
-							if (continuous > 0)
-								data.expoW.replace(continuous, data.expoW.get(continuous) + 1);
-						} else 
-						if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'W'){
-							continuous = (new Algo()).countOfCharFromLastAfterSwitch(data.fargate_seq, 'L');
-							if (continuous > 0)
-								data.expoPR.replace(continuous, data.expoPR.get(continuous) + 1);
-
-							if (continuous > 0)
-								data.expoL.replace(continuous, data.expoL.get(continuous) + 1);
-
-						}else
-						if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'B'){
-								continuous = (new Algo()).countOfCharFromLastAfterSwitch(data.fargate_seq, data.fargate_seq.charAt(data.fargate_seq.length()-2));
+						if (fargate)
+							if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'L') {
+								continuous = (new Algo()).countOfCharFromLastAfterSwitch(data.fargate_seq, 'W');
 								if (continuous > 0)
 									data.expoPR.replace(continuous, data.expoPR.get(continuous) + 1);
 
-								if (continuous > 0 && data.fargate_seq.charAt(data.fargate_seq.length()-2) == 'L')
-									data.expoL.replace(continuous, data.expoL.get(continuous) + 1);
-								else
-									if (continuous > 0 && data.fargate_seq.charAt(data.fargate_seq.length()-2) == 'W')
-										data.expoW.replace(continuous, data.expoW.get(continuous) + 1);
+								if (continuous > 0)
+									data.expoW.replace(continuous, data.expoW.get(continuous) + 1);
+							} else if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'W') {
+								continuous = (new Algo()).countOfCharFromLastAfterSwitch(data.fargate_seq, 'L');
+								if (continuous > 0)
+									data.expoPR.replace(continuous, data.expoPR.get(continuous) + 1);
 
-						}
+								if (continuous > 0)
+									data.expoL.replace(continuous, data.expoL.get(continuous) + 1);
+
+							} else if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'B') {
+								continuous = (new Algo()).countOfCharFromLastAfterSwitch(data.fargate_seq,
+										data.fargate_seq.charAt(data.fargate_seq.length() - 2));
+								if (continuous > 0)
+									data.expoPR.replace(continuous, data.expoPR.get(continuous) + 1);
+
+								if (continuous > 0 && data.fargate_seq.charAt(data.fargate_seq.length() - 2) == 'L')
+									data.expoL.replace(continuous, data.expoL.get(continuous) + 1);
+								else if (continuous > 0
+										&& data.fargate_seq.charAt(data.fargate_seq.length() - 2) == 'W')
+									data.expoW.replace(continuous, data.expoW.get(continuous) + 1);
+
+							}
 
 					}
 
 					if (data.pitstop < 0 && !predicted.equals("")) {
-						
-						if(!(data.wallet_graph_data.get(data.wallet_graph_data.size()-1 ) == Double.parseDouble(df.format(wallet).toString())))
-						data.wallet_graph_data.add(Double.parseDouble(df.format(wallet).toString()));
+
+						if (!(data.wallet_graph_data.get(data.wallet_graph_data.size() - 1) == Double
+								.parseDouble(df.format(wallet).toString())))
+							data.wallet_graph_data.add(Double.parseDouble(df.format(wallet).toString()));
 
 						if (current_coin.equals(predicted)) {
-							
-								data.fargate_wallet += data.multiplier;
-							
+
+							wallet += data.multiplier;
 
 						} else {
 
-							
-								data.fargate_wallet -= data.multiplier;
+							wallet -= data.multiplier;
 
 						}
 
+					}
+
+					if (data.pitstop < 0 && fargate && !data.predict_l3.equals("")) {
+
+						if (current_coin.equals(data.predict_l3)) {
+
+							data.wallet_l3 += bet_amount;
+
+						} else {
+
+							data.wallet_l3 -= bet_amount;
+
+						}
+						
+						data.predict_l3 = "";
+						
 					}
 
 					if (data.pitstop < 0 && fargate && !predict_l2.equals("")) {
 
-						if (current_coin.equals("bonus") ) {
+						if (current_coin.equals("bonus")) {
 							data.fargate_seq += "B";
 							data.bonus_counter++;
-							
-							wallet -= bet_amount;
-							
-						}else
-						if (current_coin.equals(predict_l2)) {
+
+							data.fargate_wallet -= bet_amount;
+
+						} else if (current_coin.equals(predict_l2)) {
 
 							data.fargate_seq += "W";
-							wallet += bet_amount;
+							data.fargate_wallet += bet_amount;
 							win_count++;
 						} else {
-							
+
 							data.fargate_seq += "L";
-							wallet -= bet_amount;
+							data.fargate_wallet -= bet_amount;
 							lost_count++;
 						}
 
 					}
-		
-					
-					if(!fargate && current_coin.equals("bonus"))
-							driver.navigate().refresh();
-						
-					predict_l2 = "";
-					fargate = true;
 
+					if (!fargate && current_coin.equals("bonus"))
+						driver.navigate().refresh();
+
+					predict_l2 = "";
+					if (data.fargate_wallet >= 3 * data.multiplier && !fargate) {
+
+						fargate = true;
+						data.fargate_wallet = 0;
+					}
+					if (data.fargate_wallet >= 2 * data.multiplier && fargate) {
+						fargate = false;
+						data.fargate_wallet = 0;
+					}
+
+					if (data.fargate_wallet < -6 * data.multiplier) {
+						fargate = false;
+						data.fargate_wallet = 0;
+					}
 					if (wallet > wallet_max)
 						wallet_max = wallet;
 
@@ -231,25 +255,15 @@ public class Algo {
 
 					if (wallet_max - wallet > displacement)
 						displacement = wallet_max - wallet;
-					
-					
-					if(wallet >= data.multiplier*10) {
-						for(int i = 0 ; i < 25 ; i++)
-							System.out.println("*");
-						System.out.println("WON");
-						for(int i = 0 ; i < 25 ; i++)
-							System.out.println("*");
-						return;
-					}
 
 					// the top level non altering div which shows the players which have placed bets
-					WebElement t_bet_container = driver.findElement(
-							By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[2]"));
+					WebElement t_bet_container = driver.findElement(By.xpath(
+							"//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[2]"));
 					String[] t_players = t_bet_container.getAttribute("innerText").trim().split("\n");
-					
-					WebElement ct_bet_container = driver.findElement(
-							By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[2]"));
-				
+
+					WebElement ct_bet_container = driver.findElement(By.xpath(
+							"//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[2]"));
+
 					String[] ct_players = ct_bet_container.getAttribute("innerText").trim().split("\n");
 					int ct_xp = 0;
 					int t_xp = 0;
@@ -281,7 +295,13 @@ public class Algo {
 							if (data.targets.get(x) > 1)
 								t_targets++;
 					}
-
+					
+					
+					/*
+					 * Main Prediction Logic :)
+					 * 
+					 *  12-07-2023
+					 */
 
 					if (((t_targets > ct_targets) && (t_betters > ct_betters))
 							|| ((t_targets < ct_targets) && (t_betters < ct_betters))) {
@@ -289,7 +309,7 @@ public class Algo {
 					} else
 						toggle = true;
 
-					if (data.pitstop-- < 0 && t_targets != ct_targets ) {
+					if (data.pitstop-- < 0 && t_targets != ct_targets) {
 
 						if (toggle == true) {
 							if (t_targets > ct_targets) {
@@ -304,46 +324,31 @@ public class Algo {
 								predicted = "t";
 
 						}
-						
-						
-						
-						//After 32 L side was more efficient
-						if(predicted.equals("ct")) {
+
+						// After 32 L side was more efficient
+						if (predicted.equals("ct")) {
 							predicted = "t";
-						}else
+						} else
 							predicted = "ct";
-						
+
+						int l_cnt = countOfCharFromLastTen(main_seq, 'L');
+						int w_cnt = countOfCharFromLastTen(main_seq, 'W');
+
+						System.out.println("L_count : W_count ==> " + l_cnt + " : " + w_cnt);
+
+						if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'L')
+							predict_l2 = predicted.equals("ct") ? "t" : "ct";
+						else
+							predict_l2 = predicted;
+
 						if (fargate) {
 							int degree = 1;
 							
-									if(data.fargate_seq.charAt(data.fargate_seq.length()-1) == 'W'
-											&& data.fargate_seq.charAt(data.fargate_seq.length()-2) != 'W')
-										degree = 1;
 							
-										
-											
-														
-							
-							int l_cnt = countOfCharFromLastTen(main_seq,'L');
-							int w_cnt = countOfCharFromLastTen(main_seq,'W');
-							
-							System.out.println("L_count : W_count ==> "+l_cnt+" : "+w_cnt);
-//							if(l_cnt > w_cnt)
-//								predict_l2 = predicted.equals("ct") ? "t":"ct";
-//							else
-//							if(l_cnt < w_cnt)
-//								predict_l2 = predicted;
-							
-							if(data.fargate_seq.charAt(data.fargate_seq.length()-1) == 'L')
-								predict_l2 = predicted.equals("ct") ? "t":"ct";
-							else
-								predict_l2 = predicted;
-							
-							
-							bet_amount = Double.parseDouble(df.format(data.multiplier*degree));
-							placer.placeBet(driver, predict_l2, bet_amount);	
-								
-							
+							data.predict_l3 = predict_l2;
+							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
+//							placer.placeBet(driver, predict_l3, bet_amount);	
+
 						}
 					} else {
 						predicted = "";
@@ -355,26 +360,29 @@ public class Algo {
 					if (predict_l2.equals("")) {
 						System.out.println("In PitStop || current coin : " + current_coin);
 //						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
-						System.out.println("Fargate wallet : " +  data.fargate_wallet +"  ::  "+"Wallet : " + df.format(wallet) + "  :: " + "Displacement:"
-								+ df.format(displacement) + "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  "
-								+ "Wallet Min : " + df.format(wallet_min));
+						System.out.println(
+								"Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L2: " + df.format(wallet)
+										+ "  :: " + "Displacement:" + df.format(displacement) + "  ::  " + "Wallet Max:"
+										+ df.format(wallet_max) + "  ::  " + "Wallet Min : " + df.format(wallet_min));
 					} else {
 
-						
-						System.out.println("Bet Amount : "+bet_amount);
+						System.out.println("Bet Amount : " + bet_amount);
 						System.out.println(
 								"=======================================================================================================");
-						System.out.println("Current Coin is : " + current_coin + "  ::  " + "Predicted : " + predict_l2);
+						System.out
+								.println("Current Coin is : " + current_coin + "  ::  " + "Predicted L3: " + data.predict_l3);
 						System.out.println(
 								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
 //						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
-						System.out.println("Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length()-57));
-						System.out.println("Fargate wallet : " + data.fargate_wallet+"  ::  "+"Wallet : " + df.format(wallet) + "  :: " + "Displacement:"
-								+ df.format(displacement) + "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  "
-								+ "Wallet Min : " + df.format(wallet_min));
+						System.out.println(
+								"Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length() - 57));
+						System.out.println(
+								"Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: " + df.format(data.wallet_l3)
+										+ "  :: " + "Displacement:" + df.format(displacement) + "  ::  " + "Wallet Max:"
+										+ df.format(wallet_max) + "  ::  " + "Wallet Min : " + df.format(wallet_min));
 						System.out.println(
 								"=======================================================================================================");
-						
+
 //						System.out.println("\nContinus Algo Result : " + data.continuous_algo + "  ::  "
 //								+ "Switching Algo Result : " + data.switching_algo);
 //
@@ -430,25 +438,25 @@ public class Algo {
 		}
 		return cnt;
 	}
-	
+
 	public int countOfCharFromLastTen(String toCheckIn, char toCheck) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length()-3; i--) {
+		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 3; i--) {
 			if (toCheckIn.charAt(i) == toCheck) {
 				cnt++;
 			}
 		}
 		return cnt;
 	}
-	
+
 	public int continuousCountForLastTwenty(String toCheckIn) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 11; i >= toCheckIn.length()-31; i--) {
-			if (toCheckIn.charAt(i) == toCheckIn.charAt(i-1)) {
+		for (int i = toCheckIn.length() - 11; i >= toCheckIn.length() - 31; i--) {
+			if (toCheckIn.charAt(i) == toCheckIn.charAt(i - 1)) {
 				cnt++;
 			}
 		}
 		return cnt;
 	}
-	
+
 }
