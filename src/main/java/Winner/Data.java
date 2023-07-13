@@ -42,7 +42,7 @@ public class Data {
 	Data(){
 		predict_l3 ="";
 		wallet_l3 = 0;
-		fargate = false;
+		fargate = true;
 		for(int i = 1 ; i <= 15; i++) {
 			expoPR.put(i, 0);
 			expoL.put(i, 0);

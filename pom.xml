@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com</groupId>
   <artifactId>TRISPHER</artifactId>
-  <version>v12</version>
+  <version>Final</version>
   <properties> <maven.compiler.source>17</maven.compiler.source> 
   <maven.compiler.target>17</maven.compiler.target></properties>
   <dependencies>

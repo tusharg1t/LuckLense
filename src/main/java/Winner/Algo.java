@@ -207,23 +207,23 @@ public class Algo {
 						
 					}
 
-					if (data.pitstop < 0 && fargate && !predict_l2.equals("")) {
+					if (data.pitstop < 0 && !predict_l2.equals("")) {
 
 						if (current_coin.equals("bonus")) {
 							data.fargate_seq += "B";
 							data.bonus_counter++;
 
-							data.fargate_wallet -= bet_amount;
+//							data.fargate_wallet -= data.multiplier;
 
 						} else if (current_coin.equals(predict_l2)) {
 
 							data.fargate_seq += "W";
-							data.fargate_wallet += bet_amount;
+							data.fargate_wallet += data.multiplier;
 							win_count++;
 						} else {
 
 							data.fargate_seq += "L";
-							data.fargate_wallet -= bet_amount;
+							data.fargate_wallet -= data.multiplier;
 							lost_count++;
 						}
 
@@ -233,28 +233,18 @@ public class Algo {
 						driver.navigate().refresh();
 
 					predict_l2 = "";
-					if (data.fargate_wallet >= 3 * data.multiplier && !fargate) {
+					
+					fargate = true;
 
-						fargate = true;
-						data.fargate_wallet = 0;
-					}
-					if (data.fargate_wallet >= 2 * data.multiplier && fargate) {
-						fargate = false;
-						data.fargate_wallet = 0;
-					}
+					if (data.wallet_l3 > wallet_max)
+						wallet_max = data.wallet_l3;
+					
 
-					if (data.fargate_wallet < -6 * data.multiplier) {
-						fargate = false;
-						data.fargate_wallet = 0;
-					}
-					if (wallet > wallet_max)
-						wallet_max = wallet;
+					if (data.wallet_l3 < wallet_min)
+						wallet_min = data.wallet_l3;
 
-					if (wallet < wallet_min)
-						wallet_min = wallet;
-
-					if (wallet_max - wallet > displacement)
-						displacement = wallet_max - wallet;
+					if (wallet_max - data.wallet_l3 > displacement)
+						displacement = wallet_max - data.wallet_l3;
 
 					// the top level non altering div which shows the players which have placed bets
 					WebElement t_bet_container = driver.findElement(By.xpath(
@@ -342,10 +332,11 @@ public class Algo {
 							predict_l2 = predicted;
 
 						if (fargate) {
-							int degree = 1;
+							
 							
 							
 							data.predict_l3 = predict_l2;
+							int degree = 1;
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
 //							placer.placeBet(driver, predict_l3, bet_amount);	
 
@@ -357,11 +348,10 @@ public class Algo {
 					System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
 //					System.out.println("Total betters = " + (t_betters + ct_betters));
 //					System.out.println("ct_targets : " + ct_targets + "  :: " + "t_targets : " + t_targets);
-					if (predict_l2.equals("")) {
+					if (data.predict_l3.equals("")) {
 						System.out.println("In PitStop || current coin : " + current_coin);
-//						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
 						System.out.println(
-								"Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L2: " + df.format(wallet)
+								"Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: " + df.format(data.wallet_l3)
 										+ "  :: " + "Displacement:" + df.format(displacement) + "  ::  " + "Wallet Max:"
 										+ df.format(wallet_max) + "  ::  " + "Wallet Min : " + df.format(wallet_min));
 					} else {

@@ -20,7 +20,7 @@ public class Start {
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
-		System.out.println("ALL THE BEST: OM HRIM AIM HRIM OM SARASWATE NAMAH:  ");
+		System.out.println("Jai Shree Raam! Ooooommm Har Har Maha Deeeeeeeeeeeeeeev");
 		new Algo().run(data, driver);
 	}
 
