@@ -134,7 +134,8 @@ public class Algo {
 						t_name_rank_map.clear();
 						ct_name_rank_map.clear();
 
-						if (main_seq.charAt(main_seq.length() - 1) == main_seq.charAt(main_seq.length() - 2))
+						if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == data.fargate_seq
+								.charAt(data.fargate_seq.length() - 2))
 							data.continuous_algo++;
 						else
 							data.switching_algo++;
@@ -202,9 +203,9 @@ public class Algo {
 							data.wallet_l3 -= bet_amount;
 
 						}
-						
+
 						data.predict_l3 = "";
-						
+
 					}
 
 					if (data.pitstop < 0 && !predict_l2.equals("")) {
@@ -233,12 +234,11 @@ public class Algo {
 						driver.navigate().refresh();
 
 					predict_l2 = "";
-					
+
 					fargate = true;
 
 					if (data.wallet_l3 > wallet_max)
 						wallet_max = data.wallet_l3;
-					
 
 					if (data.wallet_l3 < wallet_min)
 						wallet_min = data.wallet_l3;
@@ -285,12 +285,11 @@ public class Algo {
 							if (data.targets.get(x) > 1)
 								t_targets++;
 					}
-					
-					
+
 					/*
 					 * Main Prediction Logic :)
 					 * 
-					 *  12-07-2023
+					 * 12-07-2023
 					 */
 
 					if (((t_targets > ct_targets) && (t_betters > ct_betters))
@@ -326,17 +325,22 @@ public class Algo {
 
 						System.out.println("L_count : W_count ==> " + l_cnt + " : " + w_cnt);
 
-						if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'L')
+						if (main_seq.charAt(main_seq.length() - 1) == 'L'
+								|| l_cnt + w_cnt < 4 || l_cnt > 1.5*w_cnt
+								)
 							predict_l2 = predicted.equals("ct") ? "t" : "ct";
 						else
 							predict_l2 = predicted;
 
 						if (fargate) {
-							
-							
-							
+
 							data.predict_l3 = predict_l2;
 							int degree = 1;
+
+//							if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'W')
+//								degree = 1;
+							
+
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
 //							placer.placeBet(driver, predict_l3, bet_amount);	
 
@@ -350,31 +354,31 @@ public class Algo {
 //					System.out.println("ct_targets : " + ct_targets + "  :: " + "t_targets : " + t_targets);
 					if (data.predict_l3.equals("")) {
 						System.out.println("In PitStop || current coin : " + current_coin);
-						System.out.println(
-								"Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: " + df.format(data.wallet_l3)
-										+ "  :: " + "Displacement:" + df.format(displacement) + "  ::  " + "Wallet Max:"
-										+ df.format(wallet_max) + "  ::  " + "Wallet Min : " + df.format(wallet_min));
+						System.out.println("Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: "
+								+ df.format(data.wallet_l3) + "  :: " + "Displacement:" + df.format(displacement)
+								+ "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  " + "Wallet Min : "
+								+ df.format(wallet_min));
 					} else {
 
 						System.out.println("Bet Amount : " + bet_amount);
 						System.out.println(
 								"=======================================================================================================");
-						System.out
-								.println("Current Coin is : " + current_coin + "  ::  " + "Predicted L3: " + data.predict_l3);
+						System.out.println(
+								"Current Coin is : " + current_coin + "  ::  " + "Predicted L3: " + data.predict_l3);
 						System.out.println(
 								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
 //						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
 						System.out.println(
 								"Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length() - 57));
-						System.out.println(
-								"Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: " + df.format(data.wallet_l3)
-										+ "  :: " + "Displacement:" + df.format(displacement) + "  ::  " + "Wallet Max:"
-										+ df.format(wallet_max) + "  ::  " + "Wallet Min : " + df.format(wallet_min));
+						System.out.println("Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: "
+								+ df.format(data.wallet_l3) + "  :: " + "Displacement:" + df.format(displacement)
+								+ "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  " + "Wallet Min : "
+								+ df.format(wallet_min));
 						System.out.println(
 								"=======================================================================================================");
 
-//						System.out.println("\nContinus Algo Result : " + data.continuous_algo + "  ::  "
-//								+ "Switching Algo Result : " + data.switching_algo);
+						System.out.println("\nContinus Algo Result : " + data.continuous_algo + "  ::  "
+								+ "Switching Algo Result : " + data.switching_algo);
 //
 						System.out.println("\nExponential W : " + data.expoW);
 						System.out.println("Exponential L : " + data.expoL);
@@ -431,7 +435,7 @@ public class Algo {
 
 	public int countOfCharFromLastTen(String toCheckIn, char toCheck) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 3; i--) {
+		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 7; i--) {
 			if (toCheckIn.charAt(i) == toCheck) {
 				cnt++;
 			}
@@ -441,7 +445,7 @@ public class Algo {
 
 	public int continuousCountForLastTwenty(String toCheckIn) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 11; i >= toCheckIn.length() - 31; i--) {
+		for (int i = toCheckIn.length() - 11; i >= toCheckIn.length() - 51; i--) {
 			if (toCheckIn.charAt(i) == toCheckIn.charAt(i - 1)) {
 				cnt++;
 			}

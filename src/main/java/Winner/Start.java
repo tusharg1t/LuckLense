@@ -16,11 +16,10 @@ public class Start {
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-	
+		System.out.println("All The Best! Go Get Lost! ");
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
-		System.out.println("Jai Shree Raam! Ooooommm Har Har Maha Deeeeeeeeeeeeeeev");
 		new Algo().run(data, driver);
 	}
 
