@@ -212,6 +212,8 @@ public class Algo {
 
 						if (current_coin.equals("bonus")) {
 							data.fargate_seq += "B";
+							
+							if(fargate)
 							data.bonus_counter++;
 
 //							data.fargate_wallet -= data.multiplier;
@@ -235,7 +237,7 @@ public class Algo {
 
 					predict_l2 = "";
 
-					fargate = true;
+					
 
 					if (data.wallet_l3 > wallet_max)
 						wallet_max = data.wallet_l3;
@@ -285,10 +287,24 @@ public class Algo {
 							if (data.targets.get(x) > 1)
 								t_targets++;
 					}
+					
+					
+					if(Math.abs(win_count-lost_count) == 6 && !fargate) {
+						fargate = true;
+					}
 
+					if(Math.abs(win_count-lost_count) == 0 && fargate) {
+						fargate = false;
+					}
+					
+					if(Math.abs(win_count-lost_count) == 12 && fargate) {
+						fargate = false;
+					}
+					
+					
 					/*
 					 * Main Prediction Logic :)
-					 * 
+					 * Approaching 0 for success
 					 * 12-07-2023
 					 */
 
@@ -326,15 +342,16 @@ public class Algo {
 						System.out.println("L_count : W_count ==> " + l_cnt + " : " + w_cnt);
 
 						if (main_seq.charAt(main_seq.length() - 1) == 'L'
-								|| l_cnt + w_cnt < 4 || l_cnt > 1.5*w_cnt
+							|| l_cnt > 1.5*w_cnt
+							|| w_cnt + l_cnt < 6
 								)
 							predict_l2 = predicted.equals("ct") ? "t" : "ct";
 						else
 							predict_l2 = predicted;
 
 						if (fargate) {
-
-							data.predict_l3 = predict_l2;
+							
+							data.predict_l3 = win_count < lost_count? predict_l2 : predict_l2.equals("ct") ? "t" : "ct";
 							int degree = 1;
 
 //							if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'W')
@@ -348,8 +365,13 @@ public class Algo {
 					} else {
 						predicted = "";
 					}
-
+					
+					if(Math.abs(win_count-lost_count) > data.l_w_difference_max) {
+						data.l_w_difference_max = Math.abs(win_count-lost_count);
+					}
 					System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
+					System.out.println("LOSS WIN DIFFERENCE MAX : "+ data.l_w_difference_max);
+					System.out.println("FARGATE : "+fargate);
 //					System.out.println("Total betters = " + (t_betters + ct_betters));
 //					System.out.println("ct_targets : " + ct_targets + "  :: " + "t_targets : " + t_targets);
 					if (data.predict_l3.equals("")) {
@@ -358,6 +380,8 @@ public class Algo {
 								+ df.format(data.wallet_l3) + "  :: " + "Displacement:" + df.format(displacement)
 								+ "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  " + "Wallet Min : "
 								+ df.format(wallet_min));
+						System.out.println(
+								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
 					} else {
 
 						System.out.println("Bet Amount : " + bet_amount);

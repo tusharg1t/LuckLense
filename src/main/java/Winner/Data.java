@@ -16,7 +16,7 @@ public class Data {
 	double fargate_wallet;
 	
 	String fargate_seq;
-	
+	int l_w_difference_max;
 	int main_L;
 	int main_W;
 	double multiplier;
@@ -40,9 +40,10 @@ public class Data {
 	String predict_l3;
 	int bonus_counter;
 	Data(){
-		predict_l3 ="";
+		l_w_difference_max = Integer.MIN_VALUE;
+		predict_l3 = "";
 		wallet_l3 = 0;
-		fargate = true;
+		fargate = false;
 		for(int i = 1 ; i <= 15; i++) {
 			expoPR.put(i, 0);
 			expoL.put(i, 0);

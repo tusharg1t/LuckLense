@@ -16,7 +16,7 @@ public class Start {
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		System.out.println("All The Best! Go Get Lost! ");
+		System.out.println("Before Prod:4.2: Dont Waste Money! Earn Everything! JAI SHREE RAAM|| Perfect || OM NAMAH SHIVAI || JAI MATA JI || OM MAHA LAKSHMI NAMO NAMAH || OOOOOM || Om Aim Hreem Shreem Vagdevyai sarasvatyai Namah || Oh Rahawahe Namaha");
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
