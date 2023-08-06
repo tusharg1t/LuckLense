@@ -20,7 +20,12 @@ import org.openqa.selenium.WebElement;
 
 import io.netty.util.internal.MathUtil;
 import Winner.Data;
-
+/*
+ * CHANGES TO DO 
+ * *Make Prediction on all rolls
+ * *Implement Bonus Place
+ * 
+ */
 public class Algo {
 	private DecimalFormat df = new DecimalFormat("0.00");
 
@@ -43,6 +48,10 @@ public class Algo {
 		boolean toggle = true;
 		String predict_l2 = "";
 		double bet_amount = 0.0;
+		boolean scan_1 = false;
+		boolean scan_2 = false;
+		boolean scan_3 = false;
+		
 		try {
 
 			String timer = "";
@@ -59,14 +68,62 @@ public class Algo {
 
 			while (true) {
 
+				//exact div in shich time element is there
 				WebElement count_down_element = driver.findElement(
-						By.xpath("//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[2]/div[3]/div/div[2]"));
+						By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[2]/div[3]/div/div[2]"));
 				timer = count_down_element.getAttribute("innerText").toString();
 
-				if (Double.parseDouble(timer) < 17 && Double.parseDouble(timer) > 10 && !bonus_placed) {
+				
+				if (Double.parseDouble(timer) < 14 && Double.parseDouble(timer) > 13 && !scan_1) {
+					t_name_rank_map.clear();
+					ct_name_rank_map.clear();
+
+					scan_1 = true;
+					String[] ct_players = scanCTPlayers(driver);
+					String[] t_players = scanTPlayers(driver);
+					for (int i = 0; i < ct_players.length; i += 3) {
+						if(!ct_name_rank_map.containsKey(ct_players[i + 1]))
+						ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+					}
+
+					for (int i = 0; i < t_players.length; i += 3) {
+						if(!t_name_rank_map.containsKey(t_players[i + 1]))
+						t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
+					}
+				}
+				if (Double.parseDouble(timer) < 9 && Double.parseDouble(timer) > 8 && !scan_2) {
+					scan_2 = true;
+					String[] ct_players = scanCTPlayers(driver);
+					String[] t_players = scanTPlayers(driver);
+					for (int i = 0; i < ct_players.length; i += 3) {
+						if(!ct_name_rank_map.containsKey(ct_players[i + 1]))
+						ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+					}
+
+					for (int i = 0; i < t_players.length; i += 3) {
+						if(!t_name_rank_map.containsKey(t_players[i + 1]))
+						t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
+					}
+				}
+				if (Double.parseDouble(timer) < 6 && Double.parseDouble(timer) > 4 && !scan_3) {
+					scan_3 = true;
+					String[] ct_players = scanCTPlayers(driver);
+					String[] t_players = scanTPlayers(driver);
+					for (int i = 0; i < ct_players.length; i += 3) {
+						if(!ct_name_rank_map.containsKey(ct_players[i + 1]))
+						ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+					}
+
+					for (int i = 0; i < t_players.length; i += 3) {
+						if(!t_name_rank_map.containsKey(t_players[i + 1]))
+						t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
+					}
+				}
+				if (Double.parseDouble(timer) < 17 && Double.parseDouble(timer) > 14 && !bonus_placed) {
 					bonus_placed = true;
 
-//					placer.clearAmount(driver);
+
+					//
 					List<WebElement> current_coin_elements = driver
 							.findElements(By.xpath("//div[@class='previous-rolls-item']"));
 					current_coin = current_coin_elements.get(9).getAttribute("innerHTML").contains("-ct") ? "ct"
@@ -100,14 +157,15 @@ public class Algo {
 
 				if (Double.parseDouble(timer) < 3 && Double.parseDouble(timer) > 0 && !update) {
 
-					// Sample Fetch : 71 Bets Total
+					// Sample Fetch(example) : 71 Bets Total
 					WebElement ct_overview = driver.findElement(By.xpath(
-							"//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[1]"));
+							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[1]"));
 					WebElement t_overview = driver.findElement(By.xpath(
-							"//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[1]/div[1]"));
+							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[1]/div[1]"));
 
 					t_betters = Integer.parseInt(t_overview.getText().toString().split(" ")[0]);
 					ct_betters = Integer.parseInt(ct_overview.getText().toString().split(" ")[0]);
+					
 					if (!predicted.equals("")) {
 						if (predicted.equals(current_coin)) {
 
@@ -131,9 +189,8 @@ public class Algo {
 
 						}
 
-						t_name_rank_map.clear();
-						ct_name_rank_map.clear();
-
+						
+						if(fargate)
 						if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == data.fargate_seq
 								.charAt(data.fargate_seq.length() - 2))
 							data.continuous_algo++;
@@ -177,8 +234,8 @@ public class Algo {
 					if (data.pitstop < 0 && !predicted.equals("")) {
 
 						if (!(data.wallet_graph_data.get(data.wallet_graph_data.size() - 1) == Double
-								.parseDouble(df.format(wallet).toString())))
-							data.wallet_graph_data.add(Double.parseDouble(df.format(wallet).toString()));
+								.parseDouble(df.format(data.fargate_wallet).toString())))
+							data.wallet_graph_data.add(Double.parseDouble(df.format(data.fargate_wallet).toString()));
 
 						if (current_coin.equals(predicted)) {
 
@@ -197,35 +254,39 @@ public class Algo {
 						if (current_coin.equals(data.predict_l3)) {
 
 							data.wallet_l3 += bet_amount;
+							data.fargate_seq += "W";
 
 						} else {
 
 							data.wallet_l3 -= bet_amount;
-
+							
+							if (!current_coin.equals("bonus")) {
+								data.fargate_seq += "L";
+							}else
+								data.fargate_seq += "L";
 						}
 
+						if (current_coin.equals("bonus")) 
+						data.bonus_counter++;
+						
 						data.predict_l3 = "";
+						
 
 					}
 
 					if (data.pitstop < 0 && !predict_l2.equals("")) {
 
 						if (current_coin.equals("bonus")) {
-							data.fargate_seq += "B";
 							
-							if(fargate)
-							data.bonus_counter++;
-
-//							data.fargate_wallet -= data.multiplier;
-
+							//In case of bonus what to do on fargate
 						} else if (current_coin.equals(predict_l2)) {
 
-							data.fargate_seq += "W";
+							
 							data.fargate_wallet += data.multiplier;
 							win_count++;
 						} else {
 
-							data.fargate_seq += "L";
+							
 							data.fargate_wallet -= data.multiplier;
 							lost_count++;
 						}
@@ -248,19 +309,23 @@ public class Algo {
 					if (wallet_max - data.wallet_l3 > displacement)
 						displacement = wallet_max - data.wallet_l3;
 
-					// the top level non altering div which shows the players which have placed bets
-					WebElement t_bet_container = driver.findElement(By.xpath(
-							"//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[2]"));
-					String[] t_players = t_bet_container.getAttribute("innerText").trim().split("\n");
-
-					WebElement ct_bet_container = driver.findElement(By.xpath(
-							"//*[@id=\"app\"]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[2]"));
-
-					String[] ct_players = ct_bet_container.getAttribute("innerText").trim().split("\n");
+//					// the top level non altering div which shows the players which have placed bets
+//					WebElement t_bet_container = driver.findElement(By.xpath(
+//							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[2]"));
+//					String[] t_players = t_bet_container.getAttribute("innerText").trim().split("\n");
+//
+//					WebElement ct_bet_container = driver.findElement(By.xpath(
+//							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[2]"));
+//					String[] ct_players = ct_bet_container.getAttribute("innerText").trim().split("\n");
+					
+					
 					int ct_xp = 0;
 					int t_xp = 0;
 					double amount_ct = 0;
 					double amount_t = 0;
+					
+					String[] ct_players = scanCTPlayers(driver);
+					String[] t_players = scanTPlayers(driver);
 					for (int i = 0; i < ct_players.length; i += 3) {
 //													   <Name,Rank>
 						ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
@@ -288,23 +353,28 @@ public class Algo {
 								t_targets++;
 					}
 					
-					
-					if(Math.abs(win_count-lost_count) == 6 && !fargate) {
-						fargate = true;
-					}
-
-					if(Math.abs(win_count-lost_count) == 0 && fargate) {
-						fargate = false;
-					}
-					
-					if(Math.abs(win_count-lost_count) == 12 && fargate) {
-						fargate = false;
-					}
-					
-					
+					fargate = true;
+//					if(Math.abs(win_count-lost_count) == 5 && !fargate) {
+//						fargate = true;
+//					}
+//
+//					if(Math.abs(win_count-lost_count) == 1 && fargate) {
+//						fargate = false;
+//						//profit
+//					}
+//					
+//					if(Math.abs(win_count-lost_count) == 10 && fargate) {
+//						fargate = false;
+//						//loss
+//					}
+//				
+//					if(Math.abs(win_count-lost_count) == 15 && !fargate) {
+//						win_count = lost_count;
+//						//loss
+//					}
 					/*
 					 * Main Prediction Logic :)
-					 * Approaching 0 for success
+					 * Approaching to 0 for success
 					 * 12-07-2023
 					 */
 
@@ -313,8 +383,8 @@ public class Algo {
 						toggle = false;
 					} else
 						toggle = true;
-
-					if (data.pitstop-- < 0 && t_targets != ct_targets) {
+					
+					if (data.pitstop-- < 0) {
 
 						if (toggle == true) {
 							if (t_targets > ct_targets) {
@@ -341,9 +411,9 @@ public class Algo {
 
 						System.out.println("L_count : W_count ==> " + l_cnt + " : " + w_cnt);
 
-						if (main_seq.charAt(main_seq.length() - 1) == 'L'
-							|| l_cnt > 1.5*w_cnt
-							|| w_cnt + l_cnt < 6
+						if (
+								l_cnt > 1.5*w_cnt
+							 || (t_targets+ct_targets) > (t_betters+ct_betters)
 								)
 							predict_l2 = predicted.equals("ct") ? "t" : "ct";
 						else
@@ -351,13 +421,10 @@ public class Algo {
 
 						if (fargate) {
 							
-							data.predict_l3 = win_count < lost_count? predict_l2 : predict_l2.equals("ct") ? "t" : "ct";
-							int degree = 1;
-
-//							if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'W')
-//								degree = 1;
-							
-
+//							data.predict_l3 = win_count > lost_count? predict_l2 : predict_l2.equals("ct") ? "t" : "ct";
+							data.predict_l3 = predict_l2;
+ 							int degree = 1;
+ 							
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
 //							placer.placeBet(driver, predict_l3, bet_amount);	
 
@@ -372,9 +439,11 @@ public class Algo {
 					System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
 					System.out.println("LOSS WIN DIFFERENCE MAX : "+ data.l_w_difference_max);
 					System.out.println("FARGATE : "+fargate);
-//					System.out.println("Total betters = " + (t_betters + ct_betters));
-//					System.out.println("ct_targets : " + ct_targets + "  :: " + "t_targets : " + t_targets);
+					System.out.println("Decision Set Size: "+(ct_name_rank_map.size()+t_name_rank_map.size()));
+					System.out.println("Total betters = " + (t_betters + ct_betters));
+					System.out.println("ct_targets : " + ct_targets + "  :: " + "t_targets : " + t_targets);
 					if (data.predict_l3.equals("")) {
+						System.out.println("Predict L2: "+predict_l2);
 						System.out.println("In PitStop || current coin : " + current_coin);
 						System.out.println("Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: "
 								+ df.format(data.wallet_l3) + "  :: " + "Displacement:" + df.format(displacement)
@@ -418,6 +487,9 @@ public class Algo {
 				} else if (Double.parseDouble(timer) == 0.00) {
 					update = false;
 					bonus_placed = false;
+					scan_1 = false;
+					scan_2 = false;
+					scan_3 = false;
 				}
 
 			}
@@ -475,6 +547,24 @@ public class Algo {
 			}
 		}
 		return cnt;
+	}
+	
+	public String[] scanTPlayers(WebDriver driver) {
+		
+		// the top level non altering div which shows the players which have placed bets
+		WebElement t_bet_container = driver.findElement(By.xpath(
+				"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[2]"));
+		String[] t_players = t_bet_container.getAttribute("innerText").trim().split("\n");
+
+		return t_players;		
+		
+	}
+	
+	public String[] scanCTPlayers(WebDriver driver) {
+		WebElement ct_bet_container = driver.findElement(By.xpath(
+				"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[2]"));
+		String[] ct_players = ct_bet_container.getAttribute("innerText").trim().split("\n");
+		return ct_players;
 	}
 
 }
