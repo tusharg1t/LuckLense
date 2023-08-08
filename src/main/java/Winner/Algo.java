@@ -74,7 +74,7 @@ public class Algo {
 				timer = count_down_element.getAttribute("innerText").toString();
 
 				
-				if (Double.parseDouble(timer) < 14 && Double.parseDouble(timer) > 13 && !scan_1) {
+				if (Double.parseDouble(timer) < 17 && Double.parseDouble(timer) > 16 && !scan_1) {
 					t_name_rank_map.clear();
 					ct_name_rank_map.clear();
 
@@ -91,7 +91,7 @@ public class Algo {
 						t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
 					}
 				}
-				if (Double.parseDouble(timer) < 9 && Double.parseDouble(timer) > 8 && !scan_2) {
+				if (Double.parseDouble(timer) < 13 && Double.parseDouble(timer) > 11 && !scan_2) {
 					scan_2 = true;
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
@@ -105,7 +105,7 @@ public class Algo {
 						t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
 					}
 				}
-				if (Double.parseDouble(timer) < 6 && Double.parseDouble(timer) > 4 && !scan_3) {
+				if (Double.parseDouble(timer) < 9 && Double.parseDouble(timer) > 8 && !scan_3) {
 					scan_3 = true;
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
@@ -155,7 +155,7 @@ public class Algo {
 
 				}
 
-				if (Double.parseDouble(timer) < 3 && Double.parseDouble(timer) > 0 && !update) {
+				if (Double.parseDouble(timer) < 5 && Double.parseDouble(timer) > 0 && !update) {
 
 					// Sample Fetch(example) : 71 Bets Total
 					WebElement ct_overview = driver.findElement(By.xpath(
@@ -308,16 +308,6 @@ public class Algo {
 
 					if (wallet_max - data.wallet_l3 > displacement)
 						displacement = wallet_max - data.wallet_l3;
-
-//					// the top level non altering div which shows the players which have placed bets
-//					WebElement t_bet_container = driver.findElement(By.xpath(
-//							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[2]"));
-//					String[] t_players = t_bet_container.getAttribute("innerText").trim().split("\n");
-//
-//					WebElement ct_bet_container = driver.findElement(By.xpath(
-//							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[2]"));
-//					String[] ct_players = ct_bet_container.getAttribute("innerText").trim().split("\n");
-					
 					
 					int ct_xp = 0;
 					int t_xp = 0;
@@ -340,88 +330,116 @@ public class Algo {
 
 					int ct_targets = 0;
 					int t_targets = 0;
+					
+					int ct_targets_1 = 0;
+					int t_targets_1 = 0;
+					
+					int ct_targets_2 = 0;
+					int t_targets_2 = 0;
+					
+					int ct_targets_3 = 0;
+					int t_targets_3 = 0;
+					
+					int ct_targets_4 = 0;
+					int t_targets_4 = 0;
 
 					for (String x : ct_name_rank_map.keySet()) {
-						if (data.targets.containsKey(x))
-							if (data.targets.get(x) > 1)
-								ct_targets++;
+						if (data.targets.containsKey(x)) {
+							if (data.targets.get(x) >= 3)
+								ct_targets_3++;
+						
+						if (data.targets.get(x) >= 1)
+							ct_targets_1++;
+						
+						if (data.targets.get(x) >= 2)
+							ct_targets_2++;
+
+						if (data.targets.get(x) >= 0)
+							ct_targets++;
+						
+						if (data.targets.get(x) >= 4)
+							ct_targets_4++;
+						}
 					}
 
 					for (String x : t_name_rank_map.keySet()) {
-						if (data.targets.containsKey(x))
-							if (data.targets.get(x) > 1)
+						if (data.targets.containsKey(x)) {
+							if (data.targets.get(x) >= 3)
+								t_targets_3++;
+							
+							if (data.targets.get(x) >= 1)
+								t_targets_1++;
+							
+							if (data.targets.get(x) >= 2)
+								t_targets_2++;
+							
+							if (data.targets.get(x) >= 0)
 								t_targets++;
+							
+							if (data.targets.get(x) >= 4)
+								t_targets_4++;
+						}
 					}
 					
 					fargate = true;
-//					if(Math.abs(win_count-lost_count) == 5 && !fargate) {
-//						fargate = true;
-//					}
-//
-//					if(Math.abs(win_count-lost_count) == 1 && fargate) {
-//						fargate = false;
-//						//profit
-//					}
-//					
-//					if(Math.abs(win_count-lost_count) == 10 && fargate) {
-//						fargate = false;
-//						//loss
-//					}
-//				
-//					if(Math.abs(win_count-lost_count) == 15 && !fargate) {
-//						win_count = lost_count;
-//						//loss
-//					}
-					/*
-					 * Main Prediction Logic :)
-					 * Approaching to 0 for success
-					 * 12-07-2023
-					 */
 
-					if (((t_targets > ct_targets) && (t_betters > ct_betters))
-							|| ((t_targets < ct_targets) && (t_betters < ct_betters))) {
-						toggle = false;
-					} else
-						toggle = true;
+					data.winner_1 += t_targets_1 + ct_targets_1;
+					data.winner_2 += t_targets_2 + ct_targets_2;
+					data.winner_3 += t_targets_3 + ct_targets_3;
 					
 					if (data.pitstop-- < 0) {
-
-						if (toggle == true) {
-							if (t_targets > ct_targets) {
-								predicted = "ct";
-							} else
-								predicted = "t";
-
-						} else if (toggle == false) {
-							if (t_betters < ct_betters) {
-								predicted = "ct";
-							} else
-								predicted = "t";
-
-						}
-
-						// After 32 L side was more efficient
-						if (predicted.equals("ct")) {
-							predicted = "t";
-						} else
-							predicted = "ct";
-
+						
+						
+						
 						int l_cnt = countOfCharFromLastTen(main_seq, 'L');
 						int w_cnt = countOfCharFromLastTen(main_seq, 'W');
-
-						System.out.println("L_count : W_count ==> " + l_cnt + " : " + w_cnt);
-
-						if (
-								l_cnt > 1.5*w_cnt
-							 || (t_targets+ct_targets) > (t_betters+ct_betters)
-								)
-							predict_l2 = predicted.equals("ct") ? "t" : "ct";
+						
+						int ct_score = 0;
+						int t_score = 0;
+						
+						if(t_targets_3 > ct_targets_3)
+							t_score++;
+						else if(t_targets_3 < ct_targets_3)
+							ct_score++;
+						
+						if(t_targets_1 > ct_targets_1)
+							t_score++;
+						else if(t_targets_1 < ct_targets_1)
+							ct_score++;
+						
+						if(t_targets_2 > ct_targets_2)
+							t_score++;
+						else if(t_targets_2 < ct_targets_2)
+							ct_score++;
+						
+						if(t_targets_4 > ct_targets_4)
+							t_score++;
+						else if(t_targets_4 < ct_targets_4)
+							ct_score++;
+						
+						if(t_targets > ct_targets)
+							t_score++;
 						else
+							if(t_targets < ct_targets)
+							ct_score++;
+						
+						if (t_score > ct_score) {
+							predicted = "ct";
+						} else
+							if (t_score < ct_score) 
+							predicted = "t";
+							else
+								predicted = "";
+
+								
+
+						System.out.println("T Score : CT Score ==> " + t_score + " : " + ct_score);
+
+//							predict_l2 = predicted.equals("ct") ? "t" : "ct";
+						
 							predict_l2 = predicted;
 
 						if (fargate) {
-							
-//							data.predict_l3 = win_count > lost_count? predict_l2 : predict_l2.equals("ct") ? "t" : "ct";
 							data.predict_l3 = predict_l2;
  							int degree = 1;
  							
@@ -438,10 +456,9 @@ public class Algo {
 					}
 					System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
 					System.out.println("LOSS WIN DIFFERENCE MAX : "+ data.l_w_difference_max);
-					System.out.println("FARGATE : "+fargate);
+					System.out.println("WINNERS 1 2 3: "+ data.winner_1 + " : " +data.winner_2 + " : "+data.winner_3);
 					System.out.println("Decision Set Size: "+(ct_name_rank_map.size()+t_name_rank_map.size()));
 					System.out.println("Total betters = " + (t_betters + ct_betters));
-					System.out.println("ct_targets : " + ct_targets + "  :: " + "t_targets : " + t_targets);
 					if (data.predict_l3.equals("")) {
 						System.out.println("Predict L2: "+predict_l2);
 						System.out.println("In PitStop || current coin : " + current_coin);
@@ -531,7 +548,7 @@ public class Algo {
 
 	public int countOfCharFromLastTen(String toCheckIn, char toCheck) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 7; i--) {
+		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 15; i--) {
 			if (toCheckIn.charAt(i) == toCheck) {
 				cnt++;
 			}

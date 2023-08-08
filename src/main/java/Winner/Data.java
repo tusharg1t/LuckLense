@@ -24,6 +24,10 @@ public class Data {
 	int pitstop;
 	double displacement;
 	
+	int winner_1;
+	int winner_2;
+	int winner_3;
+	
 	Map<String,Integer> targets = new HashMap<String,Integer>();
 	Map<Integer,Integer> expoPR = new HashMap<Integer,Integer>();
 	Map<Integer,Integer> expoL = new HashMap<Integer,Integer>();
@@ -40,6 +44,9 @@ public class Data {
 	String predict_l3;
 	int bonus_counter;
 	Data(){
+		winner_1 = 0;
+		winner_2 = 0;
+		winner_3 = 0;
 		l_w_difference_max = Integer.MIN_VALUE;
 		predict_l3 = "";
 		wallet_l3 = 0;

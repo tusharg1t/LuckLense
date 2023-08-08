@@ -16,7 +16,7 @@ public class Start {
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		System.out.println("Live on 7-08 00.00");
+		System.out.println("\n* Focus");
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
