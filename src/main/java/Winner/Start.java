@@ -16,7 +16,11 @@ public class Start {
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		System.out.println("\n* Focus");
+		System.out.println("UAT BOT 10 Threashold");
+		System.out.println("Om Shanti || Om Shanti || Om Shanti "
+				+ "\n| Win | Win | Win || "
+				+ "\n|| Profit || Profit || Profit | "
+				+ "\n| StopLoss |StopLoss | StopLoss");
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();

@@ -11,6 +11,8 @@ public class Data {
 	
 	List<Double> wallet_graph_data = new ArrayList<Double>();
 	double wallet_together;
+	double target;
+	int nextOpportunity;
 	double wallet_max;
 	double wallet_min;
 	double fargate_wallet;
@@ -24,9 +26,15 @@ public class Data {
 	int pitstop;
 	double displacement;
 	
+	int winner_0;
 	int winner_1;
 	int winner_2;
 	int winner_3;
+	int winner_4;
+	int winner_5;
+	int winner_6;
+	int winner_7;
+	int winner_8;
 	
 	Map<String,Integer> targets = new HashMap<String,Integer>();
 	Map<Integer,Integer> expoPR = new HashMap<Integer,Integer>();
@@ -44,18 +52,18 @@ public class Data {
 	String predict_l3;
 	int bonus_counter;
 	Data(){
-		winner_1 = 0;
-		winner_2 = 0;
-		winner_3 = 0;
+		winner_0 = winner_1 = winner_2 = winner_3 = winner_4 = winner_5 = 0;
 		l_w_difference_max = Integer.MIN_VALUE;
 		predict_l3 = "";
 		wallet_l3 = 0;
 		fargate = false;
+		target = 0;
 		for(int i = 1 ; i <= 15; i++) {
 			expoPR.put(i, 0);
 			expoL.put(i, 0);
 			expoW.put(i,0);
 		}
+		nextOpportunity = 0;
 		
 		for(int i = 5 ; i <= 55; i++) {
 			players_L.put(i,0);
@@ -65,7 +73,7 @@ public class Data {
 		fargate_seq = "^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^L";
 		isRefreshed = false;
 		multiplier = 1;
-		pitstop = 17;
+		pitstop = 11;
 		main_seq="^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^TOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM||W";
 		main_L=0;
 		main_W=0;

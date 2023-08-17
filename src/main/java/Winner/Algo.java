@@ -122,8 +122,6 @@ public class Algo {
 				if (Double.parseDouble(timer) < 17 && Double.parseDouble(timer) > 14 && !bonus_placed) {
 					bonus_placed = true;
 
-
-					//
 					List<WebElement> current_coin_elements = driver
 							.findElements(By.xpath("//div[@class='previous-rolls-item']"));
 					current_coin = current_coin_elements.get(9).getAttribute("innerHTML").contains("-ct") ? "ct"
@@ -138,7 +136,10 @@ public class Algo {
 						// remove target from loosers
 						for (String x : t_name_rank_map.keySet()) {
 							data.targets.putIfAbsent(x, 0);
-							data.targets.replace(x, 0);
+							if(data.targets.get(x) > 0)
+							data.targets.replace(x, data.targets.get(x)-1);
+							
+								
 						}
 					} else if (current_coin.equals("t")) {
 						// set the winners as target
@@ -149,10 +150,10 @@ public class Algo {
 						// remove target from loosers
 						for (String x : ct_name_rank_map.keySet()) {
 							data.targets.putIfAbsent(x, 0);
-							data.targets.replace(x, 0);
+							if(data.targets.get(x) > 0)
+								data.targets.replace(x, data.targets.get(x)-1);
 						}
 					}
-
 				}
 
 				if (Double.parseDouble(timer) < 5 && Double.parseDouble(timer) > 0 && !update) {
@@ -180,7 +181,7 @@ public class Algo {
 							if (!current_coin.equals("bonus"))
 								main_seq += "L";
 							else
-								main_seq += "B";
+								main_seq += "L";
 
 							int total = t_betters + ct_betters;
 							data.players_L.putIfAbsent(total, 0);
@@ -342,104 +343,198 @@ public class Algo {
 					
 					int ct_targets_4 = 0;
 					int t_targets_4 = 0;
+					
+					int ct_targets_5 = 0;
+					int t_targets_5 = 0;
+					
+					int ct_targets_6 = 0;
+					int t_targets_6 = 0;
+					
+					int ct_targets_7 = 0;
+					int t_targets_7 = 0;
+					
+					int ct_targets_8 = 0;
+					int t_targets_8 = 0;
+				
 
 					for (String x : ct_name_rank_map.keySet()) {
 						if (data.targets.containsKey(x)) {
+							if (data.targets.get(x) >= 8)
+								ct_targets_8++;
+							else
+							if (data.targets.get(x) >= 7)
+								ct_targets_7++;
+							else
+							if (data.targets.get(x) >= 6)
+								ct_targets_6++;
+							else
+							if (data.targets.get(x) >= 5)
+								ct_targets_5++;
+							else
+							if (data.targets.get(x) >= 4)
+								ct_targets_4++;
+							else
 							if (data.targets.get(x) >= 3)
 								ct_targets_3++;
-						
+							else
+								if (data.targets.get(x) >= 2)
+									ct_targets_2++;
+								else
 						if (data.targets.get(x) >= 1)
 							ct_targets_1++;
-						
-						if (data.targets.get(x) >= 2)
-							ct_targets_2++;
-
+						else
 						if (data.targets.get(x) >= 0)
 							ct_targets++;
 						
-						if (data.targets.get(x) >= 4)
-							ct_targets_4++;
+						
 						}
 					}
 
 					for (String x : t_name_rank_map.keySet()) {
 						if (data.targets.containsKey(x)) {
+							if (data.targets.get(x) >= 8)
+								t_targets_8++;
+							else
+							if (data.targets.get(x) >= 7)
+								t_targets_7++;
+							else
+							if (data.targets.get(x) >= 6)
+								t_targets_6++;
+							else
+							if (data.targets.get(x) >= 5)
+								t_targets_5++;
+							else
+							if (data.targets.get(x) >= 4)
+								t_targets_4++;
+							else
 							if (data.targets.get(x) >= 3)
 								t_targets_3++;
-							
+							else
+								if (data.targets.get(x) >= 2)
+									t_targets_2++;
+							else
 							if (data.targets.get(x) >= 1)
 								t_targets_1++;
-							
-							if (data.targets.get(x) >= 2)
-								t_targets_2++;
-							
+							else
 							if (data.targets.get(x) >= 0)
 								t_targets++;
 							
-							if (data.targets.get(x) >= 4)
-								t_targets_4++;
 						}
 					}
 					
-					fargate = true;
+				
 
+					data.winner_0 += t_targets + ct_targets;
 					data.winner_1 += t_targets_1 + ct_targets_1;
 					data.winner_2 += t_targets_2 + ct_targets_2;
 					data.winner_3 += t_targets_3 + ct_targets_3;
-					
-					if (data.pitstop-- < 0) {
-						
-						
-						
+					data.winner_4 += t_targets_4 + ct_targets_4;
+					data.winner_5 += t_targets_5 + ct_targets_5;
+					data.winner_6 += t_targets_6 + ct_targets_6;
+					data.winner_7 += t_targets_7 + ct_targets_7;
+					data.winner_8 += t_targets_8 + ct_targets_8;
+									
+					if (data.pitstop-- < 0 ) {
+	
 						int l_cnt = countOfCharFromLastTen(main_seq, 'L');
 						int w_cnt = countOfCharFromLastTen(main_seq, 'W');
+						System.out.println("L count in last 15 main_seq: "+l_cnt);
+						if(		l_cnt > 10 
+								&& !fargate 
+								&& main_seq.length() >= data.nextOpportunity) {
+							System.out.println("\n\n\n\n\n\n\n\n"
+									+ "***********************************Activating Bot**************************"
+									+ "\n\n\n\n\n\n\n\n");
+							fargate = true;
+							data.target = data.wallet_l3 + 5*data.multiplier;
+						}
+						
+						if((data.wallet_l3 >= data.target|| (data.wallet_l3 <= data.target-(10*data.multiplier))) && fargate) {
+							fargate = false;
+							data.nextOpportunity = main_seq.length()+50;
+							
+							System.out.println("\n\n\n\n\n\n\n\n"
+									+ "***********************************Deactivating Bot**************************"
+									+ "\n\n\n\n\n\n\n\n");
+						}
+						
 						
 						int ct_score = 0;
 						int t_score = 0;
 						
-						if(t_targets_3 > ct_targets_3)
-							t_score++;
-						else if(t_targets_3 < ct_targets_3)
-							ct_score++;
+					
 						
-						if(t_targets_1 > ct_targets_1)
-							t_score++;
-						else if(t_targets_1 < ct_targets_1)
-							ct_score++;
 						
-						if(t_targets_2 > ct_targets_2)
-							t_score++;
-						else if(t_targets_2 < ct_targets_2)
-							ct_score++;
-						
-						if(t_targets_4 > ct_targets_4)
-							t_score++;
-						else if(t_targets_4 < ct_targets_4)
-							ct_score++;
-						
-						if(t_targets > ct_targets)
-							t_score++;
-						else
+							//Minority take the lead
 							if(t_targets < ct_targets)
-							ct_score++;
-						
-						if (t_score > ct_score) {
-							predicted = "ct";
-						} else
-							if (t_score < ct_score) 
-							predicted = "t";
-							else
-								predicted = "";
+								t_score+=1;
+							else if(t_targets > ct_targets)
+								ct_score+=1;
+							
+							if(t_targets_1 < ct_targets_1)
+								t_score+=1;
+							else if(t_targets_1 > ct_targets_1)
+								ct_score+=1;
+							
+							if(t_targets_2 < ct_targets_2)
+								t_score+=1;
+							else if(t_targets_2 > ct_targets_2)
+								ct_score+=1;
+							
+							if(t_targets_3 < ct_targets_3)
+								t_score+=1;
+							else if(t_targets_3 > ct_targets_3)
+								ct_score+=1;
+							
+							if(t_targets_4 < ct_targets_4)
+								t_score+=1;
+							else if(t_targets_4 > ct_targets_4)
+								ct_score+=1;
+							
 
+							
+							//Major Take lead
+							
+							if(t_targets_5 > ct_targets_5)
+								t_score+=1;
+							else if(t_targets_5 < ct_targets_5)
+								ct_score+=1;
+							
+							if(t_targets_6 > ct_targets_6)
+								t_score+=1;
+							else if(t_targets_6 < ct_targets_6)
+								ct_score+=1;
+							
+							if(t_targets_7 > ct_targets_7)
+								t_score+=1;
+							else if(t_targets_7 < ct_targets_7)
+								ct_score+=1;
+							
+							if(t_targets_8 > ct_targets_8)
+								t_score+=1;
+							else if(t_targets_8 < ct_targets_8)
+								ct_score+=1;
+						
+					
+							
+								if (t_score < ct_score ) {
+									predicted = "ct";
+								} else
+									if (t_score > ct_score) 
+									predicted = "t";
+									else
+										predicted = "";
+							
 								
 
-						System.out.println("T Score : CT Score ==> " + t_score + " : " + ct_score);
+						System.out.println("T Score : CT Score ==> " + t_score + " : " + ct_score);	
 
-//							predict_l2 = predicted.equals("ct") ? "t" : "ct";
-						
-							predict_l2 = predicted;
 
 						if (fargate) {
+							if(ct_name_rank_map.size()+t_name_rank_map.size() <20 )
+							predict_l2 = predicted.equals("ct") ? "t" : predicted.equals("t") ? "ct" : "" ;
+							else
+							predict_l2 = predicted;
 							data.predict_l3 = predict_l2;
  							int degree = 1;
  							
@@ -456,7 +551,9 @@ public class Algo {
 					}
 					System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
 					System.out.println("LOSS WIN DIFFERENCE MAX : "+ data.l_w_difference_max);
-					System.out.println("WINNERS 1 2 3: "+ data.winner_1 + " : " +data.winner_2 + " : "+data.winner_3);
+					System.out.println("WINNERS 0 1 2 3 4: "+ data.winner_0 +" : "
+					+ data.winner_1 + " : " +data.winner_2 
+					+ " : "+data.winner_3 + " : " +data.winner_4 + " : "+data.winner_5 );
 					System.out.println("Decision Set Size: "+(ct_name_rank_map.size()+t_name_rank_map.size()));
 					System.out.println("Total betters = " + (t_betters + ct_betters));
 					if (data.predict_l3.equals("")) {
@@ -468,6 +565,9 @@ public class Algo {
 								+ df.format(wallet_min));
 						System.out.println(
 								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
+						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
+						System.out.println(
+								"Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length() - 57));
 					} else {
 
 						System.out.println("Bet Amount : " + bet_amount);
@@ -477,7 +577,7 @@ public class Algo {
 								"Current Coin is : " + current_coin + "  ::  " + "Predicted L3: " + data.predict_l3);
 						System.out.println(
 								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
-//						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
+						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
 						System.out.println(
 								"Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length() - 57));
 						System.out.println("Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: "
@@ -548,7 +648,7 @@ public class Algo {
 
 	public int countOfCharFromLastTen(String toCheckIn, char toCheck) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 15; i--) {
+		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 17; i--) {
 			if (toCheckIn.charAt(i) == toCheck) {
 				cnt++;
 			}
