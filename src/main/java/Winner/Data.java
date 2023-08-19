@@ -51,7 +51,9 @@ public class Data {
 	double wallet_l3;
 	String predict_l3;
 	int bonus_counter;
+	boolean start;
 	Data(){
+		start = false;
 		winner_0 = winner_1 = winner_2 = winner_3 = winner_4 = winner_5 = 0;
 		l_w_difference_max = Integer.MIN_VALUE;
 		predict_l3 = "";
@@ -70,10 +72,10 @@ public class Data {
 			players_W.put(i,0);
 		}
 		wallet_graph_data.add(0.0);
-		fargate_seq = "^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^L";
+		fargate_seq = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
 		isRefreshed = false;
 		multiplier = 1;
-		pitstop = 11;
+		pitstop = 35;
 		main_seq="^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^TOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM||W";
 		main_L=0;
 		main_W=0;

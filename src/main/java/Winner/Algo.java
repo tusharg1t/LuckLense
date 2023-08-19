@@ -158,6 +158,32 @@ public class Algo {
 
 				if (Double.parseDouble(timer) < 5 && Double.parseDouble(timer) > 0 && !update) {
 
+					int ct_targets = 0;
+					int t_targets = 0;
+					
+					int ct_targets_1 = 0;
+					int t_targets_1 = 0;
+					
+					int ct_targets_2 = 0;
+					int t_targets_2 = 0;
+					
+					int ct_targets_3 = 0;
+					int t_targets_3 = 0;
+					
+					int ct_targets_4 = 0;
+					int t_targets_4 = 0;
+					
+					int ct_targets_5 = 0;
+					int t_targets_5 = 0;
+					
+					int ct_targets_6 = 0;
+					int t_targets_6 = 0;
+					
+					int ct_targets_7 = 0;
+					int t_targets_7 = 0;
+					
+					int ct_targets_8 = 0;
+					int t_targets_8 = 0;
 					// Sample Fetch(example) : 71 Bets Total
 					WebElement ct_overview = driver.findElement(By.xpath(
 							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[1]"));
@@ -329,32 +355,7 @@ public class Algo {
 						t_xp += Integer.parseInt(t_players[i]);
 					}
 
-					int ct_targets = 0;
-					int t_targets = 0;
 					
-					int ct_targets_1 = 0;
-					int t_targets_1 = 0;
-					
-					int ct_targets_2 = 0;
-					int t_targets_2 = 0;
-					
-					int ct_targets_3 = 0;
-					int t_targets_3 = 0;
-					
-					int ct_targets_4 = 0;
-					int t_targets_4 = 0;
-					
-					int ct_targets_5 = 0;
-					int t_targets_5 = 0;
-					
-					int ct_targets_6 = 0;
-					int t_targets_6 = 0;
-					
-					int ct_targets_7 = 0;
-					int t_targets_7 = 0;
-					
-					int ct_targets_8 = 0;
-					int t_targets_8 = 0;
 				
 
 					for (String x : ct_name_rank_map.keySet()) {
@@ -436,86 +437,92 @@ public class Algo {
 									
 					if (data.pitstop-- < 0 ) {
 	
-						int l_cnt = countOfCharFromLastTen(main_seq, 'L');
-						int w_cnt = countOfCharFromLastTen(main_seq, 'W');
+						int l_cnt = countOfCharFromLastTen(data.fargate_seq, 'L');
+						int w_cnt = countOfCharFromLastTen(data.fargate_seq, 'W');
 						System.out.println("L count in last 15 main_seq: "+l_cnt);
-						if(		l_cnt > 10 
-								&& !fargate 
-								&& main_seq.length() >= data.nextOpportunity) {
-							System.out.println("\n\n\n\n\n\n\n\n"
-									+ "***********************************Activating Bot**************************"
-									+ "\n\n\n\n\n\n\n\n");
-							fargate = true;
-							data.target = data.wallet_l3 + 5*data.multiplier;
+						
+						if(data.wallet_l3 < -7 * data.multiplier) {
+							System.out.println("\n\n\n\n\n\n*********************************************************************");
+							System.out.println("---------------------------------7 Not Won---------------------------");
+							System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
+							driver.close();
+							break;
 						}
 						
-						if((data.wallet_l3 >= data.target|| (data.wallet_l3 <= data.target-(10*data.multiplier))) && fargate) {
-							fargate = false;
-							data.nextOpportunity = main_seq.length()+50;
+						if(l_cnt > 7 && data.fargate_seq.length() >= data.nextOpportunity ) {
+							System.out.println("\n\n\n\n\n\n\n\n"
+									+ "***********************************Toggling Bot**************************"
+									+ "\n\n\n\n\n\n\n\n");
 							
-							System.out.println("\n\n\n\n\n\n\n\n"
-									+ "***********************************Deactivating Bot**************************"
-									+ "\n\n\n\n\n\n\n\n");
+							if(toggle)
+								toggle = false;
+							else
+								toggle = true;
+							
+							data.nextOpportunity = data.fargate_seq.length()+10;
 						}
 						
-						
+						fargate = true;
 						int ct_score = 0;
 						int t_score = 0;
 						
 					
 						
 						
-							//Minority take the lead
-							if(t_targets < ct_targets)
-								t_score+=1;
-							else if(t_targets > ct_targets)
-								ct_score+=1;
 							
-							if(t_targets_1 < ct_targets_1)
-								t_score+=1;
-							else if(t_targets_1 > ct_targets_1)
-								ct_score+=1;
-							
-							if(t_targets_2 < ct_targets_2)
-								t_score+=1;
-							else if(t_targets_2 > ct_targets_2)
-								ct_score+=1;
-							
-							if(t_targets_3 < ct_targets_3)
-								t_score+=1;
-							else if(t_targets_3 > ct_targets_3)
-								ct_score+=1;
-							
-							if(t_targets_4 < ct_targets_4)
-								t_score+=1;
-							else if(t_targets_4 > ct_targets_4)
-								ct_score+=1;
-							
-
 							
 							//Major Take lead
 							
 							if(t_targets_5 > ct_targets_5)
-								t_score+=1;
+								t_score+=2;
 							else if(t_targets_5 < ct_targets_5)
-								ct_score+=1;
+								ct_score+=2;
 							
 							if(t_targets_6 > ct_targets_6)
-								t_score+=1;
+								t_score+=2;
 							else if(t_targets_6 < ct_targets_6)
-								ct_score+=1;
+								ct_score+=2;
 							
 							if(t_targets_7 > ct_targets_7)
-								t_score+=1;
+								t_score+=2;
 							else if(t_targets_7 < ct_targets_7)
-								ct_score+=1;
+								ct_score+=2;
 							
 							if(t_targets_8 > ct_targets_8)
-								t_score+=1;
+								t_score+=2;
 							else if(t_targets_8 < ct_targets_8)
-								ct_score+=1;
+								ct_score+=2;
 						
 					
+							if(t_score+ct_score < 4) {
+								//Minority take the lead
+								if(t_targets < ct_targets)
+									t_score+=1;
+								else if(t_targets > ct_targets)
+									ct_score+=1;
+								
+								if(t_targets_1 < ct_targets_1)
+									t_score+=1;
+								else if(t_targets_1 > ct_targets_1)
+									ct_score+=1;
+								
+								if(t_targets_2 < ct_targets_2)
+									t_score+=1;
+								else if(t_targets_2 > ct_targets_2)
+									ct_score+=1;
+								
+								if(t_targets_3 < ct_targets_3)
+									t_score+=1;
+								else if(t_targets_3 > ct_targets_3)
+									ct_score+=1;
+								
+								if(t_targets_4 < ct_targets_4)
+									t_score+=1;
+								else if(t_targets_4 > ct_targets_4)
+									ct_score+=1;
+								
+
+							}
 							
 								if (t_score < ct_score ) {
 									predicted = "ct";
@@ -531,12 +538,22 @@ public class Algo {
 
 
 						if (fargate) {
-							if(ct_name_rank_map.size()+t_name_rank_map.size() <20 )
-							predict_l2 = predicted.equals("ct") ? "t" : predicted.equals("t") ? "ct" : "" ;
-							else
+							if(toggle)
 							predict_l2 = predicted;
+							else
+							predict_l2 = predicted.equals("ct") ? "t" : predicted.equals("t") ? "ct" : "" ;
+							
 							data.predict_l3 = predict_l2;
+							
+							
  							int degree = 1;
+ 							
+ 							if(!data.start) {
+ 								if(w_cnt > 7)
+ 								data.start = true;
+ 								
+ 								degree = 0;
+ 							}
  							
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
 //							placer.placeBet(driver, predict_l3, bet_amount);	
@@ -551,9 +568,26 @@ public class Algo {
 					}
 					System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
 					System.out.println("LOSS WIN DIFFERENCE MAX : "+ data.l_w_difference_max);
-					System.out.println("WINNERS 0 1 2 3 4: "+ data.winner_0 +" : "
-					+ data.winner_1 + " : " +data.winner_2 
-					+ " : "+data.winner_3 + " : " +data.winner_4 + " : "+data.winner_5 );
+					System.out.println("Toggle : "+toggle);
+					System.out.println("Can Start ? "+data.start);
+					System.out.println("ROUND Distribution: "
+							+ " : "+(t_targets + ct_targets) 
+							+ " : "+(t_targets_1 + ct_targets_1)  
+							+ " : "+(t_targets_2 + ct_targets_2) 
+							+ " : "+(t_targets_3 + ct_targets_3) 
+							+ " : "+(t_targets_4 + ct_targets_4) 
+							+ " : "+(t_targets_5 + ct_targets_5) 
+							+ " : "+(t_targets_6 + ct_targets_6) 
+							+ " : "+(t_targets_7 + ct_targets_7) );
+					System.out.println("WINNERS 0 1 2 3 4: "+ data.winner_0 
+					+" : "+ data.winner_1 
+					+ " : " +data.winner_2 
+					+ " : "+data.winner_3 
+					+ " : " +data.winner_4 
+					+ " : "+data.winner_5
+					+ " : "+data.winner_6
+					+ " : "+data.winner_7
+					+ " : "+data.winner_8);
 					System.out.println("Decision Set Size: "+(ct_name_rank_map.size()+t_name_rank_map.size()));
 					System.out.println("Total betters = " + (t_betters + ct_betters));
 					if (data.predict_l3.equals("")) {
@@ -648,7 +682,7 @@ public class Algo {
 
 	public int countOfCharFromLastTen(String toCheckIn, char toCheck) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 17; i--) {
+		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 11; i--) {
 			if (toCheckIn.charAt(i) == toCheck) {
 				cnt++;
 			}
