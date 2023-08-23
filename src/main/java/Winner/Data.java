@@ -12,6 +12,8 @@ public class Data {
 	List<Double> wallet_graph_data = new ArrayList<Double>();
 	double wallet_together;
 	double target;
+	int chase_wins;
+	int chase_losses;
 	int nextOpportunity;
 	double wallet_max;
 	double wallet_min;
@@ -51,6 +53,7 @@ public class Data {
 	double wallet_l3;
 	String predict_l3;
 	int bonus_counter;
+	double empire_wallet;
 	boolean start;
 	Data(){
 		start = false;
@@ -58,6 +61,9 @@ public class Data {
 		l_w_difference_max = Integer.MIN_VALUE;
 		predict_l3 = "";
 		wallet_l3 = 0;
+		chase_wins = 0;
+		chase_losses = 0;
+		empire_wallet = 0;
 		fargate = false;
 		target = 0;
 		for(int i = 1 ; i <= 15; i++) {
@@ -75,7 +81,7 @@ public class Data {
 		fargate_seq = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
 		isRefreshed = false;
 		multiplier = 1;
-		pitstop = 35;
+		pitstop = 15;
 		main_seq="^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^TOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM||W";
 		main_L=0;
 		main_W=0;

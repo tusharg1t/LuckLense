@@ -16,7 +16,7 @@ public class Start {
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		System.out.println("PROD BOT V2"
+		System.out.println("PROD V25"
 				+ "\nYou will gain the target capital || You will gain the target capital || You will regain the target capital"
 				+ "\nYou will not default || You will not default || You will not default"
 				+ "\nTushar You will be rich || Tushar you will be rich || Tushar you will be rich"
@@ -26,8 +26,6 @@ public class Start {
 				+ "\n| Win | Win | Win || "
 				+ "\n|| Profit || Profit || Profit | "
 				+ "\n| StopLoss |StopLoss | StopLoss"
-				+ "\nPranaam Maa"
-				+ "\nSHAKTI | SARSWATI | LAXMI"
 				+ "\n");
 		
 		Data data = new Data();
