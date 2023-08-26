@@ -66,7 +66,7 @@ public class Algo {
 			String predicted = "";
 			Map<String, Integer> ct_name_rank_map = new HashMap<String, Integer>();
 			Map<String, Integer> t_name_rank_map = new HashMap<String, Integer>();
-
+			
 			while (true) {
 
 				// exact div in shich time element is there
@@ -291,7 +291,7 @@ public class Algo {
 								data.fargate_seq += "L";
 						}
 
-						if (current_coin.equals("bonus"))
+						if (current_coin.equals("bonus") && data.start)
 							data.bonus_counter++;
 
 						data.predict_l3 = "";
@@ -306,10 +306,12 @@ public class Algo {
 						} else if (current_coin.equals(predict_l2)) {
 
 							data.fargate_wallet += data.multiplier;
+							if(data.start)
 							win_count++;
 						} else {
 
 							data.fargate_wallet -= data.multiplier;
+							if(data.start)
 							lost_count++;
 						}
 
@@ -412,43 +414,6 @@ public class Algo {
 						int w_cnt = countOfCharFromLastTen(data.fargate_seq, 'W');
 						System.out.println("L count in last 15 main_seq: " + l_cnt);
 
-						if (data.wallet_l3 <= -5 * data.multiplier) {
-							System.out.println(
-									"\n\n\n\n\n\n*********************************************************************");
-							System.out.println("------------------------------------------------------------");
-							System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
-//							driver.close();
-							data.chase_losses++;
-							Data newdata = new Data();
-							newdata.chase_losses = data.chase_losses;
-							newdata.chase_wins = data.chase_wins;
-							newdata.multiplier = data.multiplier;
-							newdata.empire_wallet = data.empire_wallet - 5 * data.multiplier;
-							new Algo().run(newdata, driver);
-							break;
-						}
-
-						
-						if (data.wallet_l3 >= 5 * data.multiplier) {
-							System.out.println(
-									"\n\n\n\n\n\n*********************************************************************");
-							System.out.println("*************************************5  Won***************************");
-							System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
-//							driver.close();
-							data.chase_wins++;
-							Data newdata = new Data();
-							newdata.chase_losses = data.chase_losses;
-							newdata.chase_wins = data.chase_wins;
-							newdata.multiplier	= data.multiplier;
-							newdata.empire_wallet = data.empire_wallet + 5*data.multiplier;
-							if(newdata.chase_losses == newdata.chase_wins - 1) {
-								driver.close();
-								return;
-							}
-								
-							new Algo().run(newdata, driver);
-							break;
-						}
 						
 						
 						if (l_cnt > 6 && data.fargate_seq.length() >= data.nextOpportunity) {
@@ -461,7 +426,8 @@ public class Algo {
 							else
 								toggle = true;
 
-							data.nextOpportunity = data.fargate_seq.length() + 5;
+							data.nextOpportunity = data.fargate_seq.length() + 10;
+							data.start = false;
 						}
 
 						fargate = true;
@@ -486,39 +452,15 @@ public class Algo {
 							ct_score += 1;
 
 						if (t_targets_8 > ct_targets_8)
-							t_score += 1;
+							t_score += 2;
 						else if (t_targets_8 < ct_targets_8)
-							ct_score += 1;
+							ct_score += 2;
 						int temp_t = t_score;
 						int temp_ct = ct_score;
 						t_score = 0;
 						ct_score = 0;
 						
-							// Minority take the lead
-							if (t_targets < ct_targets)
-								t_score += 1;
-							else if (t_targets > ct_targets)
-								ct_score += 1;
-
-							if (t_targets_1 < ct_targets_1)
-								t_score += 1;
-							else if (t_targets_1 > ct_targets_1)
-								ct_score += 1;
-
-							if (t_targets_2 < ct_targets_2)
-								t_score += 1;
-							else if (t_targets_2 > ct_targets_2)
-								ct_score += 1;
-
-							if (t_targets_3 < ct_targets_3)
-								t_score += 1;
-							else if (t_targets_3 > ct_targets_3)
-								ct_score += 1;
-
-							if (t_targets_4 < ct_targets_4)
-								t_score += 1;
-							else if (t_targets_4 > ct_targets_4)
-								ct_score += 1;
+							
 
 						if(Math.max(temp_ct, temp_t) > Math.max(t_score, ct_score)) {
 							if (temp_t < temp_ct) {
@@ -539,7 +481,7 @@ public class Algo {
 						
 
 						System.out.println("T Score : CT Score ==> " + t_score + " : " + ct_score);
-
+						System.out.println("Can Start ? " + data.start);
 						if (fargate) {
 							if (toggle)
 								predict_l2 = predicted;
@@ -548,18 +490,24 @@ public class Algo {
 
 							data.predict_l3 = predict_l2;
 
+							
+							//Magic Potion
+							predict_l2 = predict_l2.equals("ct") ? "t" : predicted.equals("t") ? "ct" : "";
 							int degree = 1;
-
-							if (!data.start) {
-								if (w_cnt > 7)
+							
+							if (!data.start  ) {
+								if (w_cnt > 6)
 									data.start = true;
 
 								degree = 0;
 							}
 
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
-//							placer.placeBet(driver, data.predict_l3, bet_amount);	
+							
 
+						}else {
+							predict_l2 = data.predict_l3 = "";
+							
 						}
 					} else {
 						predicted = "";
@@ -573,7 +521,7 @@ public class Algo {
 					System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
 					System.out.println("LOSS WIN DIFFERENCE MAX : " + data.l_w_difference_max);
 					System.out.println("Toggle : " + toggle);
-					System.out.println("Can Start ? " + data.start);
+					
 					System.out.println("ROUND Distribution: " + " : " + (t_targets + ct_targets) + " : "
 							+ (t_targets_1 + ct_targets_1) + " : " + (t_targets_2 + ct_targets_2) + " : "
 							+ (t_targets_3 + ct_targets_3) + " : " + (t_targets_4 + ct_targets_4) + " : "
