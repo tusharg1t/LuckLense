@@ -427,7 +427,7 @@ public class Algo {
 							break;
 						}
 						
-						if (l_cnt > 6 && data.fargate_seq.length() >= data.nextOpportunity) {
+						if (l_cnt > 7 && data.fargate_seq.length() >= data.nextOpportunity) {
 							System.out.println("\n\n\n\n\n\n\n\n"
 									+ "***********************************Toggling Bot**************************"
 									+ "\n\n\n\n\n\n\n\n");
@@ -437,7 +437,7 @@ public class Algo {
 							else
 								toggle = true;
 
-							data.nextOpportunity = data.fargate_seq.length() + 10;
+							data.nextOpportunity = data.fargate_seq.length() + 20;
 							data.start = false;
 						}
 
@@ -447,25 +447,47 @@ public class Algo {
 
 						// Major Take lead
 
-						if (t_targets_5 > ct_targets_5)
-							t_score += 1;
-						else if (t_targets_5 < ct_targets_5)
-							ct_score += 1;
+						if((ct_name_rank_map.size() + t_name_rank_map.size()) > 27) {
+							if (t_targets_4 > ct_targets_4)
+								t_score += 1;
+							else if (t_targets_4 < ct_targets_4)
+								ct_score += 1;
+							
+							if (t_targets_5 > ct_targets_5)
+								t_score += 1;
+							else if (t_targets_5 < ct_targets_5)
+								ct_score += 1;
 
-						if (t_targets_6 > ct_targets_6)
-							t_score += 1;
-						else if (t_targets_6 < ct_targets_6)
-							ct_score += 1;
+							if (t_targets_6 > ct_targets_6)
+								t_score += 1;
+							else if (t_targets_6 < ct_targets_6)
+								ct_score += 1;
 
-						if (t_targets_7 > ct_targets_7)
-							t_score += 1;
-						else if (t_targets_7 < ct_targets_7)
-							ct_score += 1;
+							if (t_targets_7 > ct_targets_7)
+								t_score += 1;
+							else if (t_targets_7 < ct_targets_7)
+								ct_score += 1;
 
-						if (t_targets_8 > ct_targets_8)
-							t_score += 2;
-						else if (t_targets_8 < ct_targets_8)
-							ct_score += 2;
+							if (t_targets_8 > ct_targets_8)
+								t_score += 1;
+							else if (t_targets_8 < ct_targets_8)
+								ct_score += 1;
+						}else {
+							if (t_targets_1 > ct_targets_1)
+								t_score += 1;
+							else if (t_targets_1 < ct_targets_1)
+								ct_score += 1;
+
+							if (t_targets_2 > ct_targets_2)
+								t_score += 1;
+							else if (t_targets_2 < ct_targets_2)
+								ct_score += 1;
+
+							if (t_targets_3 > ct_targets_3)
+								t_score += 1;
+							else if (t_targets_3 < ct_targets_3)
+								ct_score += 1;
+						}
 						int temp_t = t_score;
 						int temp_ct = ct_score;
 						t_score = 0;
@@ -505,15 +527,19 @@ public class Algo {
 							int degree = 1;
 							
 							if (!data.start  ) {
-								if (w_cnt > 6)
+								if (w_cnt > 6 && data.fargate_seq.length() >= data.nextOpportunity) {
 									data.start = true;
-
+									System.out.println("***************************** ACTIVATING BOT ***************************");
+								}
 								degree = 0;
 							}
 
+							if(degree == 1)
+								data.predict_l3 = predict_l2.equals("ct") ? "t" : predicted.equals("t") ? "ct" : "";
+
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
 							
-							placer.placeBet(driver, data.predict_l3, bet_amount);
+//							placer.placeBet(driver, data.predict_l3, bet_amount);
 						}else {
 							predict_l2 = data.predict_l3 = "";
 							

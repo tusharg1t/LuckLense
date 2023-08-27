@@ -17,7 +17,7 @@ public class Start {
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
 	
-		System.out.println("Enter the Multiplier : ");
+		System.out.println("Enter the Multiplier (Testing: Reverse Predict on Degree 1) : ");
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
 		new Algo().run(data, driver);
