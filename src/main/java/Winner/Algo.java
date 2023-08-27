@@ -414,7 +414,18 @@ public class Algo {
 						int w_cnt = countOfCharFromLastTen(data.fargate_seq, 'W');
 						System.out.println("L count in last 15 main_seq: " + l_cnt);
 
+						if(data.wallet_l3 >= 15 * data.multiplier) {
+							System.out.println("\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\nWON");
+							driver.close();
+							break;
+						}
 						
+						
+						if(data.wallet_l3 <= -10 * data.multiplier) {
+							System.out.println("\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\nLOST");
+							driver.close();
+							break;
+						}
 						
 						if (l_cnt > 6 && data.fargate_seq.length() >= data.nextOpportunity) {
 							System.out.println("\n\n\n\n\n\n\n\n"
@@ -491,8 +502,6 @@ public class Algo {
 							data.predict_l3 = predict_l2;
 
 							
-							//Magic Potion
-							predict_l2 = predict_l2.equals("ct") ? "t" : predicted.equals("t") ? "ct" : "";
 							int degree = 1;
 							
 							if (!data.start  ) {
@@ -504,7 +513,7 @@ public class Algo {
 
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
 							
-
+							placer.placeBet(driver, data.predict_l3, bet_amount);
 						}else {
 							predict_l2 = data.predict_l3 = "";
 							

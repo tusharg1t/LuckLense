@@ -17,9 +17,9 @@ public class Start {
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
 	
-		
+		System.out.println("Enter the Multiplier : ");
 		Data data = new Data();
-		data.multiplier = 1;
+		data.multiplier = sc.nextDouble();
 		new Algo().run(data, driver);
 	}
 
