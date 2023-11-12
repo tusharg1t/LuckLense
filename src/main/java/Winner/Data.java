@@ -19,6 +19,7 @@ public class Data {
 	double wallet_min;
 	double fargate_wallet;
 	
+	boolean phase_1;
 	String fargate_seq;
 	int l_w_difference_max;
 	int main_L;
@@ -66,6 +67,7 @@ public class Data {
 		empire_wallet = 0;
 		fargate = false;
 		target = 0;
+		phase_1 = false;
 		for(int i = 1 ; i <= 15; i++) {
 			expoPR.put(i, 0);
 			expoL.put(i, 0);
