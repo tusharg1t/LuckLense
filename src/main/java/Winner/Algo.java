@@ -46,7 +46,7 @@ public class Algo {
 		int ct_betters;
 		int t_betters;
 		boolean fargate = data.fargate;
-		boolean toggle = true;
+		boolean toggle = false;
 		String predict_l2 = "";
 		double bet_amount = 0.0;
 		boolean scan_1 = false;
@@ -61,19 +61,20 @@ public class Algo {
 			String ct_count = "";
 			String t_count = "";
 
-			String ct_amount = "";
-			String t_amount = "";
+			Double ct_amount = 0.00;
+			Double t_amount = 0.00;
 			String predicted = "";
 			Map<String, Integer> ct_name_rank_map = new HashMap<String, Integer>();
 			Map<String, Integer> t_name_rank_map = new HashMap<String, Integer>();
-
+			int t_vote = 0;
+			int ct_vote = 0;
 			while (true) {
 
 				// exact div in shich time element is there
 				WebElement count_down_element = driver.findElement(
 						By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[2]/div[3]/div/div[2]"));
 				timer = count_down_element.getAttribute("innerText").toString();
-
+				
 				if (Double.parseDouble(timer) < 15 && Double.parseDouble(timer) > 13 && !bonus_placed) {
 					bonus_placed = true;
 
@@ -114,19 +115,29 @@ public class Algo {
 
 					t_name_rank_map.clear();
 					ct_name_rank_map.clear();
-
+					t_vote = 0;
+					ct_vote = 0;
+					
+					int temp_t_xp = 0;
+					int temp_ct_xp = 0;
 					scan_1 = true;
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
 					for (int i = 0; i < ct_players.length; i += 3) {
-						if (!ct_name_rank_map.containsKey(ct_players[i + 1]))
+						if (!ct_name_rank_map.containsKey(ct_players[i + 1])) {
 							ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+							temp_ct_xp += Integer.parseInt(ct_players[i]);
+						}
+					
 					}
 
 					for (int i = 0; i < t_players.length; i += 3) {
-						if (!t_name_rank_map.containsKey(t_players[i + 1]))
+						if (!t_name_rank_map.containsKey(t_players[i + 1])) {
 							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
+							temp_t_xp = Integer.parseInt(t_players[i]);
+						}
 					}
+					
 				}
 				if (Double.parseDouble(timer) < 10 && Double.parseDouble(timer) > 9 && !scan_2) {
 					scan_2 = true;
@@ -141,7 +152,13 @@ public class Algo {
 						if (!t_name_rank_map.containsKey(t_players[i + 1]))
 							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
 					}
-
+					
+					if(ct_name_rank_map.size() > t_name_rank_map.size())
+						t_vote++;
+					else 
+					if(ct_name_rank_map.size() < t_name_rank_map.size())
+						ct_vote++;
+				
 				}
 				if (Double.parseDouble(timer) < 8 && Double.parseDouble(timer) > 6 && !scan_3) {
 					scan_3 = true;
@@ -156,6 +173,8 @@ public class Algo {
 						if (!t_name_rank_map.containsKey(t_players[i + 1]))
 							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
 					}
+					
+					
 				}
 
 				if (Double.parseDouble(timer) < 5 && Double.parseDouble(timer) > 0 && !update) {
@@ -191,10 +210,18 @@ public class Algo {
 							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[1]"));
 					WebElement t_overview = driver.findElement(By.xpath(
 							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[1]/div[1]"));
-
+					
+					WebElement t_amount_overview = driver.findElement(By.xpath(
+							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div/div[2]/span/div"));
+					WebElement ct_amount_overview = driver.findElement(By.xpath(
+							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[2]/span/div"));
+					
+					t_amount = Double.parseDouble(t_amount_overview.getText().toString().replaceAll(",", ""));
+					ct_amount = Double.parseDouble(ct_amount_overview.getText().toString().replaceAll(",", ""));
 					t_betters = Integer.parseInt(t_overview.getText().toString().split(" ")[0]);
 					ct_betters = Integer.parseInt(ct_overview.getText().toString().split(" ")[0]);
-
+					
+					
 					if (!predicted.equals("")) {
 						if (predicted.equals(current_coin)) {
 
@@ -262,8 +289,8 @@ public class Algo {
 					if (data.pitstop < 0 && !predicted.equals("")) {
 
 						if (!(data.wallet_graph_data.get(data.wallet_graph_data.size() - 1) == Double
-								.parseDouble(df.format(data.fargate_wallet).toString())))
-							data.wallet_graph_data.add(Double.parseDouble(df.format(data.fargate_wallet).toString()));
+								.parseDouble(df.format(data.fargate_wallet).toString().replaceAll(",", ""))))
+							data.wallet_graph_data.add(Double.parseDouble(df.format(data.fargate_wallet).toString().replaceAll(",", "")));
 
 						if (current_coin.equals(predicted)) {
 
@@ -336,8 +363,8 @@ public class Algo {
 
 					int ct_xp = 0;
 					int t_xp = 0;
-					double amount_ct = 0;
-					double amount_t = 0;
+					int max_ct_xp = 0;
+					int max_t_xp = 0;
 
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
@@ -346,11 +373,16 @@ public class Algo {
 						ct_name_rank_map.putIfAbsent(ct_players[i + 1], Integer.parseInt(ct_players[i]));
 						ct_xp += Integer.parseInt(ct_players[i]);
 
+						if(ct_xp > max_ct_xp)
+							max_ct_xp = ct_xp;
 					}
 
 					for (int i = 0; i < t_players.length; i += 3) {
 						t_name_rank_map.putIfAbsent(t_players[i + 1], Integer.parseInt(t_players[i]));
 						t_xp += Integer.parseInt(t_players[i]);
+						
+						if(t_xp > max_t_xp)
+							max_t_xp = t_xp;
 					}
 
 					System.out.println("CT_MAP : " + ct_name_rank_map.toString());
@@ -415,18 +447,18 @@ public class Algo {
 					data.winner_7 += t_targets_7 + ct_targets_7;
 					data.winner_8 += t_targets_8 + ct_targets_8;
 
-					if (data.wallet_l3 >= 10 * data.multiplier || data.wallet_l3 <= -10 * data.multiplier) {
-						System.out.println("Wallet L3: " + data.wallet_l3);
-						System.out.println("\n\n\n\n\n\n\n\n"
-								+ "***********************************Happy Dipawali**************************"
-								+ "\n\n\n\n\n\n\n\n");
-						return;
-					}
+//					if (data.wallet_l3 >= 5 * data.multiplier || data.wallet_l3 <= -10 * data.multiplier) {
+//						System.out.println("Wallet L3: " + data.wallet_l3);
+//						System.out.println("\n\n\n\n\n\n\n\n"
+//								+ "***********************************Happy Dipawali**************************"
+//								+ "\n\n\n\n\n\n\n\n");
+//						return;
+//					}
 					if (data.wallet_l3 == 5 * data.multiplier && !data.phase_1) {
 						System.out.println("\n\n\n\n\n\n\n\n"
 								+ "***********************************Pausing Betting for a Break**************************"
 								+ "\n\n\n\n\n\n\n\n");
-						data.nextOpportunity = data.fargate_seq.length() + 25;
+						data.nextOpportunity = data.fargate_seq.length() + 15;
 						data.phase_1 = true;
 						data.start = false;
 					}
@@ -436,7 +468,7 @@ public class Algo {
 						int w_cnt = countOfCharFromLastTen(data.fargate_seq, 'W');
 						System.out.println("W count in last 15 main_seq: " + w_cnt);
 
-						if ((w_cnt < 7) && data.start) {
+						if ((w_cnt <= 5) && data.start) {
 							System.out.println("\n\n\n\n\n\n\n\n"
 									+ "***********************************Toggling Bot**************************"
 									+ "\n\n\n\n\n\n\n\n");
@@ -455,6 +487,7 @@ public class Algo {
 						int t_score = 0;
 
 
+						
 						if (t_targets_2 > ct_targets_2)
 							t_score += 1;
 						else if (t_targets_2 < ct_targets_2)
@@ -479,44 +512,93 @@ public class Algo {
 						else
 							predicted = "";
 
-						if (predicted.equals("t") && t_xp < ct_xp) {
-							if(ct_name_rank_map.size() < t_name_rank_map.size())
-								predicted = "t";
-							else
-								predicted = "ct";
-						}
+//						if (predicted.equals("t") && t_xp < ct_xp) {
+//							if(ct_name_rank_map.size() < t_name_rank_map.size())
+//								predicted = "t";
+//							else
+//								predicted = "ct";
+//						}
+//						
+//						if (predicted.equals("ct") && t_xp > ct_xp) {
+//							if(ct_name_rank_map.size() > t_name_rank_map.size())
+//								predicted = "ct";
+//							else
+//								predicted = "t";
+//						}
 						
-						if (predicted.equals("ct") && t_xp > ct_xp) {
-							if(ct_name_rank_map.size() > t_name_rank_map.size())
-								predicted = "ct";
-							else
-								predicted = "t";
-						}
+						
+						
+						
+						//VOTE 1 : Absolute
+						if(predicted.equals("t"))
+								t_vote++;
+						else 
+						if(predicted.equals("ct"))
+								ct_vote++;
+						
+						//VOTE 2 : Ambiguous
+						if(ct_betters < t_betters)
+								t_vote++;
+						else 
+						if(ct_betters > t_betters)
+								ct_vote++;
+						
+						
+						//VOTE 3 : Absolute
+						if(ct_amount > t_amount)
+							t_vote++;
+						else 
+						if(ct_amount < t_amount)
+							ct_vote++;
+						
+						
+						//VOTE 4 : Absolute
+						if(t_xp > ct_xp)
+							t_vote++;
+						else 
+						if(ct_xp < t_xp)
+							ct_vote++;
+					
+						
+						System.out.println("EXIT POLL ct : t >>>> "+ct_vote+" : "+t_vote);
+						if(ct_vote > t_vote)
+							predicted = "ct";
+						else
+						if(t_vote > ct_vote)
+							predicted = "t";
+						else
+							predicted= "";
+						
 						System.out.println("Can Start ? " + data.start);
 						System.out.println("T Score : CT Score ==> " + t_score + " : " + ct_score);
 						if (fargate) {
 							
-							if(toggle) {
-								predicted = predicted.equals("ct") ? "t" : predicted.equals("t")? "ct":"";
-							}
+							
 							
 							predict_l2 = predicted;
 
 							
 								data.predict_l3 = predict_l2;
-
+								
 							int degree = 1;
-							data.start= true; 
+						 
 							if (!data.start) {
-								if (w_cnt >= 9 && data.fargate_seq.length() >= data.nextOpportunity)
+								if (w_cnt >= 7 && data.fargate_seq.length() >= data.nextOpportunity)
 									data.start = true;
 
 								degree = 0;
 							}
-
+							char lastElement = data.fargate_seq.charAt(data.fargate_seq.length() - 11);
+							System.out.println("Last Outcome Element to be Removed :>>> "+lastElement);
+							
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
 
-							placer.placeBet(driver, data.predict_l3, bet_amount);
+							if(!data.predict_l3.equals(""))
+							for(int ind = 0 ; ind < 9 ; ind++) {
+								data.prediction_cache[ind] = data.prediction_cache[ind+1];
+							}
+							if(!data.predict_l3.equals(""))
+							data.prediction_cache[9] = data.predict_l3.toUpperCase().charAt(0);
 						} else {
 							predict_l2 = data.predict_l3 = "";
 
@@ -528,40 +610,42 @@ public class Algo {
 					if (Math.abs(win_count - lost_count) > data.l_w_difference_max) {
 						data.l_w_difference_max = Math.abs(win_count - lost_count);
 					}
-					System.out.println("Chasers W:L ======>  " + data.chase_wins + " : " + data.chase_losses);
-					System.out.println("Empire Wallet = " + data.empire_wallet);
+//					System.out.println("Chasers W:L ======>  " + data.chase_wins + " : " + data.chase_losses);
+//					System.out.println("Empire Wallet = " + data.empire_wallet);
 					System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
-					System.out.println("LOSS WIN DIFFERENCE MAX : " + data.l_w_difference_max);
-					System.out.println("Toggle : " + toggle);
+//					System.out.println("LOSS WIN DIFFERENCE MAX : " + data.l_w_difference_max);
+//					System.out.println("Toggle : " + toggle);
 
-					System.out.println("Decision Set Size: " + (ct_name_rank_map.size() + t_name_rank_map.size()));
-					System.out.println("Total betters = " + (t_betters + ct_betters));
-
+//					System.out.println("Decision Set Size: " + (ct_name_rank_map.size() + t_name_rank_map.size()));
+//					System.out.println("Total betters = " + (t_betters + ct_betters));
+//					System.out.println("AMOUNT CT:T >>>> "+ct_amount+" : "+t_amount);
+					
 					if (data.predict_l3.equals("")) {
-						System.out.println("Predict L2: " + predict_l2);
-						System.out.println("In PitStop || current coin : " + current_coin);
-						System.out.println("Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: "
-								+ df.format(data.wallet_l3) + "  :: " + "Displacement:" + df.format(displacement)
-								+ "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  " + "Wallet Min : "
-								+ df.format(wallet_min));
-						System.out.println(
-								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
-						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
-						System.out.println(
-								"Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length() - 57));
+//						System.out.println("Predict L2: " + predict_l2);
+//						System.out.println("In PitStop || current coin : " + current_coin);
+//						System.out.println("Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: "
+//								+ df.format(data.wallet_l3) + "  :: " + "Displacement:" + df.format(displacement)
+//								+ "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  " + "Wallet Min : "
+//								+ df.format(wallet_min));
+//						System.out.println(
+//								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
+//												System.out.println("Sequence         : " + main_seq.substring(main_seq.length() - 57));
+//						System.out.println(
+//										   "Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length() - 57));
 					} else {
 
 						System.out.println("Bet Amount : " + bet_amount);
 						System.out.println(
 								"=======================================================================================================");
 						System.out.println("CT_XP vs T_XP :> " + ct_xp + " : " + t_xp);
+						System.out.println("Prediction Cache : "+Arrays.toString(data.prediction_cache));
 						System.out.println(
 								"Current Coin is : " + current_coin + "  ::  " + "Predicted L3: " + data.predict_l3);
 						System.out.println(
 								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
-						System.out.println("Sequence : " + main_seq.substring(main_seq.length() - 57));
+						System.out.println("Sequence         : " + main_seq.substring(main_seq.length() - 57));
 						System.out.println(
-								"Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length() - 57));
+										   "Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length() - 57));
 						System.out.println("Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: "
 								+ df.format(data.wallet_l3) + "  :: " + "Displacement:" + df.format(displacement)
 								+ "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  " + "Wallet Min : "
@@ -632,17 +716,18 @@ public class Algo {
 
 	public int countOfCharFromLastTen(String toCheckIn, char toCheck) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 16; i--) {
+		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 11; i--) {
 			if (toCheckIn.charAt(i) == toCheck) {
 				cnt++;
 			}
 		}
 		return cnt;
 	}
+	
 
 	public int continuousCountForLastTwenty(String toCheckIn) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 11; i >= toCheckIn.length() - 51; i--) {
+		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 21; i--) {
 			if (toCheckIn.charAt(i) == toCheckIn.charAt(i - 1)) {
 				cnt++;
 			}

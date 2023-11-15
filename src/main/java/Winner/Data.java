@@ -2,8 +2,10 @@ package Winner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 public class Data {
 	
@@ -56,6 +58,7 @@ public class Data {
 	int bonus_counter;
 	double empire_wallet;
 	boolean start;
+	Character[] prediction_cache = new Character[10];
 	Data(){
 		start = false;
 		winner_0 = winner_1 = winner_2 = winner_3 = winner_4 = winner_5 = 0;
@@ -68,6 +71,7 @@ public class Data {
 		fargate = false;
 		target = 0;
 		phase_1 = false;
+		
 		for(int i = 1 ; i <= 15; i++) {
 			expoPR.put(i, 0);
 			expoL.put(i, 0);
