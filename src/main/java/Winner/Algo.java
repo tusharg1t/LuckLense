@@ -447,40 +447,13 @@ public class Algo {
 					data.winner_7 += t_targets_7 + ct_targets_7;
 					data.winner_8 += t_targets_8 + ct_targets_8;
 
-//					if (data.wallet_l3 >= 5 * data.multiplier || data.wallet_l3 <= -10 * data.multiplier) {
-//						System.out.println("Wallet L3: " + data.wallet_l3);
-//						System.out.println("\n\n\n\n\n\n\n\n"
-//								+ "***********************************Happy Dipawali**************************"
-//								+ "\n\n\n\n\n\n\n\n");
-//						return;
-//					}
-					if (data.wallet_l3 == 5 * data.multiplier && !data.phase_1) {
-						System.out.println("\n\n\n\n\n\n\n\n"
-								+ "***********************************Pausing Betting for a Break**************************"
-								+ "\n\n\n\n\n\n\n\n");
-						data.nextOpportunity = data.fargate_seq.length() + 15;
-						data.phase_1 = true;
-						data.start = false;
-					}
+
 					if (data.pitstop-- < 0) {
 
 						int l_cnt = countOfCharFromLastTen(data.fargate_seq, 'L');
 						int w_cnt = countOfCharFromLastTen(data.fargate_seq, 'W');
 						System.out.println("W count in last 15 main_seq: " + w_cnt);
 
-						if ((w_cnt <= 5) && data.start) {
-							System.out.println("\n\n\n\n\n\n\n\n"
-									+ "***********************************Toggling Bot**************************"
-									+ "\n\n\n\n\n\n\n\n");
-
-							if (toggle)
-								toggle = false;
-							else
-								toggle = true;
-
-							data.nextOpportunity = data.fargate_seq.length()+ 5;
-							data.start = false;
-						}
 
 						fargate = true;
 						int ct_score = 0;
@@ -488,11 +461,6 @@ public class Algo {
 
 
 						
-						if (t_targets_2 > ct_targets_2)
-							t_score += 1;
-						else if (t_targets_2 < ct_targets_2)
-							ct_score += 1;
-
 						if (t_targets_3 > ct_targets_3)
 							t_score += 1;
 						else if (t_targets_3 < ct_targets_3)
@@ -512,29 +480,15 @@ public class Algo {
 						else
 							predicted = "";
 
-//						if (predicted.equals("t") && t_xp < ct_xp) {
-//							if(ct_name_rank_map.size() < t_name_rank_map.size())
-//								predicted = "t";
-//							else
-//								predicted = "ct";
-//						}
-//						
-//						if (predicted.equals("ct") && t_xp > ct_xp) {
-//							if(ct_name_rank_map.size() > t_name_rank_map.size())
-//								predicted = "ct";
-//							else
-//								predicted = "t";
-//						}
-						
-						
+			
 						
 						
 						//VOTE 1 : Absolute
 						if(predicted.equals("t"))
-								t_vote++;
+								t_vote+=3;
 						else 
 						if(predicted.equals("ct"))
-								ct_vote++;
+								ct_vote+=3;
 						
 						//VOTE 2 : Ambiguous
 						if(ct_betters < t_betters)
@@ -554,10 +508,23 @@ public class Algo {
 						
 						//VOTE 4 : Absolute
 						if(t_xp > ct_xp)
-							t_vote++;
+							t_vote+=1;
 						else 
 						if(ct_xp < t_xp)
-							ct_vote++;
+							ct_vote+=1;
+						
+						//VOTE 5 : 
+						if (t_targets_2 > ct_targets_2)
+							t_vote += 2;
+						else if (t_targets_2 < ct_targets_2)
+							ct_vote += 2;
+						
+						//VOTE 5 : 
+						if (t_targets_1 > ct_targets_1)
+							ct_vote += 3;
+						else if (t_targets_1 < ct_targets_1)
+							t_vote += 3;
+
 					
 						
 						System.out.println("EXIT POLL ct : t >>>> "+ct_vote+" : "+t_vote);
@@ -582,12 +549,12 @@ public class Algo {
 								
 							int degree = 1;
 						 
-							if (!data.start) {
-								if (w_cnt >= 7 && data.fargate_seq.length() >= data.nextOpportunity)
-									data.start = true;
-
-								degree = 0;
-							}
+//							if (!data.start) {
+//								if (w_cnt >= 7 && data.fargate_seq.length() >= data.nextOpportunity)
+//									data.start = true;
+//
+//								degree = 0;
+//							}
 							char lastElement = data.fargate_seq.charAt(data.fargate_seq.length() - 11);
 							System.out.println("Last Outcome Element to be Removed :>>> "+lastElement);
 							
