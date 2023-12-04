@@ -1,159 +1,102 @@
 package Winner;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+
 public class Data {
-	String count_seq;
-	String amount_seq;
+	
 	String main_seq;
-	String outcome_seq;
-	String committ_seq;
-	int committ_win;
-	int committ_lost;
-	int skip_beat_counter;
 	
-	int max_g_continuous;
-	int max_l_continuous;
-	int g_count;
-	int g_amount;
-	int l_count;
-	int l_amount;
+	List<Double> wallet_graph_data = new ArrayList<Double>();
+	double wallet_together;
+	double target;
+	int chase_wins;
+	int chase_losses;
+	int nextOpportunity;
+	double wallet_max;
+	double wallet_min;
+	double fargate_wallet;
 	
-	int win_counter;
-	
-	int wallet_dynamic;
-	double goal_amount;
-	
-	float wallet_together;
-	float wallet_together_max;
-	float wallet_together_min;
-	
-	int cnt_continuous_cnt;
-	int cnt_switcher_cnt;
-	
-	int amt_continuous_cnt;
-	int amt_switcher_cnt;
-	
-	int wallet_dynamic_together;
-	
-	int number_of_ones_count;
-	int number_of_twos_count;
-	int number_of_threes_count;
-	int number_of_fours_count;
-	int number_of_fives_count;
-	int number_of_worst_cases_count;
-	
-	int number_of_ones_amount;
-	int number_of_twos_amount;
-	int number_of_threes_amount;
-	int number_of_fours_amount;
-	int number_of_fives_amount;
-	int number_of_worst_cases_amount;
-	
-	int number_of_ones_main;
-	int number_of_twos_main;
-	int number_of_threes_main;
-	int number_of_fours_main;
-	int number_of_fives_main;
-	int number_of_sixes_main;
-	int number_of_sevens_main;
-	int number_of_eights_main;
-	int number_of_nines_main;
-	int number_of_tens_main;
-	int number_of_worst_cases_main;
-	
-	int continuity_counter_amount;
-	int continuity_counter_count;
-	int continuity_counter_main;
-	int smooth_count;
-	int spikey_amount;
-	int smooth_amount;
-	int spikey_count;
-	
-	int main_count_g;
-	int main_count_l;
-	int main_win_cause_l;
-	int main_win_cause_g;
-	String main_checker;
-	
+	boolean phase_1;
+	String fargate_seq;
+	int l_w_difference_max;
 	int main_L;
 	int main_W;
 	double multiplier;
 	boolean isRefreshed;
-	String committ_side;
-	boolean doToggle;
-	String helper_seq;
-	boolean was_bet_placed = false;
+	int pitstop;
+	double displacement;
+	
+	int winner_0;
+	int winner_1;
+	int winner_2;
+	int winner_3;
+	int winner_4;
+	int winner_5;
+	int winner_6;
+	int winner_7;
+	int winner_8;
+	
+	Map<String,Integer> targets = new HashMap<String,Integer>();
+	Map<Integer,Integer> expoPR = new HashMap<Integer,Integer>();
+	Map<Integer,Integer> expoL = new HashMap<Integer,Integer>();
+	Map<Integer,Integer> expoW = new HashMap<Integer,Integer>();
+	
+		// < number of players, count>
+	Map<Integer,Integer> players_L = new HashMap<Integer,Integer>();
+	Map<Integer,Integer> players_W = new HashMap<Integer,Integer>();
+	
+	int continuous_algo;
+	int switching_algo;
+	boolean fargate;
+	double wallet_l3;
+	String predict_l3;
+	int bonus_counter;
+	double empire_wallet;
+	boolean start;
+	Character[] prediction_cache = new Character[10];
 	Data(){
-		skip_beat_counter = 0;
-		doToggle = true;
-		win_counter = 500;
-		committ_win = 0;
-		committ_win = 0;
-		committ_side="";
-		helper_seq = "WWW";
-		committ_seq = "OOMRahawehNamahWW";
-		was_bet_placed = false;
+		start = false;
+		winner_0 = winner_1 = winner_2 = winner_3 = winner_4 = winner_5 = 0;
+		l_w_difference_max = Integer.MIN_VALUE;
+		predict_l3 = "";
+		wallet_l3 = 0;
+		chase_wins = 0;
+		chase_losses = 0;
+		empire_wallet = 0;
+		fargate = false;
+		target = 0;
+		phase_1 = false;
+		
+		for(int i = 1 ; i <= 15; i++) {
+			expoPR.put(i, 0);
+			expoL.put(i, 0);
+			expoW.put(i,0);
+		}
+		nextOpportunity = 0;
+		
+		for(int i = 5 ; i <= 55; i++) {
+			players_L.put(i,0);
+			players_W.put(i,0);
+		}
+		wallet_graph_data.add(0.0);
+		fargate_seq = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
 		isRefreshed = false;
-		multiplier = 0.05;
-		main_count_g = 0 ;
-		outcome_seq = "";
-		main_count_l = 0;
-		main_win_cause_l = 0;
-		main_win_cause_g = 0;
-		main_checker = "";
-		count_seq="GGG";
-		amount_seq="GGG";
-		main_seq="WWW";
+		multiplier = 1;
+		pitstop = 15;
+		main_seq="^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^TOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM||W";
 		main_L=0;
 		main_W=0;
-		g_count=0;
-		l_count=0;
-		g_amount=0;
-		l_amount=0;
-		wallet_together=0;
-		wallet_together_max=-9999;
-		wallet_together_min=9999;
-		max_g_continuous=0;
-		max_l_continuous=0;
-		goal_amount=0;
-		cnt_continuous_cnt=0;
-		cnt_switcher_cnt=0;
 		
-		amt_continuous_cnt=0;
-		amt_switcher_cnt=0;
+		wallet_together=0.0;
+		wallet_max=-9999;
+		wallet_min=9999;
+		fargate_wallet = 0;
+		displacement = 0;
 		
-		number_of_ones_count=0;
-		number_of_twos_count=0;
-		number_of_threes_count=0;
-		number_of_fours_count=0;
-		number_of_fives_count=0;
-		number_of_worst_cases_count=0;
-		
-		number_of_ones_amount=0;
-		number_of_twos_amount=0;
-		number_of_threes_amount=0;
-		number_of_fours_amount=0;
-		number_of_fives_amount=0;
-		number_of_worst_cases_amount=0;
-		
-		number_of_ones_main=0;
-		number_of_twos_main=0;
-		number_of_threes_main=0;
-		number_of_fours_main=0;
-		number_of_fives_main=0;
-		number_of_sixes_main=0;
-		number_of_sevens_main=0;
-		number_of_eights_main=0;
-		number_of_nines_main=0;
-		number_of_tens_main=0;
-		number_of_worst_cases_main=0;
-		
-		continuity_counter_amount=1;
-		continuity_counter_count=1;
-		continuity_counter_main=1;
-		
-		smooth_count=0;
-		spikey_count=0;
-		smooth_amount=0;
-		spikey_amount=0;
 	}
 }

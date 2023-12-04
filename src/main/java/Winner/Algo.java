@@ -1,7 +1,13 @@
 package Winner;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -13,867 +19,705 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import io.netty.util.internal.MathUtil;
+import Winner.Data;
 
+/*
+ * CHANGES TO DO 
+ * *Make Prediction on all rolls
+ * *Implement Bonus Place
+ * 
+ */
 public class Algo {
+	private DecimalFormat df = new DecimalFormat("0.00");
+
 	public void run(Data data, WebDriver driver) {
 		driver.navigate().refresh();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		int g_count=data.g_count;
-		int g_amount=data.g_amount;
-		int needToSleep = 0;
-		int l_count=data.l_count;
-		int l_amount=data.l_amount;
-		int committ_win = data.committ_win;
-		int committ_lost = data.committ_lost;
-		String count_seq = data.count_seq;
-		String amount_seq= data.amount_seq;
-		String outcome_seq = data.outcome_seq;
-		int skip_beat_counter = data.skip_beat_counter;
-		boolean doToggle = data.doToggle;
-		String helper_seq = data.helper_seq;
-		boolean was_bet_placed = data.was_bet_placed;
+		String main_seq = data.main_seq;
+		int win_count = data.main_W;
+		int lost_count = data.main_L;
+		double wallet = data.wallet_together;
+		double displacement = data.displacement;
 
-		String committ_seq = data.committ_seq;
-		String committ_side = data.committ_side;
-		String main_seq= data.main_seq;
-		float wallet_together=data.wallet_together;
-		float wallet_together_min=data.wallet_together_min;
-		float wallet_together_max=data.wallet_together_max;
-		
-		int max_g_continuous=data.max_g_continuous;
-		int max_l_continuous=data.max_l_continuous;
-		double goal_amount=data.goal_amount;
-		boolean isRefreshed = data.isRefreshed;
-		int cnt_continuous_cnt = data.cnt_continuous_cnt;
-		int cnt_switcher_cnt = data.cnt_switcher_cnt;
-		
-		int amt_continuous_cnt = data.amt_continuous_cnt;
-		int amt_switcher_cnt = data.amt_switcher_cnt;
-		Scanner sc = new Scanner(System.in);
-		int win_counter = data.win_counter;
-		int number_of_ones_count=data.number_of_ones_count;
-		int number_of_twos_count=data.number_of_twos_count;
-		int number_of_threes_count=data.number_of_threes_count;
-		int number_of_fours_count=data.number_of_fours_count;
-		int number_of_fives_count=data.number_of_fives_count;
-		int number_of_worst_cases_count=data.number_of_worst_cases_count;
-		
-		int number_of_ones_amount=data.number_of_ones_amount;
-		int number_of_twos_amount=data.number_of_twos_amount;
-		int number_of_threes_amount=data.number_of_threes_amount;
-		int number_of_fours_amount=data.number_of_fours_amount;
-		int number_of_fives_amount=data.number_of_fives_amount;
-		int number_of_worst_cases_amount=data.number_of_worst_cases_amount;
-		
-		int number_of_ones_main=data.number_of_ones_main;
-		int number_of_twos_main=data.number_of_twos_main;
-		int number_of_threes_main=data.number_of_threes_main;
-		int number_of_fours_main=data.number_of_fours_main;
-		int number_of_fives_main=data.number_of_fives_main;
-		int number_of_sixes_main=data.number_of_sixes_main;
-		int number_of_sevens_main=data.number_of_sevens_main;
-		int number_of_eights_main=data.number_of_eights_main;
-		int number_of_nines_main=data.number_of_nines_main;
-		int number_of_tens_main=data.number_of_tens_main;
-		int number_of_worst_cases_main=data.number_of_worst_cases_main;
-		
-		int continuity_counter_count = data.continuity_counter_count;
-		int continuity_counter_amount = data.continuity_counter_amount;
-		int continuity_counter_main = data.continuity_counter_main;
-		
-		int main_L = data.main_L;
-		int main_W = data.main_W;
-		
-		int main_count_g = data.main_count_g;
-		int main_count_l = data.main_count_l;
-		int main_win_cause_g = data.main_win_cause_g;
-		int main_win_cause_l = data.main_win_cause_l;
-		
-		String main_checker = data.main_checker;
-		String prediction_final="";
-		boolean halt = false;
-		boolean was_onhalt = false;
+		double wallet_max = data.wallet_max;
+		double wallet_min = data.wallet_min;
+		Bookie placer = new Bookie();
+		boolean bonus_placed = true;
+		int ct_betters;
+		int t_betters;
+		boolean fargate = data.fargate;
 		boolean toggle = false;
+		String predict_l2 = "";
+		double bet_amount = 0.0;
+		boolean scan_1 = false;
+		boolean scan_2 = false;
+		boolean scan_3 = false;
+
 		try {
-//			WebElement account_amount = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[2]/div[2]/div/div[1]/div/div/span/span/div/span"));
-			
-			int loss=0;
-			String outcome = "";
-			String next="";
-			boolean printed=false;
-			int count_E=0;
-			int count_O=0;
-			
-			int amount_E=0;
-			int amount_O=0;
-			
-			String current_coin="";
-			String ct_count="";
-			String t_count="";
 
-			String ct_amount="";
-			String t_amount="";
-			String predict_amount="";
-			String predict_count="";
-			String timer="";
-			String wallet_prediction = "";
-			boolean update=false;
-			int bonus_counter = 0;
-			
-//			ct_count=ct_count_element.getAttribute("innerText").trim().split(" ")[0];
-//			t_count=t_count_element.getAttribute("innerText").trim().split(" ")[0];
-//			
-//
-//			ct_amount=ct_amount_element.getAttribute("innerText").replace(",", "");
-//			t_amount=t_amount_element.getAttribute("innerText").replace(",", "");
-//			
-			String dynamic_predict="";
-			String together_predict="";
-			String dynamic_together_predict="";
-			Bookie coingobbler = new Bookie();
-			double bet_amount = 1;
-			String prediction_type_G_or_L = "L";
-			String fixed_betsOn = "";
-			while(true) {
+			String timer = "";
+			String current_coin = "";
+			boolean update = false;
+			String ct_count = "";
+			String t_count = "";
+
+			Double ct_amount = 0.00;
+			Double t_amount = 0.00;
+			String predicted = "";
+			Map<String, Integer> ct_name_rank_map = new HashMap<String, Integer>();
+			Map<String, Integer> t_name_rank_map = new HashMap<String, Integer>();
+			int t_vote = 0;
+			int ct_vote = 0;
+			while (true) {
+
+				// exact div in shich time element is there
+				WebElement count_down_element = driver.findElement(
+						By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[2]/div[3]/div/div[2]"));
+				timer = count_down_element.getAttribute("innerText").toString();
 				
+				if (Double.parseDouble(timer) < 15 && Double.parseDouble(timer) > 13 && !bonus_placed) {
+					bonus_placed = true;
+
+					List<WebElement> current_coin_elements = driver
+							.findElements(By.xpath("//div[@class='previous-rolls-item']"));
+					current_coin = current_coin_elements.get(9).getAttribute("innerHTML").contains("-ct") ? "ct"
+							: current_coin_elements.get(9).getAttribute("innerHTML").contains("-t") ? "t" : "bonus";
+
+					if (current_coin.equals("ct")) {
+						// set the winners as target
+						for (String x : ct_name_rank_map.keySet()) {
+							data.targets.putIfAbsent(x, 0);
+							data.targets.replace(x, data.targets.get(x) + 1);
+						}
+						// remove target from loosers
+						for (String x : t_name_rank_map.keySet()) {
+							data.targets.putIfAbsent(x, 0);
+							if (data.targets.get(x) > 0)
+								data.targets.replace(x, data.targets.get(x) - 1);
+
+						}
+					} else if (current_coin.equals("t")) {
+						// set the winners as target
+						for (String x : t_name_rank_map.keySet()) {
+							data.targets.putIfAbsent(x, 0);
+							data.targets.replace(x, data.targets.get(x) + 1);
+						}
+						// remove target from loosers
+						for (String x : ct_name_rank_map.keySet()) {
+							data.targets.putIfAbsent(x, 0);
+							if (data.targets.get(x) > 0)
+								data.targets.replace(x, data.targets.get(x) - 1);
+						}
+					}
+				}
+
+				if (Double.parseDouble(timer) < 13 && Double.parseDouble(timer) > 11 && !scan_1) {
+
+					t_name_rank_map.clear();
+					ct_name_rank_map.clear();
+					t_vote = 0;
+					ct_vote = 0;
+					
+					int temp_t_xp = 0;
+					int temp_ct_xp = 0;
+					scan_1 = true;
+					String[] ct_players = scanCTPlayers(driver);
+					String[] t_players = scanTPlayers(driver);
+					for (int i = 0; i < ct_players.length; i += 3) {
+						if (!ct_name_rank_map.containsKey(ct_players[i + 1])) {
+							ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+							temp_ct_xp += Integer.parseInt(ct_players[i]);
+						}
+					
+					}
+
+					for (int i = 0; i < t_players.length; i += 3) {
+						if (!t_name_rank_map.containsKey(t_players[i + 1])) {
+							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
+							temp_t_xp = Integer.parseInt(t_players[i]);
+						}
+					}
+					
+				}
+				if (Double.parseDouble(timer) < 10 && Double.parseDouble(timer) > 9 && !scan_2) {
+					scan_2 = true;
+					String[] ct_players = scanCTPlayers(driver);
+					String[] t_players = scanTPlayers(driver);
+					for (int i = 0; i < ct_players.length; i += 3) {
+						if (!ct_name_rank_map.containsKey(ct_players[i + 1]))
+							ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+					}
+
+					for (int i = 0; i < t_players.length; i += 3) {
+						if (!t_name_rank_map.containsKey(t_players[i + 1]))
+							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
+					}
+					
+					if(ct_name_rank_map.size() > t_name_rank_map.size())
+						t_vote++;
+					else 
+					if(ct_name_rank_map.size() < t_name_rank_map.size())
+						ct_vote++;
 				
-				WebElement count_down_element = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[2]/div[3]/div/div[2]"));
-				timer=count_down_element.getAttribute("innerText");
-				
-				if(Double.parseDouble(timer)<15 && Double.parseDouble(timer)>0 && update==false) {
-					
-					
-						
-					
-						List<WebElement> current_coin_elements = driver.findElements(By.xpath("//div[@class='previous-rolls-item']"));
-						current_coin=current_coin_elements.get(9).getAttribute("innerHTML").contains("-ct")?"ct":
-							current_coin_elements.get(9).getAttribute("innerHTML").contains("-t")?"t":"bonus";
-					
-					
-					
-					if(current_coin.equals(predict_count)) {
-//						wallet_together-=1.5;
-						count_seq+="G";
-						g_count++;
+				}
+				if (Double.parseDouble(timer) < 8 && Double.parseDouble(timer) > 6 && !scan_3) {
+					scan_3 = true;
+					String[] ct_players = scanCTPlayers(driver);
+					String[] t_players = scanTPlayers(driver);
+					for (int i = 0; i < ct_players.length; i += 3) {
+						if (!ct_name_rank_map.containsKey(ct_players[i + 1]))
+							ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
 					}
-					else
-					if(current_coin.equals("bonus")) {
-						count_seq+="B";
-					
-						bonus_counter++;
-					}
-					else {
-						
-						count_seq+="L";
-						l_count++;
+
+					for (int i = 0; i < t_players.length; i += 3) {
+						if (!t_name_rank_map.containsKey(t_players[i + 1]))
+							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
 					}
 					
 					
+				}
+
+				if (Double.parseDouble(timer) < 5 && Double.parseDouble(timer) > 0 && !update) {
+
+					int ct_targets = 0;
+					int t_targets = 0;
+
+					int ct_targets_1 = 0;
+					int t_targets_1 = 0;
+
+					int ct_targets_2 = 0;
+					int t_targets_2 = 0;
+
+					int ct_targets_3 = 0;
+					int t_targets_3 = 0;
+
+					int ct_targets_4 = 0;
+					int t_targets_4 = 0;
+
+					int ct_targets_5 = 0;
+					int t_targets_5 = 0;
+
+					int ct_targets_6 = 0;
+					int t_targets_6 = 0;
+
+					int ct_targets_7 = 0;
+					int t_targets_7 = 0;
+
+					int ct_targets_8 = 0;
+					int t_targets_8 = 0;
+					// Sample Fetch(example) : 71 Bets Total
+					WebElement ct_overview = driver.findElement(By.xpath(
+							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[1]"));
+					WebElement t_overview = driver.findElement(By.xpath(
+							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[1]/div[1]"));
+					
+					WebElement t_amount_overview = driver.findElement(By.xpath(
+							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div/div[2]/span/div"));
+					WebElement ct_amount_overview = driver.findElement(By.xpath(
+							"//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[2]/span/div"));
+					
+					t_amount = Double.parseDouble(t_amount_overview.getText().toString().replaceAll(",", ""));
+					ct_amount = Double.parseDouble(ct_amount_overview.getText().toString().replaceAll(",", ""));
+					t_betters = Integer.parseInt(t_overview.getText().toString().split(" ")[0]);
+					ct_betters = Integer.parseInt(ct_overview.getText().toString().split(" ")[0]);
 					
 					
-					if(!prediction_final.equals(""))
-					if(current_coin.equals(prediction_final)) {
-						
-						main_seq+="W";
-						
-						helper_seq += "W";
-						
-					
-						main_W++;
-						
-						if(main_checker.equals("G")){
-							main_win_cause_g++;
-						}else
-						if(main_checker.equals("L"))
-							main_win_cause_l++;
-					}else {
-						
-						
-						main_seq+="L";
-						
-						
-						helper_seq += "L";
-						
-						
-						main_L++;
-						
-						if(main_checker.equals("G")) {
-							main_count_g++;
-						}else
-							if(main_checker.equals("L")) {
-								main_count_l++;
+					if (!predicted.equals("")) {
+						if (predicted.equals(current_coin)) {
+
+							main_seq += "W";
+
+							int total = t_betters + ct_betters;
+							data.players_W.putIfAbsent(total, 0);
+							data.players_W.replace(total, data.players_W.get(total) + 1);
+
+						} else {
+
+							if (!current_coin.equals("bonus"))
+								main_seq += "L";
+							else
+								main_seq += "L";
+
+							int total = t_betters + ct_betters;
+							data.players_L.putIfAbsent(total, 0);
+							if (!current_coin.equals("bonus"))
+								data.players_L.replace(total, data.players_L.get(total) + 1);
+
+						}
+
+						if (fargate)
+							if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == data.fargate_seq
+									.charAt(data.fargate_seq.length() - 2))
+								data.continuous_algo++;
+							else
+								data.switching_algo++;
+
+						int continuous;
+
+						if (fargate)
+							if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'L') {
+								continuous = (new Algo()).countOfCharFromLastAfterSwitch(data.fargate_seq, 'W');
+								if (continuous > 0)
+									data.expoPR.replace(continuous, data.expoPR.get(continuous) + 1);
+
+								if (continuous > 0)
+									data.expoW.replace(continuous, data.expoW.get(continuous) + 1);
+							} else if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'W') {
+								continuous = (new Algo()).countOfCharFromLastAfterSwitch(data.fargate_seq, 'L');
+								if (continuous > 0)
+									data.expoPR.replace(continuous, data.expoPR.get(continuous) + 1);
+
+								if (continuous > 0)
+									data.expoL.replace(continuous, data.expoL.get(continuous) + 1);
+
+							} else if (data.fargate_seq.charAt(data.fargate_seq.length() - 1) == 'B') {
+								continuous = (new Algo()).countOfCharFromLastAfterSwitch(data.fargate_seq,
+										data.fargate_seq.charAt(data.fargate_seq.length() - 2));
+								if (continuous > 0)
+									data.expoPR.replace(continuous, data.expoPR.get(continuous) + 1);
+
+								if (continuous > 0 && data.fargate_seq.charAt(data.fargate_seq.length() - 2) == 'L')
+									data.expoL.replace(continuous, data.expoL.get(continuous) + 1);
+								else if (continuous > 0
+										&& data.fargate_seq.charAt(data.fargate_seq.length() - 2) == 'W')
+									data.expoW.replace(continuous, data.expoW.get(continuous) + 1);
+
 							}
+
 					}
-					
-					if(!committ_side.equals("")) {
+
+					if (data.pitstop < 0 && !predicted.equals("")) {
+
+						if (!(data.wallet_graph_data.get(data.wallet_graph_data.size() - 1) == Double
+								.parseDouble(df.format(data.fargate_wallet).toString().replaceAll(",", ""))))
+							data.wallet_graph_data.add(Double.parseDouble(df.format(data.fargate_wallet).toString().replaceAll(",", "")));
+
+						if (current_coin.equals(predicted)) {
+
+							wallet += data.multiplier;
+
+						} else {
+
+							wallet -= data.multiplier;
+
+						}
+
+					}
+
+					if (data.pitstop < 0 && fargate && !data.predict_l3.equals("")) {
+
+						if (current_coin.equals(data.predict_l3)) {
+
+							data.wallet_l3 += bet_amount;
+							data.fargate_seq += "W";
+
+						} else {
+
+							data.wallet_l3 -= bet_amount;
+
+							if (!current_coin.equals("bonus")) {
+								data.fargate_seq += "L";
+							} else
+								data.fargate_seq += "L";
+						}
+
+						if (current_coin.equals("bonus") && data.start)
+							data.bonus_counter++;
+
+						data.predict_l3 = "";
+
+					}
+
+					if (data.pitstop < 0 && !predict_l2.equals("")) {
+
+						if (current_coin.equals("bonus")) {
+
+							// In case of bonus what to do on fargate
+						} else if (current_coin.equals(predict_l2)) {
+
+							data.fargate_wallet += data.multiplier;
+							if (data.start)
+								win_count++;
+						} else {
+
+							data.fargate_wallet -= data.multiplier;
+							if (data.start)
+								lost_count++;
+						}
+
+					}
+
+					if (!fargate && current_coin.equals("bonus"))
+						driver.navigate().refresh();
+
+					predict_l2 = "";
+
+					if (data.wallet_l3 > wallet_max)
+						wallet_max = data.wallet_l3;
+
+					if (data.wallet_l3 < wallet_min)
+						wallet_min = data.wallet_l3;
+
+					if (wallet_max - data.wallet_l3 > displacement)
+						displacement = wallet_max - data.wallet_l3;
+
+					int ct_xp = 0;
+					int t_xp = 0;
+					int max_ct_xp = 0;
+					int max_t_xp = 0;
+
+					String[] ct_players = scanCTPlayers(driver);
+					String[] t_players = scanTPlayers(driver);
+					for (int i = 0; i < ct_players.length; i += 3) {
+//													   <Name,Rank>
+						ct_name_rank_map.putIfAbsent(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+						ct_xp += Integer.parseInt(ct_players[i]);
+
+						if(ct_xp > max_ct_xp)
+							max_ct_xp = ct_xp;
+					}
+
+					for (int i = 0; i < t_players.length; i += 3) {
+						t_name_rank_map.putIfAbsent(t_players[i + 1], Integer.parseInt(t_players[i]));
+						t_xp += Integer.parseInt(t_players[i]);
 						
-					if(current_coin.equals(committ_side) ) {
-						wallet_together += bet_amount;
-						committ_seq += "W";
-						committ_win++;
-					}else {
-						wallet_together -= bet_amount;
-						committ_seq += "L";
-						committ_lost++;
+						if(t_xp > max_t_xp)
+							max_t_xp = t_xp;
 					}
-					
-					}	
-					
-					
-					if(current_coin.equals(predict_amount)) {
-						amount_seq+="G";
-						g_amount++;
+
+					System.out.println("CT_MAP : " + ct_name_rank_map.toString());
+
+					System.out.println("CT_MAP : " + t_name_rank_map.toString());
+
+					for (String x : ct_name_rank_map.keySet()) {
+						if (data.targets.containsKey(x)) {
+							if (data.targets.get(x) >= 8)
+								ct_targets_8++;
+							else if (data.targets.get(x) >= 7)
+								ct_targets_7++;
+							else if (data.targets.get(x) >= 6)
+								ct_targets_6++;
+							else if (data.targets.get(x) >= 5)
+								ct_targets_5++;
+							else if (data.targets.get(x) >= 4)
+								ct_targets_4++;
+							else if (data.targets.get(x) >= 3)
+								ct_targets_3++;
+							else if (data.targets.get(x) >= 2)
+								ct_targets_2++;
+							else if (data.targets.get(x) >= 1)
+								ct_targets_1++;
+							else if (data.targets.get(x) >= 0)
+								ct_targets++;
+
+						}
 					}
-					else
-					if(current_coin.equals("bonus")) {
-						amount_seq+="B";
-						bonus_counter++;
+
+					for (String x : t_name_rank_map.keySet()) {
+						if (data.targets.containsKey(x)) {
+							if (data.targets.get(x) >= 8)
+								t_targets_8++;
+							else if (data.targets.get(x) >= 7)
+								t_targets_7++;
+							else if (data.targets.get(x) >= 6)
+								t_targets_6++;
+							else if (data.targets.get(x) >= 5)
+								t_targets_5++;
+							else if (data.targets.get(x) >= 4)
+								t_targets_4++;
+							else if (data.targets.get(x) >= 3)
+								t_targets_3++;
+							else if (data.targets.get(x) >= 2)
+								t_targets_2++;
+							else if (data.targets.get(x) >= 1)
+								t_targets_1++;
+							else if (data.targets.get(x) >= 0)
+								t_targets++;
+
+						}
 					}
-					else {
-						amount_seq+="L";
-						l_amount++;
-					}
-					
-					if(amount_seq.length()>3)
-					if(amount_seq.charAt(amount_seq.length()-2)==amount_seq.charAt(amount_seq.length()-1)||amount_seq.charAt(amount_seq.length()-1)=='B'||amount_seq.charAt(amount_seq.length()-2)=='B') {
-						continuity_counter_amount++;
-					}else {
-						if(continuity_counter_amount==1)
-							number_of_ones_amount++;
+
+					data.winner_0 += t_targets + ct_targets;
+					data.winner_1 += t_targets_1 + ct_targets_1;
+					data.winner_2 += t_targets_2 + ct_targets_2;
+					data.winner_3 += t_targets_3 + ct_targets_3;
+					data.winner_4 += t_targets_4 + ct_targets_4;
+					data.winner_5 += t_targets_5 + ct_targets_5;
+					data.winner_6 += t_targets_6 + ct_targets_6;
+					data.winner_7 += t_targets_7 + ct_targets_7;
+					data.winner_8 += t_targets_8 + ct_targets_8;
+
+
+					if (data.pitstop-- < 0) {
+
+						int l_cnt = countOfCharFromLastTen(data.fargate_seq, 'L');
+						int w_cnt = countOfCharFromLastTen(data.fargate_seq, 'W');
+						System.out.println("W count in last 15 main_seq: " + w_cnt);
+
+
+						fargate = true;
+						int ct_score = 0;
+						int t_score = 0;
+
+
+						
+						if (t_targets_3 > ct_targets_3)
+							t_score += 1;
+						else if (t_targets_3 < ct_targets_3)
+							ct_score += 1;
+
+						if (t_targets_4 > ct_targets_4)
+							t_score += 1;
+						else if (t_targets_4 < ct_targets_4)
+							ct_score += 1;
+
+						
+
+						if (t_score < ct_score) {
+							predicted = "ct";
+						} else if (t_score > ct_score)
+							predicted = "t";
 						else
-							if(continuity_counter_amount==2)
-								number_of_twos_amount++;
-							else
-								if(continuity_counter_amount==3)
-									number_of_threes_amount++;
-								else
-									if(continuity_counter_amount==4)
-										number_of_fours_amount++;
-									else
-										if(continuity_counter_amount==5)
-											number_of_fives_amount++;
-										else
-									if(continuity_counter_amount>5)
-										number_of_worst_cases_amount++;
-						
-						continuity_counter_amount=1;
-									
-					}
-					
-					
-					
-					
-					if(committ_seq.length()>3 && !prediction_final.equals("") && was_bet_placed)
-						if(committ_seq.charAt(committ_seq.length()-2)==committ_seq.charAt(committ_seq.length()-1) && committ_seq.charAt(committ_seq.length()-1) == 'L') {
-							continuity_counter_main++;
-							
-						}else
-						{
-							
-							if(continuity_counter_main==1 && committ_seq.charAt(committ_seq.length()-2)=='L')
-								number_of_ones_main++;
-							else
-								if(continuity_counter_main==2 && committ_seq.charAt(committ_seq.length()-2)=='L')
-									number_of_twos_main++;
-								else
-									if(continuity_counter_main==3 && committ_seq.charAt(committ_seq.length()-2)=='L')
-										number_of_threes_main++;
-									else
-										if(continuity_counter_main==4 && committ_seq.charAt(committ_seq.length()-2)=='L')
-											number_of_fours_main++;
-										else
-											if(continuity_counter_main==5 && committ_seq.charAt(committ_seq.length()-2)=='L')
-												number_of_fives_main++;
-											else
-												if(continuity_counter_main==6 && committ_seq.charAt(committ_seq.length()-2)=='L')
-													number_of_sixes_main++;
-												else
-													if(continuity_counter_main==7 && committ_seq.charAt(committ_seq.length()-2)=='L')
-														number_of_sevens_main++;
-													else
-														if(continuity_counter_main==8 && committ_seq.charAt(committ_seq.length()-2)=='L')
-															number_of_eights_main++;
-														else
-															if(continuity_counter_main==9 && committ_seq.charAt(committ_seq.length()-2)=='L')
-																number_of_nines_main++;
-															else
-																if(continuity_counter_main==10 && committ_seq.charAt(committ_seq.length()-2)=='L')
-																	number_of_tens_main++;
-																else
-																	if(continuity_counter_main>10)
-																		number_of_worst_cases_main++;
-							
-								
-							if(continuity_counter_main >= 8) {
-								win_counter = 500;
-							}
-							
-									continuity_counter_main = 1;
-							
-						}
-					
-					if(
-							committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-6) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-7) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-8) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-9) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-10) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-11) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-12) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-13) == 'L'
-						&& main_seq.charAt(committ_seq.length()-14) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-15) == 'L'
-						){
-								bet_amount = 0;
-					}else
-					if(
-							committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L'  
-						&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-6) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-7) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-8) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-9) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-10) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-11) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-12) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-13) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-14) == 'L'
-						){
-								bet_amount = 0;
-					}else
-					if(
-							committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-6) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-7) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-8) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-9) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-10) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-11) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-12) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-13) == 'L'
-						){
-								bet_amount = 0;
-					}else
-					if(
-							committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-6) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-7) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-8) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-9) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-10) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-11) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-12) == 'L'
-						
-						){
-								bet_amount = 0;
-					}else
-					if(
-							committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-6) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-7) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-8) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-9) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-10) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-11) == 'L'
-						
-						){
-								bet_amount = 0;
-					}else
-					if(
-							committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-6) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-7) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-8) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-9) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-10) == 'L'
-						){
-								bet_amount = 0;
-					}else
-					if(
-							committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-6) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-7) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-8) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-9) == 'L'
-						){
-								bet_amount = 0;
-					}else
-					if(
-							committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-6) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-7) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-8) == 'L'
-						){
-								bet_amount = 511 ;
-					}
-					else 
-						if(
-								committ_seq.charAt(committ_seq.length()-1) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-							&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-							&& committ_seq.charAt(committ_seq.length()-6) == 'L'
-							&& committ_seq.charAt(committ_seq.length()-7) == 'L'
-							){
-									bet_amount = 255;
-						}
-					else 
-						if(
-								committ_seq.charAt(committ_seq.length()-1) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-							&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-							&& committ_seq.charAt(committ_seq.length()-6) == 'L'
-							){
-									bet_amount = 127;
-						}else
-					if(
-							committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-						&& committ_seq.charAt(committ_seq.length()-5) == 'L'
-						){
-								bet_amount = 63;
-					}else 
-					if(
-							committ_seq.charAt(committ_seq.length()-1) == 'L' 
-					&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-					&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-					&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-					){
-							bet_amount = 31;
-					}else 
-						if(
-								committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-						){
-								bet_amount = 15;
-					}else 
-						if(
-								committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-						){
-								bet_amount = 7;
-					}else 
-						if(
-								committ_seq.charAt(committ_seq.length()-1) == 'L' 
-						){
-								bet_amount = 3;
-					}else
-						bet_amount = 1;
+							predicted = "";
+
 			
-					
-					if(amount_seq.charAt(amount_seq.length()-1) == amount_seq.charAt(amount_seq.length()-2) || amount_seq.charAt(amount_seq.length()-1)=='B' || amount_seq.charAt(amount_seq.length()-2)=='B')
-						amt_continuous_cnt++;
-					else
-						amt_switcher_cnt++;
-					
-					if(wallet_together > wallet_together_max)
-						wallet_together_max = wallet_together;
-					
-					if(wallet_together < wallet_together_min)
-						wallet_together_min = wallet_together;
-				
-					
-					//perfect stop to died
-					if(!committ_side.equals("") ){
-						if(committ_seq.charAt(committ_seq.length()-6) == 'W'&&
-								committ_seq.charAt(committ_seq.length()-1) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-2) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-3) == 'L' 
-							&& committ_seq.charAt(committ_seq.length()-4) == 'L'
-							&& committ_seq.charAt(committ_seq.length()-5) == 'L'							
-							){
-									Thread.sleep(1200000);
-									System.out.println("Ready to triumph!");
-						}
 						
 						
-						committ_side = "";
-					}
-					
-					WebElement ct_count_element = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[1]"));
-					WebElement t_count_element = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[1]/div[1]"));
-					
-					WebElement ct_amount_element = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[1]/div[2]/span/div/span"));
-					WebElement t_amount_element = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[1]/div[2]/span/div/span"));
-
-					
-					ct_count=ct_count_element.getAttribute("innerText").trim().split(" ")[0];
-					t_count=t_count_element.getAttribute("innerText").trim().split(" ")[0];
-					
-
-					ct_amount=ct_amount_element.getAttribute("innerText").replace(",", "");
-					t_amount=t_amount_element.getAttribute("innerText").replace(",", "");
-					
-					//predicting g of count
-					if(Double.parseDouble(ct_amount)>Double.parseDouble(t_amount))
-						predict_amount="ct";
-					else
-						predict_amount="t";
-					
-					if(Integer.parseInt(ct_count)>Integer.parseInt(t_count))
-						predict_count="ct";
-					else
-						predict_count="t";
-					
-
-					
-					if(count_seq.charAt(count_seq.length()-1)==count_seq.charAt(count_seq.length()-2)) {
-						data.smooth_count++;
-					}else {
-						data.spikey_count++;
-					}
-					
-					if(amount_seq.charAt(amount_seq.length()-1)==amount_seq.charAt(amount_seq.length()-2)) {
-						data.smooth_amount++;
-					}else {
-						data.spikey_amount++;
-					}
-					
-					
-					bet_amount *= data.multiplier;
-					 DecimalFormat df = new DecimalFormat("###.##");
-					bet_amount = Double.parseDouble(df.format(bet_amount));
-					
-					
-					if(committ_seq.charAt(committ_seq.length()-1) == 'W')
-						data.isRefreshed = false;
-			
-					
-					if(data.isRefreshed || win_counter <= 0) {
-						bet_amount = 0;
-					}			
-							if( 
-									count_seq.charAt(count_seq.length()-1) != 'B'
-							&& predict_amount == predict_count
-//							&&
-//							Integer.parseInt(ct_count)+Integer.parseInt(t_count) > 10
-							){
+						//VOTE 1 : Absolute
+						if(predicted.equals("t"))
+								t_vote+=3;
+						else 
+						if(predicted.equals("ct"))
+								ct_vote+=3;
 						
-								double g_ratio = ((double)main_win_cause_g/(double)main_count_g) ;
-										double l_ratio = ((double)main_win_cause_l/(double)main_count_l);
-									
+						//VOTE 2 : Ambiguous
+						if(ct_betters < t_betters)
+								t_vote++;
+						else 
+						if(ct_betters > t_betters)
+								ct_vote++;
+						
+						
+						//VOTE 3 : Absolute
+						if(ct_amount > t_amount)
+							t_vote++;
+						else 
+						if(ct_amount < t_amount)
+							ct_vote++;
+						
+						
+						//VOTE 4 : Absolute
+						if(t_xp > ct_xp)
+							t_vote+=1;
+						else 
+						if(ct_xp < t_xp)
+							ct_vote+=1;
+						
+						//VOTE 5 : 
+						if (t_targets_2 > ct_targets_2)
+							t_vote += 2;
+						else if (t_targets_2 < ct_targets_2)
+							ct_vote += 2;
+						
+						//VOTE 5 : 
+						if (t_targets_1 > ct_targets_1)
+							ct_vote += 3;
+						else if (t_targets_1 < ct_targets_1)
+							t_vote += 3;
 
-										
-//									 if(doToggle)
-									 {
-										 if(toggle){
-											 //G
-											 if(predict_amount.equals("ct") ) {
-											
-												 if( main_seq.length() > 25 ) {
-													coingobbler.placeBet(driver, "ct", bet_amount);
-													committ_side = "ct";
-													win_counter--;
-												 }
-													prediction_final="ct";
-											 }else {
-												 if(main_seq.length() > 25) {
-													coingobbler.placeBet(driver, "t", bet_amount);
-													committ_side = "t";
-													win_counter--;
-												 }
-													prediction_final="t";
-											 }
-											 
-											 toggle = false;
-											 main_checker = prediction_type_G_or_L = "G";
-										 }else{
-											 
-											 //L
-											 if(predict_amount.equals("ct") ) {
-												 if(main_seq.length() > 25 ) {
-													coingobbler.placeBet(driver, "t", bet_amount);
-													committ_side = "t";
-													win_counter--;
-												 }
-													prediction_final="t";
-											 }else {
-												 if(main_seq.length() > 25 ) {
-													coingobbler.placeBet(driver, "ct", bet_amount);
-													committ_side = "ct";
-													win_counter--;
-												 }
-													prediction_final="ct";
-											 }
-											 
-											 toggle = true;
-											 main_checker = prediction_type_G_or_L = "L";
-										 }
-									 }
-//									 else{
-//										 //dont toggle stay on the max one! G or L
-//										 String gorl = amount_seq.length() > 90 ? amount_seq.substring(75) : amount_seq;
-//										 int g = 0;
-//										 int l = 0;
-//										 for(int ind = 0 ; ind < gorl.length() ; ind++) {
-//											 if(gorl.charAt(ind) == 'L')
-//												 l++;
-//											 else
-//											 if(gorl.charAt(ind) == 'G')
-//													 g++;
-//										 }
-//										 
-//										 if(g > l) {
-//											 if(predict_amount.equals("ct") ) {
-//													
-//												 if(win_counter-- > 0 )
-//													data.isRefreshed = coingobbler.placeBet(driver, "ct", bet_amount);
-//													
-//													prediction_final="ct";
-//											 }else {
-//												 if(win_counter-- > 0 )
-//													data.isRefreshed = coingobbler.placeBet(driver, "t", bet_amount);
-//													
-//													prediction_final="t";
-//											 }
-//											 
-//											 main_checker = prediction_type_G_or_L = "G";
-//										 }else {
-//											 //go with l
-//											 if(predict_amount.equals("ct") ) {
-//												 if(win_counter-- > 0 )
-//													data.isRefreshed = coingobbler.placeBet(driver, "t", bet_amount);
-//													
-//													prediction_final="t";
-//											 }else {
-//												 if(win_counter-- > 0 )
-//													data.isRefreshed = coingobbler.placeBet(driver, "ct", bet_amount);
-//													
-//													prediction_final="ct";
-//											 }
-//											 
-//											 main_checker = prediction_type_G_or_L = "L";
-//										 }
-//									 }
-									
-									 
-									 
+					
+						
+						System.out.println("EXIT POLL ct : t >>>> "+ct_vote+" : "+t_vote);
+						if(ct_vote > t_vote)
+							predicted = "ct";
+						else
+						if(t_vote > ct_vote)
+							predicted = "t";
+						else
+							predicted= "";
+						
+						System.out.println("Can Start ? " + data.start);
+						System.out.println("T Score : CT Score ==> " + t_score + " : " + ct_score);
+						if (fargate) {
+							
+							
+							
+							predict_l2 = predicted;
+
+							
+								data.predict_l3 = predict_l2;
 								
-							if(!committ_side.equals(""))
-								{
-//									System.out.println("*****************************************************************\n");
-//									System.out.println("Count Seq  : "+count_seq);
-////									System.out.println("Count Main  : "+main_seq);
-//									System.out.println("Committ Sequence  : "+committ_seq);
-//									System.out.println("Puting amount : "+ bet_amount);
-//									System.out.println("Capacity : " + win_counter);
-//									if((main_win_cause_g <= 5 || main_win_cause_l <= 5 || main_count_g <= 5 || main_count_l <= 5))
-//										System.out.println("Not Placing the Bet! Pilot Assessment Phase");
-//									System.out.println("\n\n___________________________________For Main___________________");
-//									System.out.println("Ones : "+number_of_ones_main);
-//									System.out.println("Twos : "+number_of_twos_main);
-//									System.out.println("Threes : "+number_of_threes_main);
-//									System.out.println("Fours : "+number_of_fours_main);
-//									System.out.println("Fives : "+number_of_fives_main);
-//									System.out.println("Sixes : "+number_of_sixes_main);
-//									System.out.println("______________________________________________________");
-//									System.out.println("Sevens : "+number_of_sevens_main);
-//									System.out.println("Eights : "+number_of_eights_main);
-//									System.out.println("Nines : "+number_of_nines_main);
-//									System.out.println("Tens : "+number_of_tens_main);
-//									System.out.println("WC : "+number_of_worst_cases_main);
-//									System.out.println("W Main count : "+main_W);
-//									System.out.println("L Main count : "+main_L);
+							int degree = 1;
+						 
+//							if (!data.start) {
+//								if (w_cnt >= 7 && data.fargate_seq.length() >= data.nextOpportunity)
+//									data.start = true;
 //
-//									System.out.println("W committ count : "+committ_win);
-//									System.out.println("L committ count : "+committ_lost);
-//									System.out.println("Wallet :"+wallet_together);
-//									System.out.println("Toggeling or not :"+doToggle);
-////									System.out.println("Wallet together Max Score :"+wallet_together_max);
-////									System.out.println("Wallet together Min Score :"+wallet_together_min);
-//									System.out.println("Number of Losses caused by L :"+ main_count_l);
-//									System.out.println("Number of Losses caused by G :"+ main_count_g);
-//									System.out.println("Number of Win caused by G :"+ main_win_cause_g);
-//									System.out.println("Number of Win caused by L :"+ main_win_cause_l);
-//									System.out.println("Ration comparision : G>"+g_ratio + "       L>"+ l_ratio);
-//									System.out.println("Prediction type : "+prediction_type_G_or_L);
-//									System.out.println("Final Prediction : "+prediction_final);
-//									System.out.println("Final Committed Side : "+committ_side);
-//									System.out.println("Latest Roll : "+current_coin);
-//									System.out.println("Difference between CT and T count : ("+Integer.parseInt(ct_count)+" - "+Integer.parseInt(t_count)+" ) => "+ Math.abs(Integer.parseInt(ct_count)-Integer.parseInt(t_count)));
-//									System.out.println("amt == cnt ; 1-7 only double ; only toggle ; Count bug fixed <:: Time : > " + java.time.LocalDateTime.now());
-//									System.out.println("\n\n\n\n\n");
-								
-//								System.out.println(",{\"Committ_W\":"+committ_win+",\"Committ_L\":"+committ_lost+
-//										",\"Main_W\":"+main_W+",\"Main_L\":"+main_L+"}");								
-								}else {
-//									System.out.println("Not committing this time");								
-								}
+//								degree = 0;
+//							}
+							char lastElement = data.fargate_seq.charAt(data.fargate_seq.length() - 11);
+							System.out.println("Last Outcome Element to be Removed :>>> "+lastElement);
 							
-							if(!committ_side.equals(""))
-							System.out.println(
-									",{\"Time\":\""+ java.time.LocalDateTime.now() +
-									"\",\"Prediction\":\""+committ_side+
-									"\",\"Total_Riskers\":\""+(Integer.parseInt(ct_count)+Integer.parseInt(t_count))+
-									"\",\"Committ Seq\":\""+committ_seq
-									+
-									"\",\"Win Countdown\":\""+win_counter+
-									"\",\"Committ_W\":\""+committ_win+
-									"\",\"Committ_L\":\""+committ_lost+
-									"\",\"Main_W\":\""+main_W+
-									"\",\"Main_L\":\""+main_L+
-									"\",\"Wallet\":\""+wallet_together+
-									"\",\"Putting Amount\":\""+bet_amount+
-									"\",\"One\":\""+number_of_ones_main+
-									"\",\"Two\":\""+number_of_twos_main+
-									"\",\"Three\":\""+number_of_threes_main+
-									"\",\"Four\":\""+number_of_fours_main+
-									"\",\"Five\":\""+number_of_fives_main+
-									"\",\"Six\":\""+number_of_sixes_main+
-									"\",\"Seven\":\""+number_of_sevens_main+
-									"\",\"Eight\":\""+number_of_eights_main+
-									"\",\"Nine\":\""+number_of_nines_main+
-									"\",\"Ten\":\""+number_of_tens_main+
-									"\",\"WC\":\""+number_of_worst_cases_main+
-									
-									"\"}");	
+							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
+
+							if(!data.predict_l3.equals(""))
+							for(int ind = 0 ; ind < 9 ; ind++) {
+								data.prediction_cache[ind] = data.prediction_cache[ind+1];
 							}
-							else{
-									prediction_final="";
-//									System.out.println("skipping\n\n");
-								}
-						
-						
-					
-					
-					
-					
-					if(amount_seq.length()>100)
-						amount_seq=amount_seq.substring(1);
-					
+							if(!data.predict_l3.equals(""))
+							data.prediction_cache[9] = data.predict_l3.toUpperCase().charAt(0);
+						} else {
+							predict_l2 = data.predict_l3 = "";
 
-					if(count_seq.length()>100)
-						count_seq=count_seq.substring(1);
-					
-					if(main_seq.length()>100)
-						main_seq=main_seq.substring(1);
-					
-					if(committ_seq.length()>100)
-						committ_seq=committ_seq.substring(1);
-					
-					//code to find out max possible continuous g and l
-					int count_amt=1;
-					int count_cnt=1;
-					boolean breakit=false;
-					if(!committ_side.equals("")) {
-						was_bet_placed = true;
-					}else {
-						was_bet_placed = false;
+						}
+					} else {
+						predicted = "";
 					}
-					
-					
-					update=true;
-					
-				}else
-					if(Double.parseDouble(timer)==0.00) {
-						update=false;
+
+					if (Math.abs(win_count - lost_count) > data.l_w_difference_max) {
+						data.l_w_difference_max = Math.abs(win_count - lost_count);
 					}
-				
+//					System.out.println("Chasers W:L ======>  " + data.chase_wins + " : " + data.chase_losses);
+//					System.out.println("Empire Wallet = " + data.empire_wallet);
+					System.out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
+//					System.out.println("LOSS WIN DIFFERENCE MAX : " + data.l_w_difference_max);
+//					System.out.println("Toggle : " + toggle);
+
+//					System.out.println("Decision Set Size: " + (ct_name_rank_map.size() + t_name_rank_map.size()));
+//					System.out.println("Total betters = " + (t_betters + ct_betters));
+//					System.out.println("AMOUNT CT:T >>>> "+ct_amount+" : "+t_amount);
+					
+					if (data.predict_l3.equals("")) {
+//						System.out.println("Predict L2: " + predict_l2);
+//						System.out.println("In PitStop || current coin : " + current_coin);
+//						System.out.println("Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: "
+//								+ df.format(data.wallet_l3) + "  :: " + "Displacement:" + df.format(displacement)
+//								+ "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  " + "Wallet Min : "
+//								+ df.format(wallet_min));
+//						System.out.println(
+//								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
+//												System.out.println("Sequence         : " + main_seq.substring(main_seq.length() - 57));
+//						System.out.println(
+//										   "Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length() - 57));
+					} else {
+
+						System.out.println("Bet Amount : " + bet_amount);
+						System.out.println(
+								"=======================================================================================================");
+						System.out.println("CT_XP vs T_XP :> " + ct_xp + " : " + t_xp);
+						System.out.println("Prediction Cache : "+Arrays.toString(data.prediction_cache));
+						System.out.println(
+								"Current Coin is : " + current_coin + "  ::  " + "Predicted L3: " + data.predict_l3);
+						System.out.println(
+								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
+						System.out.println("Sequence         : " + main_seq.substring(main_seq.length() - 57));
+						System.out.println(
+										   "Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length() - 57));
+						System.out.println("Fargate wallet : " + data.fargate_wallet + "  ::  " + "Wallet L3: "
+								+ df.format(data.wallet_l3) + "  :: " + "Displacement:" + df.format(displacement)
+								+ "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  " + "Wallet Min : "
+								+ df.format(wallet_min));
+						System.out.println(
+								"=======================================================================================================");
+
+						System.out.println("\nContinus Algo Result : " + data.continuous_algo + "  ::  "
+								+ "Switching Algo Result : " + data.switching_algo);
+//
+						System.out.println("\nExponential W : " + data.expoW);
+						System.out.println("Exponential L : " + data.expoL);
+//						System.out.println("\nPlayer Heat Map L : " + data.players_L);
+//						System.out.println("Player Heat Map W : " + data.players_W);
+
+					}
+
+					update = true;
+
+					System.out.println("\n\n\n\n");
+
+				}
+
+				if (Double.parseDouble(timer) == 0.00) {
+					update = false;
+					bonus_placed = false;
+					scan_1 = false;
+					scan_2 = false;
+					scan_3 = false;
+				}
+
 			}
-		}catch(Exception e) {
-			System.out.println("Supreme Refresh");
-			data.committ_lost = committ_lost;
-			data.committ_win = committ_win;
-			data.doToggle = doToggle;
-			data.committ_side = committ_side;
-			data.main_checker = main_checker;
-			data.main_count_g = main_count_g;
-			data.main_count_l = main_count_l;
-			data.main_win_cause_g = main_win_cause_g;
-			data.main_win_cause_l = main_win_cause_l;
-			data.amount_seq=amount_seq;
-			data.outcome_seq=outcome_seq;
-			data.count_seq=count_seq;
-			data.main_seq=main_seq;
-			data.g_amount=g_amount;
-			data.g_count=g_count;
-			data.skip_beat_counter = skip_beat_counter;
-			data.l_amount=l_amount;
-			data.l_count=l_count;
-			data.wallet_together_min=wallet_together_min;
-			data.wallet_together_max=wallet_together_max;
-			data.wallet_together=wallet_together;
-			data.max_g_continuous=max_g_continuous;
-			data.max_l_continuous=max_l_continuous;
-			data.helper_seq = helper_seq;
-			data.goal_amount = goal_amount;
-			data.cnt_switcher_cnt = cnt_switcher_cnt;
-			data.cnt_continuous_cnt = cnt_continuous_cnt;
-			data.amt_switcher_cnt = amt_switcher_cnt;
-			data.amt_continuous_cnt = amt_continuous_cnt;
-			data.number_of_ones_amount=number_of_ones_amount;
-			data.number_of_threes_amount=number_of_threes_amount;
-			data.number_of_twos_amount=number_of_twos_amount;
-			data.number_of_fours_amount=number_of_fours_amount;
-			data.number_of_fives_amount=number_of_fives_amount;
-			data.number_of_worst_cases_amount=number_of_worst_cases_amount;
-			data.was_bet_placed = was_bet_placed;
-			data.number_of_ones_count=number_of_ones_count;
-			data.number_of_threes_count=number_of_threes_count;
-			data.number_of_twos_count=number_of_twos_count;
-			data.number_of_fours_count=number_of_fours_count;
-			data.number_of_fives_count=number_of_fives_count;
-			data.number_of_worst_cases_count=number_of_worst_cases_count;
-			data.isRefreshed = true;
-			data.number_of_ones_main=number_of_ones_main;
-			data.number_of_threes_main=number_of_threes_main;
-			data.number_of_twos_main=number_of_twos_main;
-			data.number_of_fours_main=number_of_fours_main;
-			data.number_of_fives_main=number_of_fives_main;
-			data.number_of_sixes_main=number_of_sixes_main;
-			data.number_of_sevens_main=number_of_sevens_main;
-			data.number_of_eights_main=number_of_eights_main;
-			data.number_of_nines_main=number_of_nines_main;
-			data.number_of_tens_main=number_of_tens_main;
-			data.number_of_worst_cases_main=number_of_worst_cases_main;
-			data.main_L = main_L;
-			data.main_W = main_W;
-			data.win_counter = win_counter;
-			data.committ_seq = committ_seq;
-//			System.out.println(e.getMessage());
-			new Algo().run(data,driver);
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
+			System.out.println("\nContinus Algo Result : " + data.continuous_algo + "  ::  "
+					+ "Switching Algo Result : " + data.switching_algo);
 
+			System.out.println("\nExponential W : " + data.expoW);
+			System.out.println("Exponential L : " + data.expoL);
+			System.out.println("\nPlayer Heat Map L : " + data.players_L);
+			System.out.println("Player Heat Map W : " + data.players_W);
+			System.out.println(data.wallet_graph_data.toString());
+			data.displacement = displacement;
+			data.main_seq = main_seq;
+			data.main_W = win_count;
+			data.main_L = lost_count;
+			data.wallet_together = wallet;
+			data.wallet_max = wallet_max;
+			data.wallet_min = wallet_min;
+			data.fargate = fargate;
+			new Algo().run(data, driver);
+			System.out.println("\nMain Sequence : " + main_seq);
+			return;
 		}
+
+	}
+
+	public int countOfCharFromLastAfterSwitch(String toCheckIn, char toCheck) {
+		int cnt = 0;
+		for (int i = toCheckIn.length() - 2; i >= 0; i--) {
+			if (toCheckIn.charAt(i) == toCheck) {
+				cnt++;
+			} else
+				break;
+		}
+		return cnt;
+	}
+
+	public int countOfCharFromLastTen(String toCheckIn, char toCheck) {
+		int cnt = 0;
+		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 11; i--) {
+			if (toCheckIn.charAt(i) == toCheck) {
+				cnt++;
+			}
+		}
+		return cnt;
 	}
 	
-	
+
+	public int continuousCountForLastTwenty(String toCheckIn) {
+		int cnt = 0;
+		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 21; i--) {
+			if (toCheckIn.charAt(i) == toCheckIn.charAt(i - 1)) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+
+	public String[] scanTPlayers(WebDriver driver) {
+
+		// the top level non altering div which shows the players which have placed bets
+		WebElement t_bet_container = driver.findElement(
+				By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[3]/div/div[2]"));
+		String[] t_players = t_bet_container.getAttribute("innerText").trim().split("\n");
+
+		return t_players;
+
+	}
+
+	public String[] scanCTPlayers(WebDriver driver) {
+		WebElement ct_bet_container = driver.findElement(
+				By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[6]/div[1]/div/div[2]"));
+		String[] ct_players = ct_bet_container.getAttribute("innerText").trim().split("\n");
+		return ct_players;
+	}
 
 }
