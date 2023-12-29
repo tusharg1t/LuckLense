@@ -2,7 +2,9 @@ package Winner;
 
 import java.util.Scanner;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import Winner.Data;
@@ -13,19 +15,19 @@ public class Start {
 		options.addArguments("start-maximized");
 		options.addArguments("--incognito");
 		options.addArguments("--remote-allow-origins=*");
+		options.addArguments("--headless");
+		options.addArguments("--window-size=1920,1080");
+		options.addArguments("--mute-audio");
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		System.out.println("WE WIN BY NOT REPEATING MISTAKES:"
-				+ "\n\t1.\tDon't Gamble on your own!"
-				+ "\n\t2.\tDon't bet exponential"
-				+ "\n\t3.\tDon't put any more money into it, it will give you back just hold"
-				+ "\n\t4.\tYou have enough time, it will work when time and effort is right."
-				+ "\n\t5.\tKeep Improving the algorithm");
 		System.out.print("Enter bet_amount : ");
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
+		System.out.print("\n\nEnter Target Wallet Amount : ");
+		data.wallet_stop = sc.nextDouble();
+//		LoginService.LogIn(driver, "csgoempire_september", "L@k$hm!V!shnu_2023");
 		new Algo().run(data, driver);
 		driver.close();
 	}

@@ -1,6 +1,7 @@
 package Winner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Data {
 	double wallet_max;
 	double wallet_min;
 	double fargate_wallet;
-	
+	double wallet_stop;
 	boolean phase_1;
 	String fargate_seq;
 	int l_w_difference_max;
@@ -59,11 +60,23 @@ public class Data {
 	double empire_wallet;
 	boolean start;
 	Character[] prediction_cache = new Character[10];
+	Character[] outcome_cache = new Character[10];
+	double global_wallet;
+	String global_outcome_seq;
+	int global_win_cnt;
+	int global_loss_cnt;
 	Data(){
+		wallet_stop = 100;
+		global_outcome_seq="";
+		global_win_cnt=0;
+		global_loss_cnt=0;
+		global_wallet = 0;
+		Arrays.fill(prediction_cache, 'B');
+		Arrays.fill(outcome_cache, 'B');
 		start = false;
 		winner_0 = winner_1 = winner_2 = winner_3 = winner_4 = winner_5 = 0;
 		l_w_difference_max = Integer.MIN_VALUE;
-		predict_l3 = "";
+		predict_l3 = "BBBBBBBBBBBBBBB";
 		wallet_l3 = 0;
 		chase_wins = 0;
 		chase_losses = 0;
@@ -77,18 +90,18 @@ public class Data {
 			expoL.put(i, 0);
 			expoW.put(i,0);
 		}
-		nextOpportunity = 0;
+		nextOpportunity = 10;
 		
 		for(int i = 5 ; i <= 55; i++) {
 			players_L.put(i,0);
 			players_W.put(i,0);
 		}
 		wallet_graph_data.add(0.0);
-		fargate_seq = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
+		fargate_seq = "BWBWBBWBWBBWBWB";
 		isRefreshed = false;
 		multiplier = 1;
-		pitstop = 15;
-		main_seq="^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^T^TOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM||W";
+		pitstop = 5;
+		main_seq="BWBWBBWBWBBWBWB";
 		main_L=0;
 		main_W=0;
 		
