@@ -32,15 +32,8 @@ public class Data {
 	int pitstop;
 	double displacement;
 	
-	int winner_0;
-	int winner_1;
-	int winner_2;
-	int winner_3;
-	int winner_4;
-	int winner_5;
-	int winner_6;
-	int winner_7;
-	int winner_8;
+	int win_cnt_commited;
+	int loss_cnt_commited;
 	
 	Map<String,Integer> targets = new HashMap<String,Integer>();
 	Map<Integer,Integer> expoPR = new HashMap<Integer,Integer>();
@@ -74,7 +67,8 @@ public class Data {
 		Arrays.fill(prediction_cache, 'B');
 		Arrays.fill(outcome_cache, 'B');
 		start = false;
-		winner_0 = winner_1 = winner_2 = winner_3 = winner_4 = winner_5 = 0;
+		win_cnt_commited = 0;
+		loss_cnt_commited = 0;
 		l_w_difference_max = Integer.MIN_VALUE;
 		predict_l3 = "BBBBBBBBBBBBBBB";
 		wallet_l3 = 0;

@@ -25,9 +25,7 @@ public class Start {
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
-		System.out.print("\n\nEnter Target Wallet Amount : ");
-		data.wallet_stop = sc.nextDouble();
-//		LoginService.LogIn(driver, "csgoempire_september", "L@k$hm!V!shnu_2023");
+		LoginService.LogIn(driver, "cracker15k", "BigWin@500k");
 		new Algo().run(data, driver);
 		driver.close();
 	}

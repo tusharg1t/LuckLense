@@ -167,14 +167,8 @@ public class Algo {
 						if (!t_name_rank_map.containsKey(t_players[i + 1]))
 							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
 					}
-
-					if (ct_name_rank_map.size() > t_name_rank_map.size())
-						t_vote++;
-					else if (ct_name_rank_map.size() < t_name_rank_map.size())
-						ct_vote++;
-
 				}
-				if (Double.parseDouble(timer) < 6 && Double.parseDouble(timer) > 3 && !scan_3) {
+				if (Double.parseDouble(timer) < 6 && Double.parseDouble(timer) > 5 && !scan_3) {
 					scan_3 = true;
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
@@ -190,7 +184,7 @@ public class Algo {
 
 				}
 
-				if (Double.parseDouble(timer) < 2 && Double.parseDouble(timer) > 0 && !update) {
+				if (Double.parseDouble(timer) <= 2 && Double.parseDouble(timer) > 0 && !update) {
 
 					int ct_targets = 0;
 					int t_targets = 0;
@@ -330,6 +324,7 @@ public class Algo {
 							data.wallet_l3 -= bet_amount;
 							data.wallet_l3 = (data.wallet_l3 * 100) / 100;
 							if (!current_coin.equals("bonus")) {
+
 								data.fargate_seq += "L";
 							} else
 								data.fargate_seq += "B";
@@ -351,13 +346,15 @@ public class Algo {
 						} else if (current_coin.equals(predict_l2)) {
 
 							data.fargate_wallet += data.multiplier;
-
 							win_count++;
+							if (bet_amount > 0)
+								data.win_cnt_commited++;
 						} else {
 
 							data.fargate_wallet -= data.multiplier;
-
 							lost_count++;
+							if (bet_amount > 0)
+								data.loss_cnt_commited++;
 						}
 
 					}
@@ -403,8 +400,7 @@ public class Algo {
 					if (Math.ceil(data.wallet_l3 * 100) / 100 >= Math.floor(5 * data.multiplier * 100) / 100) {
 						System.out.println("\n\n\n\n\n\n******==Success==********" + data.wallet_l3);
 						data.global_wallet += 5 * data.multiplier;
-//						data.multiplier *= 1.5;
-//						data.multiplier = Math.floor(data.multiplier * 100) / 100;
+
 						data.wallet_l3 = 0;
 						data.nextOpportunity = main_seq.length() + 50;
 						data.start = false;
@@ -413,18 +409,14 @@ public class Algo {
 						displacement = 0;
 						data.global_win_cnt++;
 						data.global_outcome_seq += "W";
-
-//						if(Math.ceil(data.global_wallet * 100) / 100 > Math.floor(data.wallet_stop * 100) / 100) {
-//							return;
-//						}
-//						return;
+						Thread.sleep(600000);
+						if (data.global_wallet >= Math.floor(10 * data.multiplier * 100) / 100)
+							return;
 					}
 
 					if (Math.floor(data.wallet_l3 * 100) / 100 <= Math.ceil(-10 * data.multiplier * 100) / 100) {
 						System.out.println("---------==THINK==---------" + data.wallet_l3);
 						data.global_wallet -= 10 * data.multiplier;
-//						data.multiplier = data.multiplier * 0.7;
-//						data.multiplier = Math.floor(data.multiplier * 100) / 100;
 						data.wallet_l3 = 0;
 						data.nextOpportunity = main_seq.length() + 50;
 						data.start = false;
@@ -433,9 +425,10 @@ public class Algo {
 						displacement = 0;
 						data.global_loss_cnt += 2;
 						data.global_outcome_seq += "LL";
-
-//						if(data.global_win_cnt - data.global_loss_cnt < -2)
-//							return;
+						if (data.global_wallet <= 0)
+							return;
+						if(data.global_win_cnt - data.global_loss_cnt < -2)
+							return;
 
 					}
 
@@ -444,6 +437,8 @@ public class Algo {
 						return;
 					}
 
+					int ctWinSum = 0;
+					int tWinSum = 0;
 					for (String x : ct_name_rank_map.keySet()) {
 						if (data.targets.containsKey(x)) {
 							if (data.targets.get(x) >= 4)
@@ -458,6 +453,8 @@ public class Algo {
 								ct_targets++;
 
 						}
+
+						ctWinSum += data.targets.get(x) != null ? data.targets.get(x) : 0;
 					}
 
 					for (String x : t_name_rank_map.keySet()) {
@@ -473,19 +470,11 @@ public class Algo {
 							else if (data.targets.get(x) >= 0)
 								t_targets++;
 						}
+
+						tWinSum += data.targets.get(x) != null ? data.targets.get(x) : 0;
 					}
 
-					data.winner_0 += t_targets + ct_targets;
-					data.winner_1 += t_targets_1 + ct_targets_1;
-					data.winner_2 += t_targets_2 + ct_targets_2;
-					data.winner_3 += t_targets_3 + ct_targets_3;
-					data.winner_4 += t_targets_4 + ct_targets_4;
-					data.winner_5 += t_targets_5 + ct_targets_5;
-					data.winner_6 += t_targets_6 + ct_targets_6;
-					data.winner_7 += t_targets_7 + ct_targets_7;
-					data.winner_8 += t_targets_8 + ct_targets_8;
-
-					if (data.pitstop-- < 0  && t_betters+ct_betters > 15) {
+					if (data.pitstop-- < 0 && t_betters + ct_betters > 10) {
 
 						int l_cnt = countOfCharFromLastTen(main_seq, 'L');
 						int w_cnt = countOfCharFromLastTen(main_seq, 'W');
@@ -494,20 +483,25 @@ public class Algo {
 						int ct_score = 0;
 						int t_score = 0;
 
-						if (t_targets_3 < ct_targets_3)
-							t_score += 3;
-						else if (t_targets_3 > ct_targets_3)
-							ct_score += 3;
-
-						if (t_targets_4 > ct_targets_4)
-							ct_score += 4;
-						else if (t_targets_4 < ct_targets_4)
-							t_score += 4;
-
 						if (t_targets > ct_targets)
 							t_score += 2;
 						else if (t_targets < ct_targets)
 							ct_score += 2;
+
+						if (t_targets_1 < ct_targets_1)
+							ct_score += 2;
+						else if (t_targets_1 > ct_targets_1)
+							t_score += 2;
+
+						if (t_targets_2 < ct_targets_2)
+							t_score += 3;
+						else if (t_targets_2 > ct_targets_2)
+							ct_score += 3;
+
+						if (t_targets_3 < ct_targets_3)
+							t_score += 3;
+						else if (t_targets_3 > ct_targets_3)
+							ct_score += 3;
 
 						if (t_score < ct_score) {
 							predicted = "ct";
@@ -516,53 +510,54 @@ public class Algo {
 						else
 							predicted = "";
 
-						// Assessment 1 Complete //VOTE 1 : SOLID
-						if (predicted.equals("t"))
-							ct_vote += 15;
-						else if (predicted.equals("ct"))
-							t_vote += 15;
+//						 //VOTE 1 : SOLID
+//						if (predicted.equals("t")) {
+//							ct_vote += 25;
+//							System.out.println("VOTE1: CT 20");
+//						}else if (predicted.equals("ct")) {
+//							t_vote += 25;
+//
+//							System.out.println("VOTE1: T 20");
+//						}
 
-						// VOTE 2 : SOLID
-						if (ct_betters > t_betters)
-							t_vote += 5;
-						else if (ct_betters < t_betters)
-							ct_vote += 5;
+//						// VOTE 2 COMPOSIT : Boogie Woogie
+//						if (ct_betters > t_betters ) {
+//							ct_vote += 10;
+//
+//							System.out.println("VOTE2: CT 10");
+//						} else if (ct_betters < t_betters ) {
+//							t_vote += 10;
+//							System.out.println("VOTE2: T 10");
+//						}
 
-						// VOTE 3 : SOLID
-						if (ct_amount > t_amount)
-							t_vote += 5;
-						else if (ct_amount < t_amount)
-							ct_vote += 5;
+						// VOTE 3 COMPOSIT : Optimist
+//						if ((t_xp > ct_xp) && (ct_betters < t_betters)) {
+//							t_vote += 25;
+//							System.out.println("VOTE3: T 25");
+//						} else if ((t_xp < ct_xp) && (ct_betters > t_betters)) {
+//							ct_vote += 25;
+//							System.out.println("VOTE3: CT 25");
+//						}
+//						
+//						if(tWinSum > ctWinSum)
+//								t_vote += 15;
+//						else
+//							if(tWinSum < ctWinSum)
+//								ct_vote += 15;
 
-						// VOTE 6 : SOLID
-						if (t_xp > ct_xp)
-							ct_vote += 5;
-						else if (t_xp < ct_xp)
-							t_vote += 5;
+						// continuous||type > 7 then amount min wins
+						int continuousCnt = continuousCountForLastinArray(data.outcome_cache, 10);
+						boolean enable = false;
+						enable = enableRound(data.outcome_cache);
+						if (t_targets_2 > ct_targets_2)
+							t_vote += 20;
+						else if (t_targets_2 < ct_targets_2)
+							ct_vote += 20;
 
-						// VOTE 7 : SOLID : ct 1: t 2
-						if (who_first == 1)
-							t_vote += 10;
-						else if (who_first == 2)
-							ct_vote += 10;
-
-						// VOTE 8 COMPOSIT : Boogie Woogie
-						if (ct_betters > t_betters && who_first == 2) {
-							ct_vote += 10;
-						} else if (ct_betters < t_betters && who_first == 1) {
-							t_vote += 10;
-						}
-
-						// VOTE 9 COMPOSIT : Optimist
-						if ((t_xp > ct_xp) && (ct_betters < t_betters)) {
-							t_vote += 10;
-						} else if ((t_xp < ct_xp) && (ct_betters > t_betters)) {
-							ct_vote += 10;
-						}
-
-						
-
-						
+						System.out.println("CT_CNT : T_CNT ==> " + ct_betters + " : " + t_betters);
+						System.out.println("CT_AMT : T_AMT ==> " + ct_amount + " : " + t_amount);
+						System.out.println("Continuous CNT  ==> " + continuousCnt);
+						System.out.println("CT_VOTE : T_VOTE ==> " + ct_vote + " : " + t_vote);
 						if (ct_vote > t_vote)
 							predicted = "ct";
 						else if (t_vote > ct_vote)
@@ -572,14 +567,19 @@ public class Algo {
 
 						if (fargate) {
 
-							int degree = 1;
+							int degree = 0;
+
+							System.out.println("Loss : Win >> " + l_cnt + " : " + w_cnt);
+
+							if (!predicted.equals("") && (main_seq.length() > 30 && enable) && t_betters+ct_betters > 15)
+								degree = 1;
 
 							predict_l2 = predicted;
-
 							data.predict_l3 = predict_l2;
+
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
 
-//							winner.placeBet(driver, data.predict_l3, bet_amount);
+							winner.placeBet(driver, data.predict_l3, bet_amount);
 							if (!data.predict_l3.equals(""))
 								for (int ind = 0; ind < 9; ind++) {
 									data.prediction_cache[ind] = data.prediction_cache[ind + 1];
@@ -610,8 +610,9 @@ public class Algo {
 						System.out.println("Prediction Cache : " + Arrays.toString(data.prediction_cache));
 						System.out.println(
 								"Current Coin is : " + current_coin + "  ::  " + "Predicted L3: " + data.predict_l3);
-						System.out.println(
-								"W : L Ratio = " + win_count + " : " + lost_count + " : " + data.bonus_counter);
+						System.out.println("W : L Ratio Fargate SEQ = " + win_count + " : " + lost_count);
+						System.out.println("W : L Ratio Committed Rolls = " + data.win_cnt_commited + " : "
+								+ data.loss_cnt_commited + " : " + data.bonus_counter);
 						System.out.println("Sequence         : " + main_seq
 								.substring(main_seq.length() - (main_seq.length() > 50 ? 50 : main_seq.length())));
 						System.out.println("Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length()
@@ -683,7 +684,7 @@ public class Algo {
 
 	public int countOfCharFromLastTen(String toCheckIn, char toCheck) {
 		int cnt = 0;
-		int checkTill = toCheckIn.length() - (toCheckIn.length() > 6 ? 6 : toCheckIn.length());
+		int checkTill = toCheckIn.length() - (toCheckIn.length() > 7 ? 7 : toCheckIn.length());
 		for (int i = toCheckIn.length() - 1; i >= checkTill; i--) {
 			if (toCheckIn.charAt(i) == toCheck) {
 				cnt++;
@@ -692,10 +693,10 @@ public class Algo {
 		return cnt;
 	}
 
-	public int continuousCountForLastTwenty(String toCheckIn) {
+	public int continuousCountForLastinArray(Character[] toCheckIn, int windowSize) {
 		int cnt = 0;
-		for (int i = toCheckIn.length() - 1; i >= toCheckIn.length() - 21; i--) {
-			if (toCheckIn.charAt(i) == toCheckIn.charAt(i - 1)) {
+		for (int i = 9; i > 0; i--) {
+			if (toCheckIn[i] == toCheckIn[i - 1]) {
 				cnt++;
 			}
 		}
@@ -722,6 +723,28 @@ public class Algo {
 				.toArray(String[]::new);
 
 		return ct_players;
+	}
+
+	public boolean enableRound(Character[] toCheckIn) {
+		boolean ret = false;
+		int t = 0;
+		int ct = 0;
+		int bonus = 0;
+
+		for (Character x : toCheckIn) {
+			if (x == 'T')
+				t++;
+			else if (x == 'C')
+				ct++;
+			else
+				bonus++;
+		}
+		
+		System.out.println("T"+t+"  CT"+ct+"  Bonus"+bonus);
+		if (ct+bonus < 7 && ct+bonus > 3)
+			ret = true;
+
+		return ret;
 	}
 
 }
