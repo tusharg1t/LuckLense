@@ -54,6 +54,9 @@ public class Algo {
 		boolean scan_2 = false;
 		boolean scan_3 = false;
 		int who_first = 0; // 1 ct : 2 t
+		
+		int t_ragers = 0;
+		int ct_ragers = 0;
 		try {
 
 			String timer = "";
@@ -67,6 +70,11 @@ public class Algo {
 			String predicted = "";
 			Map<String, Integer> ct_name_rank_map = new HashMap<String, Integer>();
 			Map<String, Integer> t_name_rank_map = new HashMap<String, Integer>();
+			
+			Map<String, Integer> ct_name_amount_map = new HashMap<String, Integer>();
+			Map<String, Integer> t_name_amount_map = new HashMap<String, Integer>();
+			
+			
 			int t_vote = 0;
 			int ct_vote = 0;
 			while (true) {
@@ -100,6 +108,8 @@ public class Algo {
 						for (String x : t_name_rank_map.keySet()) {
 							data.targets.putIfAbsent(x, 0);
 							if (data.targets.get(x) > 0)
+								data.targets.replace(x, data.targets.get(x) - 2);
+							else
 								data.targets.replace(x, 0);
 
 						}
@@ -109,10 +119,13 @@ public class Algo {
 							data.targets.putIfAbsent(x, 0);
 							data.targets.replace(x, data.targets.get(x) + 1);
 						}
+						
 						// remove target from loosers
 						for (String x : ct_name_rank_map.keySet()) {
 							data.targets.putIfAbsent(x, 0);
-							if (data.targets.get(x) > 0)
+							if (data.targets.get(x)- 2 > 0)
+								data.targets.replace(x, data.targets.get(x) - 2);
+							else
 								data.targets.replace(x, 0);
 						}
 					}
@@ -125,25 +138,43 @@ public class Algo {
 					ct_name_rank_map.clear();
 					t_vote = 0;
 					ct_vote = 0;
+					
+					t_ragers = 0;
+					ct_ragers = 0;
 
 					int temp_t_xp = 0;
 					int temp_ct_xp = 0;
 					scan_1 = true;
+					
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
 					for (int i = 0; i < ct_players.length; i += 3) {
+						
+						
 						if (!ct_name_rank_map.containsKey(ct_players[i + 1])) {
+							
+							if(data.amountRecord.get(ct_players[i+1])!= null && Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1]))
+								ct_ragers++;
+							data.amountRecord.replace(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+							
 							ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
 							temp_ct_xp += Integer.parseInt(ct_players[i]);
 						}
+						
+						
 
 					}
 
 					for (int i = 0; i < t_players.length; i += 3) {
 						if (!t_name_rank_map.containsKey(t_players[i + 1])) {
+							if(data.amountRecord.get(t_players[i+1])!= null && Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1]))
+								t_ragers++;
+							data.amountRecord.replace(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "").replaceAll(",", "")));
+							
 							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
 							temp_t_xp = Integer.parseInt(t_players[i]);
 						}
+						
 					}
 
 					if (ct_name_rank_map.size() > t_name_rank_map.size())
@@ -158,14 +189,32 @@ public class Algo {
 					scan_2 = true;
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
+					
 					for (int i = 0; i < ct_players.length; i += 3) {
-						if (!ct_name_rank_map.containsKey(ct_players[i + 1]))
+						if (!ct_name_rank_map.containsKey(ct_players[i + 1])) {
+							
+							if(data.amountRecord.get(ct_players[i+1])!= null && Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1]))
+								ct_ragers++;
+							data.amountRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+							
 							ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+						
+						}
+							
+						
+						
 					}
 
 					for (int i = 0; i < t_players.length; i += 3) {
-						if (!t_name_rank_map.containsKey(t_players[i + 1]))
+						if (!t_name_rank_map.containsKey(t_players[i + 1])) {
+							if(data.amountRecord.get(t_players[i+1])!= null && Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1]))
+								t_ragers++;
+							data.amountRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+							
 							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
+						}
+
+						
 					}
 				}
 				if (Double.parseDouble(timer) < 6 && Double.parseDouble(timer) > 5 && !scan_3) {
@@ -173,13 +222,25 @@ public class Algo {
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
 					for (int i = 0; i < ct_players.length; i += 3) {
-						if (!ct_name_rank_map.containsKey(ct_players[i + 1]))
+						if (!ct_name_rank_map.containsKey(ct_players[i + 1])) {
+							if(data.amountRecord.get(ct_players[i+1])!= null && Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1]))
+								ct_ragers++;
+							data.amountRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+							
 							ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+						}
+				
 					}
 
 					for (int i = 0; i < t_players.length; i += 3) {
-						if (!t_name_rank_map.containsKey(t_players[i + 1]))
+						if (!t_name_rank_map.containsKey(t_players[i + 1])) {
+							if(data.amountRecord.get(t_players[i+1])!= null && Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1]))
+								t_ragers++;
+							data.amountRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+							
 							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
+						}
+						
 					}
 
 				}
@@ -381,22 +442,39 @@ public class Algo {
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
 					for (int i = 0; i < ct_players.length; i += 3) {
+						if (!ct_name_rank_map.containsKey(ct_players[i + 1])){
+							if(data.amountRecord.get(ct_players[i+1])!= null && Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1]))
+								t_ragers++;
+							data.amountRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+						}
+						
 //													   <Name,Rank>
 						ct_name_rank_map.putIfAbsent(ct_players[i + 1], Integer.parseInt(ct_players[i]));
 						ct_xp += Integer.parseInt(ct_players[i]);
 
+						
+						
+						
 						if (ct_xp > max_ct_xp)
 							max_ct_xp = ct_xp;
 					}
 
 					for (int i = 0; i < t_players.length; i += 3) {
+						if (!t_name_rank_map.containsKey(t_players[i + 1])){
+							if(data.amountRecord.get(t_players[i+1])!= null && Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1]))
+								t_ragers++;
+							data.amountRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+						}
+						
 						t_name_rank_map.putIfAbsent(t_players[i + 1], Integer.parseInt(t_players[i]));
 						t_xp += Integer.parseInt(t_players[i]);
+						
+						
 
 						if (t_xp > max_t_xp)
 							max_t_xp = t_xp;
 					}
-
+					
 					if (Math.ceil(data.wallet_l3 * 100) / 100 >= Math.floor(5 * data.multiplier * 100) / 100) {
 						System.out.println("\n\n\n\n\n\n******==Success==********" + data.wallet_l3);
 						data.global_wallet += 5 * data.multiplier;
@@ -432,20 +510,11 @@ public class Algo {
 
 					}
 
-					if (data.multiplier == 0.00) {
-						System.out.println("=====OPTIMIZATION NEEDED=====");
-						return;
-					}
-
 					int ctWinSum = 0;
 					int tWinSum = 0;
 					for (String x : ct_name_rank_map.keySet()) {
 						if (data.targets.containsKey(x)) {
-							if (data.targets.get(x) >= 4)
-								ct_targets_4++;
-							else if (data.targets.get(x) >= 3)
-								ct_targets_3++;
-							else if (data.targets.get(x) >= 2)
+							if (data.targets.get(x) >= 2)
 								ct_targets_2++;
 							else if (data.targets.get(x) >= 1)
 								ct_targets_1++;
@@ -459,18 +528,14 @@ public class Algo {
 
 					for (String x : t_name_rank_map.keySet()) {
 						if (data.targets.containsKey(x)) {
-							if (data.targets.get(x) >= 4)
-								t_targets_4++;
-							else if (data.targets.get(x) >= 3)
-								t_targets_3++;
-							else if (data.targets.get(x) >= 2)
+							if (data.targets.get(x) >= 2)
 								t_targets_2++;
 							else if (data.targets.get(x) >= 1)
 								t_targets_1++;
 							else if (data.targets.get(x) >= 0)
 								t_targets++;
 						}
-
+						
 						tWinSum += data.targets.get(x) != null ? data.targets.get(x) : 0;
 					}
 
@@ -483,25 +548,20 @@ public class Algo {
 						int ct_score = 0;
 						int t_score = 0;
 
-						if (t_targets > ct_targets)
-							t_score += 2;
-						else if (t_targets < ct_targets)
+						if (t_targets < ct_targets)
+							t_score += 1;
+						else if (t_targets > ct_targets)
+							ct_score += 1;
+
+						if (t_targets_2 < ct_targets_2)
 							ct_score += 2;
+						else if (t_targets_2 > ct_targets_2)
+							t_score += 2;
 
 						if (t_targets_1 < ct_targets_1)
 							ct_score += 2;
 						else if (t_targets_1 > ct_targets_1)
 							t_score += 2;
-
-						if (t_targets_2 < ct_targets_2)
-							t_score += 3;
-						else if (t_targets_2 > ct_targets_2)
-							ct_score += 3;
-
-						if (t_targets_3 < ct_targets_3)
-							t_score += 3;
-						else if (t_targets_3 > ct_targets_3)
-							ct_score += 3;
 
 						if (t_score < ct_score) {
 							predicted = "ct";
@@ -511,14 +571,14 @@ public class Algo {
 							predicted = "";
 
 //						 //VOTE 1 : SOLID
-//						if (predicted.equals("t")) {
-//							ct_vote += 25;
-//							System.out.println("VOTE1: CT 20");
-//						}else if (predicted.equals("ct")) {
-//							t_vote += 25;
-//
-//							System.out.println("VOTE1: T 20");
-//						}
+						if (predicted.equals("t")) {
+							ct_vote += 25;
+							System.out.println("VOTE1: CT 20");
+						}else if (predicted.equals("ct")) {
+							t_vote += 25;
+
+							System.out.println("VOTE1: T 20");
+						}
 
 //						// VOTE 2 COMPOSIT : Boogie Woogie
 //						if (ct_betters > t_betters ) {
@@ -539,25 +599,35 @@ public class Algo {
 //							System.out.println("VOTE3: CT 25");
 //						}
 //						
-//						if(tWinSum > ctWinSum)
-//								t_vote += 15;
-//						else
-//							if(tWinSum < ctWinSum)
-//								ct_vote += 15;
+						if(tWinSum > ctWinSum)
+								t_vote += 25;
+						else
+							if(tWinSum < ctWinSum)
+								ct_vote += 25;
 
 						// continuous||type > 7 then amount min wins
 						int continuousCnt = continuousCountForLastinArray(data.outcome_cache, 10);
 						boolean enable = false;
 						enable = enableRound(data.outcome_cache);
-						if (t_targets_2 > ct_targets_2)
-							t_vote += 20;
-						else if (t_targets_2 < ct_targets_2)
-							ct_vote += 20;
+						String tempVote ="";
+						String maxWagerers = "";
+						if (t_ragers < ct_ragers)
+							tempVote = "ct";
+						else if (t_ragers > ct_ragers)
+							tempVote = "t";
+						
+						if(t_betters > ct_betters)
+							maxWagerers = "t";
+						else
+							if(t_betters < ct_betters)
+								maxWagerers = "ct";
+						
+						
+						
+						
 
 						System.out.println("CT_CNT : T_CNT ==> " + ct_betters + " : " + t_betters);
-						System.out.println("CT_AMT : T_AMT ==> " + ct_amount + " : " + t_amount);
-						System.out.println("Continuous CNT  ==> " + continuousCnt);
-						System.out.println("CT_VOTE : T_VOTE ==> " + ct_vote + " : " + t_vote);
+						System.out.println("Rage Detector ct : t == " + ct_ragers + " : " + t_ragers);
 						if (ct_vote > t_vote)
 							predicted = "ct";
 						else if (t_vote > ct_vote)
@@ -565,15 +635,19 @@ public class Algo {
 						else
 							predicted = "";
 
+						if(maxWagerers.equals(tempVote))
+							predicted = tempVote;
+						
+						
 						if (fargate) {
 
-							int degree = 0;
+							int degree = 1;
 
 							System.out.println("Loss : Win >> " + l_cnt + " : " + w_cnt);
 
-							if (!predicted.equals("") && (main_seq.length() > 30 && enable) && t_betters+ct_betters > 15)
-								degree = 1;
-
+							if(t_betters+ct_betters < 11)
+								degree = 0;
+									
 							predict_l2 = predicted;
 							data.predict_l3 = predict_l2;
 
@@ -602,6 +676,7 @@ public class Algo {
 					System.out.println("GLOBAL WALLET == " + data.global_wallet);
 					System.out.println("GLOBAL SEQUENCE == " + data.global_outcome_seq);
 					System.out.println("GLOBAL Loss : WIN == " + data.global_loss_cnt + " : " + data.global_win_cnt);
+					
 					if (!data.predict_l3.equals("")) {
 						System.out.println("Bet Amount : " + bet_amount);
 						System.out.println(
@@ -741,7 +816,7 @@ public class Algo {
 		}
 		
 		System.out.println("T"+t+"  CT"+ct+"  Bonus"+bonus);
-		if (ct+bonus < 7 && ct+bonus > 3)
+		if (ct+bonus <= 6 && ct+bonus >= 4)
 			ret = true;
 
 		return ret;

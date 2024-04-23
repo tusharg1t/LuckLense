@@ -36,6 +36,7 @@ public class Data {
 	int loss_cnt_commited;
 	
 	Map<String,Integer> targets = new HashMap<String,Integer>();
+	Map<String,Double> amountRecord = new HashMap<String,Double>();
 	Map<Integer,Integer> expoPR = new HashMap<Integer,Integer>();
 	Map<Integer,Integer> expoL = new HashMap<Integer,Integer>();
 	Map<Integer,Integer> expoW = new HashMap<Integer,Integer>();

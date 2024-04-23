@@ -12,10 +12,13 @@ public class LoginService {
 	public static void LogIn(WebDriver driver, String username, String password) {
 		//click on Signin on main page
 		//*[@id="empire-header"]/div[1]/div/div[3]/div[2]/div[3]/button
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"empire-header\"]/div[1]/div/div[3]/div[2]/div[3]/button")));
 		
 		WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"empire-header\"]/div[1]/div/div[3]/div[2]/div[3]/button"));
         loginButton.click();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        System.out.println(loginButton);
+        
 		//put credentials can click sign in
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"responsive_page_template_content\"]/div[1]/div[1]/div/div/div/div[2]/div/form/div[4]/button")));
 		
