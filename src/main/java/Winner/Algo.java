@@ -539,7 +539,7 @@ public class Algo {
 						tWinSum += data.targets.get(x) != null ? data.targets.get(x) : 0;
 					}
 
-					if (data.pitstop-- < 0 && t_betters + ct_betters > 10) {
+					if (data.pitstop-- < 0) {
 
 						int l_cnt = countOfCharFromLastTen(main_seq, 'L');
 						int w_cnt = countOfCharFromLastTen(main_seq, 'W');
@@ -572,41 +572,21 @@ public class Algo {
 
 //						 //VOTE 1 : SOLID
 						if (predicted.equals("t")) {
-							ct_vote += 25;
-							System.out.println("VOTE1: CT 20");
+							ct_vote += 27;
+							System.out.println("VOTE1: CT 27");
 						}else if (predicted.equals("ct")) {
-							t_vote += 25;
+							t_vote += 27;
 
-							System.out.println("VOTE1: T 20");
+							System.out.println("VOTE1: T 27");
 						}
-
-//						// VOTE 2 COMPOSIT : Boogie Woogie
-//						if (ct_betters > t_betters ) {
-//							ct_vote += 10;
-//
-//							System.out.println("VOTE2: CT 10");
-//						} else if (ct_betters < t_betters ) {
-//							t_vote += 10;
-//							System.out.println("VOTE2: T 10");
-//						}
-
-						// VOTE 3 COMPOSIT : Optimist
-//						if ((t_xp > ct_xp) && (ct_betters < t_betters)) {
-//							t_vote += 25;
-//							System.out.println("VOTE3: T 25");
-//						} else if ((t_xp < ct_xp) && (ct_betters > t_betters)) {
-//							ct_vote += 25;
-//							System.out.println("VOTE3: CT 25");
-//						}
-//						
+						else
 						if(tWinSum > ctWinSum)
-								t_vote += 25;
+								t_vote += 27;
 						else
 							if(tWinSum < ctWinSum)
-								ct_vote += 25;
+								ct_vote += 27;
 
-						// continuous||type > 7 then amount min wins
-						int continuousCnt = continuousCountForLastinArray(data.outcome_cache, 10);
+						
 						boolean enable = false;
 						enable = enableRound(data.outcome_cache);
 						String tempVote ="";
@@ -635,7 +615,7 @@ public class Algo {
 						else
 							predicted = "";
 
-						if(maxWagerers.equals(tempVote))
+						if( (t_ragers>=1.5*ct_ragers || ct_ragers >= 1.5*t_ragers)&& maxWagerers.equals(tempVote) )
 							predicted = tempVote;
 						
 						
@@ -801,6 +781,8 @@ public class Algo {
 	}
 
 	public boolean enableRound(Character[] toCheckIn) {
+		// continuous||type > 7 then amount min wins
+		int continuousCnt = continuousCountForLastinArray(toCheckIn, 10);
 		boolean ret = false;
 		int t = 0;
 		int ct = 0;
