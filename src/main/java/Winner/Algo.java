@@ -551,7 +551,7 @@ public class Algo {
 						tWinSum += data.targets.get(x) != null ? data.targets.get(x) : 0;
 					}
 
-					if (data.pitstop-- < 0 && t_betters+ct_betters > 20) {
+					if (data.pitstop-- < 0 && t_betters+ct_betters > 15) {
 
 						int l_cnt = countOfCharFromLastTen(main_seq, 'L');
 						int w_cnt = countOfCharFromLastTen(main_seq, 'W');
@@ -600,11 +600,11 @@ public class Algo {
 						
 //						 //VOTE 1 : SOLID
 						if(tWinSum > ctWinSum && maxWagerers.equals("t")) {
-								ct_vote += 27;
+								t_vote += 27;
 								System.out.println("WINSUM CT : T ==> "+ctWinSum+" :: "+tWinSum);
 								predictionBy = "WINSUM";
 						}else if(tWinSum < ctWinSum && maxWagerers.equals("ct")) {
-								t_vote += 27;
+								ct_vote += 27;
 								System.out.println("WINSUM CT : T ==> "+ctWinSum+" :: "+tWinSum);
 								predictionBy = "WINSUM";
 						}else if (predicted.equals("ct")) {
@@ -627,7 +627,7 @@ public class Algo {
 						if( (t_ragers>=3*ct_ragers || ct_ragers >= 3*t_ragers) ) {
 
 							System.out.println("Prediction By Rage Detector ct : t == " + ct_ragers + " : " + t_ragers);
-							predicted = maxWagerers;
+							predicted = tempVote.equals("t")?"ct":tempVote.equals("ct")?"t":"";
 							predictionBy = "RAGE";
 						}else {
 
