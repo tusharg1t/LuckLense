@@ -40,7 +40,7 @@ public class Data {
 	Map<Integer,Integer> expoPR = new HashMap<Integer,Integer>();
 	Map<Integer,Integer> expoL = new HashMap<Integer,Integer>();
 	Map<Integer,Integer> expoW = new HashMap<Integer,Integer>();
-	
+	Map<String, int[]> audit = new HashMap<String, int[]>();
 		// < number of players, count>
 	Map<Integer,Integer> players_L = new HashMap<Integer,Integer>();
 	Map<Integer,Integer> players_W = new HashMap<Integer,Integer>();

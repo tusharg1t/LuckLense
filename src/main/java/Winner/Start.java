@@ -27,7 +27,7 @@ public class Start {
 		
 		Data data = new Data();
 		data.multiplier = sc.nextDouble();
-		LoginService.LogIn(driver,"csgoempire_september", "L@k$hm!V!shnu_2023");
+//		LoginService.LogIn(driver,"csgoempire_september", "L@k$hm!V!shnu_2023");
 		new Algo().run(data, driver);
 		driver.close();
 	}
