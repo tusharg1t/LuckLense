@@ -292,7 +292,7 @@ public class Algo {
 
 					int[] algoRes = data.audit.get(predictionBy);
 					if(algoRes == null)
-						algoRes = new int[] {0,0};
+						algoRes = new int[] {0,0,0};
 					
 					if (!predicted.equals("")) {
 						if (predicted.equals(current_coin)) {
@@ -307,12 +307,14 @@ public class Algo {
 
 						} else {
 
-							if (!current_coin.equals("bonus"))
+							if (!current_coin.equals("bonus")) {
 								main_seq += "L";
-							else
+								algoRes[1]++;
+							}else {
 								main_seq += "L";
-
-							algoRes[1]++;
+								algoRes[2]++;
+							}
+							
 							data.audit.put(predictionBy, algoRes);
 							
 							int total = t_betters + ct_betters;
@@ -560,20 +562,16 @@ public class Algo {
 						int ct_score = 0;
 						int t_score = 0;
 
-						if (t_targets > ct_targets)
-							t_score += 2;
-						else if (t_targets < ct_targets)
-							ct_score += 2;
-
+						
 						if (t_targets_2 < ct_targets_2)
 							ct_score += 4;
 						else if (t_targets_2 > ct_targets_2)
 							t_score += 4;
 
 						if (t_targets_1 < ct_targets_1)
-							ct_score += 2;
+							ct_score += 4;
 						else if (t_targets_1 > ct_targets_1)
-							t_score += 2;
+							t_score += 4;
 
 						if (t_score < ct_score) {
 							predicted = "ct";
@@ -600,11 +598,11 @@ public class Algo {
 						
 //						 //VOTE 1 : SOLID
 						if(tWinSum > ctWinSum && maxWagerers.equals("t")) {
-								t_vote += 27;
+								ct_vote += 27;
 								System.out.println("WINSUM CT : T ==> "+ctWinSum+" :: "+tWinSum);
 								predictionBy = "WINSUM";
 						}else if(tWinSum < ctWinSum && maxWagerers.equals("ct")) {
-								ct_vote += 27;
+								t_vote += 27;
 								System.out.println("WINSUM CT : T ==> "+ctWinSum+" :: "+tWinSum);
 								predictionBy = "WINSUM";
 						}else if (predicted.equals("ct")) {
@@ -627,7 +625,7 @@ public class Algo {
 						if( (t_ragers>=3*ct_ragers || ct_ragers >= 3*t_ragers) ) {
 
 							System.out.println("Prediction By Rage Detector ct : t == " + ct_ragers + " : " + t_ragers);
-							predicted = tempVote.equals("t")?"ct":tempVote.equals("ct")?"t":"";
+							predicted = tempVote;
 							predictionBy = "RAGE";
 						}else {
 
@@ -675,6 +673,7 @@ public class Algo {
 								"=======================================================================================================");
 						System.out.println("OutCome Cache    : " + Arrays.toString(data.outcome_cache));
 						System.out.println("Prediction Cache : " + Arrays.toString(data.prediction_cache));
+						System.out.println("Prediction By : "+ predictionBy);
 						System.out.println(
 								"Current Coin is : " + current_coin + "  ::  " + "Predicted L3: " + data.predict_l3);
 						System.out.println("W : L Ratio Fargate SEQ = " + win_count + " : " + lost_count);
@@ -704,7 +703,7 @@ public class Algo {
 					
 					for(String res : data.audit.keySet()) {
 						int[] auditRes = data.audit.get(res);
-						System.out.println("AUDIT INSIGHTS <W:L> : " +res+" == " + auditRes[0]+" : "+auditRes[1]);
+						System.out.println("AUDIT INSIGHTS <W:L:B> : " +res+" == " + auditRes[0]+" : "+auditRes[1]+" : "+auditRes[2]);
 					}
 					System.out.println("\n\n\n\n");
 
