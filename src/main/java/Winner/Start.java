@@ -1,5 +1,8 @@
 package Winner;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 import org.openqa.selenium.By;
@@ -26,10 +29,35 @@ public class Start {
 		System.out.print("Enter bet_amount : ");
 		
 		Data data = new Data();
-		data.multiplier = sc.nextDouble();
+		double multiplier = sc.nextDouble();
+		data.multiplier = multiplier;
 //		LoginService.LogIn(driver,"csgoempire_september", "L@k$hm!V!shnu_2023");
-		new Algo().run(data, driver);
-		driver.close();
+		data = new Algo().run(data, driver);
+		
+		int round = 1;
+		while(true) {
+			
+			if(data.global_wallet <= 0)
+				multiplier = data.multiplier * 0.5;
+			else
+				multiplier = data.multiplier*1.5;
+			String result = data.global_win_cnt > data.global_loss_cnt ? "WON":"LOST";
+			String fileName = "Round"+(round++)+"_"+result+".txt";
+			FileWriter fileWriter;
+			try {
+				fileWriter = new FileWriter(fileName);
+				PrintWriter printWriter = new PrintWriter(fileWriter);
+			    printWriter.print(data.toString());
+			    printWriter.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Data newData = new Data();
+			newData.multiplier = multiplier;
+			data = new Algo().run(newData, driver);
+		}
+//		driver.close();
 	}
 
 }

@@ -4,11 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="46ec2c0c-ae97-4d86-8699-cb96e2f64a52" name="Changes" comment="" />
+    <list default="true" id="46ec2c0c-ae97-4d86-8699-cb96e2f64a52" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Winner/Algo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Winner/Algo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Winner/Data.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Winner/Data.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Winner/LoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Winner/LoginService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Winner/Start.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Winner/Start.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Winner/Algo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Winner/Algo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Winner/Data.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Winner/Data.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Winner/Start.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Winner/Start.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -29,10 +46,12 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Program Files/Java/jdk-11.0.16.1",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2"
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "D:/November/PROJECTS",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -45,5 +64,16 @@
       <updated>1668187175265</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

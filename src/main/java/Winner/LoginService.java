@@ -17,7 +17,6 @@ public class LoginService {
 		
 		WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"empire-header\"]/div[1]/div/div[3]/div[2]/div[3]/button"));
         loginButton.click();
-        System.out.println(loginButton);
         
 		//put credentials can click sign in
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"responsive_page_template_content\"]/div[1]/div[1]/div/div/div/div[2]/div/form/div[4]/button")));
