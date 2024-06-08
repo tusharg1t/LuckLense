@@ -10,6 +10,10 @@ public class TechniqueStats {
 		this.winCount = winCount;
 		this.prediction = prediction;
 	}
+	@Override
+	public String toString() {
+		return "TechniqueStats [sequence=" + sequence + ", winCount=" + winCount + ", prediction=" + prediction + "]";
+	}
 	
 	
 }

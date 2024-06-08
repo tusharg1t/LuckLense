@@ -31,7 +31,7 @@ public class Start {
 		Data data = new Data();
 		double multiplier = sc.nextDouble();
 		data.multiplier = multiplier;
-//		LoginService.LogIn(driver,"csgoempire_september", "L@k$hm!V!shnu_2023");
+		LoginService.LogIn(driver,"csgoempire_september", "L@k$hm!V!shnu_2023");
 		data = new Algo().run(data, driver);
 		
 		int round = 1;
@@ -41,15 +41,19 @@ public class Start {
 				multiplier = data.multiplier * 0.5;
 			else
 				multiplier = data.multiplier*1.5;
+			
+			multiplier = Math.floor(multiplier * 100) / 100;
 			String result = data.global_win_cnt > data.global_loss_cnt ? "WON":"LOST";
 			String fileName = "Round"+(round++)+"_"+result+".txt";
 			FileWriter fileWriter;
 			try {
+				
 				fileWriter = new FileWriter(fileName);
 				PrintWriter printWriter = new PrintWriter(fileWriter);
 			    printWriter.print(data.toString());
 			    printWriter.close();
-			} catch (IOException e) {
+			    Thread.sleep(100000);
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
