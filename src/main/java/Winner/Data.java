@@ -109,17 +109,17 @@ public class Data {
 		displacement = 0;
 		
 		
-		techStat.put("MAJOR", new TechniqueStats("",0,""));
-		techStat.put("WINSUM", new TechniqueStats("",0,""));
-		techStat.put("TARGET0", new TechniqueStats("",0,""));
-		techStat.put("TARGET2", new TechniqueStats("",0,""));
-		techStat.put("RAGE", new TechniqueStats("",0,""));
-		techStat.put("SCORE", new TechniqueStats("",0,""));
-		techStat.put("AMT", new TechniqueStats("",0,""));
-		techStat.put("CNT", new TechniqueStats("",0,""));
-		techStat.put("XPSUM", new TechniqueStats("",0,""));
-		techStat.put("MAXXP", new TechniqueStats("",0,""));
-		techStat.put("WHOFIRST", new TechniqueStats("",0,""));
+		techStat.put("MAJOR", new TechniqueStats("",0,"",0));
+		techStat.put("WINSUM", new TechniqueStats("",0,"",0));
+		techStat.put("TARGET0", new TechniqueStats("",0,"",0));
+		techStat.put("TARGET2", new TechniqueStats("",0,"",0));
+		techStat.put("RAGE", new TechniqueStats("",0,"",0));
+		techStat.put("SCORE", new TechniqueStats("",0,"",0));
+		techStat.put("AMT", new TechniqueStats("",0,"",0));
+		techStat.put("CNT", new TechniqueStats("",0,"",0));
+		techStat.put("XPSUM", new TechniqueStats("",0,"",0));
+		techStat.put("MAXXP", new TechniqueStats("",0,"",0));
+		techStat.put("WHOFIRST", new TechniqueStats("",0,"",0));
 		
 		audit.put("MAJOR", new int[] {0,0,0});
 		audit.put("WINSUM", new int[] {0,0,0});

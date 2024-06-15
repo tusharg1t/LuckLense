@@ -83,6 +83,9 @@ public class Algo {
 			
 			int t_vote = 0;
 			int ct_vote = 0;
+			int winsum_max =0;
+			String winsum_strat = "";
+			
 			while (true) {
 
 				// exact div in shich time element is there
@@ -113,7 +116,7 @@ public class Algo {
 								keys.add(entry.getKey());
 						}
 						
-						System.out.println(keys);
+						//updates audits for all algorithms
 						for(Map.Entry<String, int[]> entry : data.audit.entrySet()) {
 							if(keys.contains(entry.getKey())){
 								int[] algoRes = data.audit.get(entry.getKey());
@@ -122,7 +125,7 @@ public class Algo {
 								if(predicted.equals(current_coin)) {
 									algoRes[0]+=1;
 								}else {
-									if(predicted.equals("bonus")) {
+									if(current_coin.equals("bonus")) {
 										algoRes[2]+=1;
 									}else {
 										algoRes[1]+=1;
@@ -137,7 +140,7 @@ public class Algo {
 								if(predicted.equals(current_coin)) {
 									algoRes[1]+=1;
 								}else {
-									if(predicted.equals("bonus")) {
+									if(current_coin.equals("bonus")) {
 										algoRes[2]+=1;
 									}else {
 										algoRes[0]+=1;
@@ -149,6 +152,22 @@ public class Algo {
 							
 						}
 						
+						
+//						//only update audits for predictionby algorithms
+//						if(!predictionBy.equals("")) {
+//							int[] algoRes = data.audit.get(predictionBy);
+//							if(predicted.equals(current_coin)) {
+//								algoRes[1]+=1;
+//							}else {
+//								if(current_coin.equals("bonus")) {
+//									algoRes[2]+=1;
+//								}else {
+//									algoRes[0]+=1;
+//								}
+//							}
+//							
+//							data.audit.put(predictionBy, algoRes);
+//						}
 					}
 					
 
@@ -186,11 +205,13 @@ public class Algo {
 					
 					ct_techStat_wins =0;
 					t_techStat_wins =0;
+					
+					
 					for(Map.Entry<String, TechniqueStats> entry : data.techStat.entrySet()) {
 						if(entry.getValue().prediction.equals(current_coin)) {
 							if(entry.getValue().winCount < 0)
 								entry.getValue().winCount = 0;
-							
+//							
 							entry.getValue().winCount++;
 							entry.getValue().sequence+="W";
 						}else
@@ -198,7 +219,7 @@ public class Algo {
 							if(entry.getValue().winCount > 0)
 								entry.getValue().winCount = 0;
 							
-							entry.getValue().winCount--;
+							entry.getValue().winCount = 0;
 							entry.getValue().sequence+="L";
 						}
 							
@@ -208,7 +229,19 @@ public class Algo {
 						if(entry.getValue().prediction.equals("ct"))
 							ct_techStat_wins += entry.getValue().winCount;
 							
+						
 						entry.getValue().prediction = "";
+					}
+					winsum_max = 0;
+					winsum_strat = "";
+					for(Map.Entry<String, TechniqueStats> entry : data.techStat.entrySet()) {
+						int strat_wins = countOfCharFromLastTen(entry.getValue().sequence,'W',7);
+						entry.getValue().winSum = strat_wins;
+						
+						if(entry.getValue().winSum > winsum_max) {
+							winsum_max = entry.getValue().winSum;
+							winsum_strat = entry.getKey();
+						}
 					}
 
 				}
@@ -562,40 +595,40 @@ public class Algo {
 							max_t_xp = t_xp;
 					}
 					
-					if (Math.ceil(data.wallet_l3 * 100) / 100 >= Math.floor(5 * data.multiplier * 100) / 100) {
-						System.out.println("\n\n\n\n\n\n******==Success==********" + data.wallet_l3);
-						data.global_wallet += 5 * data.multiplier;
-
-						data.wallet_l3 = 0;
-						data.nextOpportunity = main_seq.length() + 50;
-						data.start = false;
-						wallet_max = 0;
-						wallet_min = 0;
-						displacement = 0;
-						data.global_win_cnt++;
-						data.global_outcome_seq += "W";
-						if (data.global_wallet >= Math.floor(5 * data.multiplier * 100) / 100)
-							return data;
-					}
-
-					if (Math.floor(data.wallet_l3 * 100) / 100 <= Math.ceil(-5 * data.multiplier * 100) / 100) {
-						System.out.println("---------==THINK==---------" + data.wallet_l3);
-						data.global_wallet -= 5 * data.multiplier;
-						data.wallet_l3 = 0;
-						data.nextOpportunity = main_seq.length() + 50;
-						data.start = false;
-						wallet_max = 0;
-						wallet_min = 0;
-						displacement = 0;
-						data.global_loss_cnt += 1;
-						data.global_outcome_seq += "L";
-						Thread.sleep(1000000);
-						if (data.global_wallet <= 0)
-							return data;
-						if(data.global_win_cnt - data.global_loss_cnt < -1)
-							return data;
-
-					}
+//					if (Math.ceil(data.wallet_l3 * 100) / 100 >= Math.floor(5 * data.multiplier * 100) / 100) {
+//						System.out.println("\n\n\n\n\n\n******==Success==********" + data.wallet_l3);
+//						data.global_wallet += 5 * data.multiplier;
+//
+//						data.wallet_l3 = 0;
+//						data.nextOpportunity = main_seq.length() + 50;
+//						data.start = false;
+//						wallet_max = 0;
+//						wallet_min = 0;
+//						displacement = 0;
+//						data.global_win_cnt++;
+//						data.global_outcome_seq += "W";
+//						if (data.global_wallet >= Math.floor(5 * data.multiplier * 100) / 100)
+//							return data;
+//					}
+//
+//					if (Math.floor(data.wallet_l3 * 100) / 100 <= Math.ceil(-5 * data.multiplier * 100) / 100) {
+//						System.out.println("---------==THINK==---------" + data.wallet_l3);
+//						data.global_wallet -= 5 * data.multiplier;
+//						data.wallet_l3 = 0;
+//						data.nextOpportunity = main_seq.length() + 50;
+//						data.start = false;
+//						wallet_max = 0;
+//						wallet_min = 0;
+//						displacement = 0;
+//						data.global_loss_cnt += 1;
+//						data.global_outcome_seq += "L";
+//						Thread.sleep(1000000);
+//						if (data.global_wallet <= 0)
+//							return data;
+//						if(data.global_win_cnt - data.global_loss_cnt < -1)
+//							return data;
+//
+//					}
 
 					int ctWinSum = 0;
 					int tWinSum = 0;
@@ -664,9 +697,9 @@ public class Algo {
 						enable = enableRound(data.outcome_cache);
 						String tempVote ="";
 						String maxWagerers = "";
-						if (t_ragers < ct_ragers)
+						if (t_ragers > ct_ragers)
 							tempVote = "t";
-						else if (t_ragers > ct_ragers)
+						else if (t_ragers < ct_ragers)
 							tempVote = "ct";
 						
 						if(t_betters > ct_betters)
@@ -681,24 +714,24 @@ public class Algo {
 //							System.out.println("WINSUM CT : T ==> "+ctWinSum+" :: "+tWinSum);
 //							predictionBy = "WINSUM";
 //							
-							data.techStat.get("WINSUM").prediction = "t";
+							data.techStat.get("WINSUM").prediction = "ct";
 						}else if(tWinSum  < ctWinSum ) {
 //							ct_vote += 27;
 //							System.out.println("WINSUM CT : T ==> "+ctWinSum+" :: "+tWinSum);
 //							predictionBy = "WINSUM";
 //							
 
-							data.techStat.get("WINSUM").prediction = "ct";
+							data.techStat.get("WINSUM").prediction = "t";
 						}
 						
-						if (predicted.equals("ct") ) {
+						if (predicted.equals("t") ) {
 //							ct_vote += 27;
 //							System.out.println("SCORE CT : T ==> "+ct_vote+" :: "+t_vote);
 //							predictionBy = "SCORE";
 							
 
 							data.techStat.get("SCORE").prediction = "ct";
-						}else if (predicted.equals("t") ) {
+						}else if (predicted.equals("ct") ) {
 //							t_vote += 27;
 //							System.out.println("SCORE CT : T ==> "+ct_vote+" :: "+t_vote);
 //							predictionBy = "SCORE";
@@ -706,32 +739,32 @@ public class Algo {
 							data.techStat.get("SCORE").prediction = "t";
 						}
 						
-						if( t_amount > ct_amount) {
+						if( t_amount < ct_amount) {
 							data.techStat.get("AMT").prediction = "ct";
 						}else
-						if(t_amount < ct_amount) {
+						if(t_amount > ct_amount) {
 							data.techStat.get("AMT").prediction = "t";
 						}
 						
 						if( t_betters > ct_betters) {
-							data.techStat.get("CNT").prediction = "t";
+							data.techStat.get("CNT").prediction = "ct";
 						}else
 						if(t_betters < ct_betters) {
-							data.techStat.get("CNT").prediction = "ct";
+							data.techStat.get("CNT").prediction = "t";
 						}
 						
 						if( ct_xp < t_xp) {
-							data.techStat.get("XPSUM").prediction = "t";
+							data.techStat.get("XPSUM").prediction = "ct";
 						}else
 						if(ct_xp > t_xp) {
-							data.techStat.get("XPSUM").prediction = "ct";
+							data.techStat.get("XPSUM").prediction = "t";
 						}
 						
 						if( max_t_xp > max_ct_xp) {
-							data.techStat.get("MAXXP").prediction = "t";
+							data.techStat.get("MAXXP").prediction = "ct";
 						}else
 						if(max_t_xp < max_ct_xp) {
-							data.techStat.get("MAXXP").prediction = "ct";
+							data.techStat.get("MAXXP").prediction = "t";
 						}
 						
 						if( t_targets_2 < ct_targets_2) {
@@ -741,10 +774,10 @@ public class Algo {
 							data.techStat.get("TARGET2").prediction = "ct";
 						}
 						
-						if( t_targets < ct_targets) {
+						if( t_targets > ct_targets) {
 							data.techStat.get("TARGET0").prediction = "t";
 						}else
-						if(t_targets > ct_targets) {
+						if(t_targets < ct_targets) {
 							data.techStat.get("TARGET0").prediction = "ct";
 						}
 						
@@ -788,7 +821,30 @@ public class Algo {
 						int max = -101;
 						boolean ambiguous = true;
 						
+						int ct_continuityCriteria = 0;
+						int t_continuityCriteria = 0;
+						
 						for(Map.Entry<String, TechniqueStats> entry : data.techStat.entrySet()) {
+							
+							TechniqueStats techStatObj = entry.getValue();
+							
+							if(Math.abs(techStatObj.winCount) < 5) {
+								
+								if(techStatObj.prediction.equals("ct"))
+									ct_continuityCriteria++;
+								
+
+								if(techStatObj.prediction.equals("t"))
+									t_continuityCriteria++;
+							}else {
+								if(techStatObj.prediction.equals("ct"))
+									t_continuityCriteria++;
+								
+
+								if(techStatObj.prediction.equals("t"))
+									ct_continuityCriteria++;
+							}
+							
 							if(entry.getValue().winCount > max) {
 								max = entry.getValue().winCount;
 								key = entry.getKey();
@@ -803,24 +859,56 @@ public class Algo {
 						if (fargate) {
 
 							int degree = 0;
-							if(t_techStat_wins > ct_techStat_wins)
-								predicted = "t";
-							else
-							if(t_techStat_wins < ct_techStat_wins)
-								predicted = "ct";
+							
 							
 							if(key.equals("")) {
-								predicted = data.techStat.get("RAGE").prediction;
-								key = "RAGE";
+								predicted = data.techStat.get(winsum_strat).prediction;
+								key = winsum_strat;
 							}else {
-								if(predicted.equals(data.techStat.get(key).prediction)) {
-										predicted = data.techStat.get(key).prediction;
-										degree = 1;
+								
+////								//FILTER B
+////								if(predicted.equals(data.techStat.get(key).prediction)) {
+////										predicted = data.techStat.get(key).prediction;
+////										
+////										
+////										//FILTER X
+////										if(predicted.equals(data.techStat.get(winsum_strat).prediction)) {
+////											predicted = predicted.equals("t")?"ct":predicted.equals("ct")?"t":"";
+////											degree = 1;
+////										}
+////								}
+//								
+//								if(ambiguous && !winsum_strat.equals("")) {
+//									//FILTER A
+//									predicted = data.techStat.get(winsum_strat).prediction;
+//									predictionBy = "";
+//								}else {
+//									predicted = data.techStat.get(key).prediction;
+//									predictionBy=key;
+//								}
+//
+//								predicted = predicted.equals("t")?"ct":predicted.equals("ct")?"t":"";
+								
+								
+								System.out.println("CRITERIA > ct:t  "+ct_continuityCriteria+":"+t_continuityCriteria);
+								if(ct_continuityCriteria > t_continuityCriteria)
+									predicted = "ct";
+								else
+								if(ct_continuityCriteria < t_continuityCriteria)
+										predicted = "t";
+								else {
+									predicted = "";
 								}
+								
+								if(winsum_max > 1)
+								degree = 1;
+								
 							}
 							
-							if(data.techStat.get("RAGE").sequence.length() < 20 || ambiguous || t_betters+ct_betters < 20 )
+							if(data.techStat.get("RAGE").sequence.length() < 20 || t_betters+ct_betters < 10 )
 								degree = 0;
+							
+							
 							
 							
 							predict_l2 = predicted;
@@ -831,7 +919,6 @@ public class Algo {
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
 
 							winner.placeBet(driver, data.predict_l3, bet_amount);
-							predictionBy = key;
 							if (!data.predict_l3.equals(""))
 								for (int ind = 0; ind < 9; ind++) {
 									data.prediction_cache[ind] = data.prediction_cache[ind + 1];
