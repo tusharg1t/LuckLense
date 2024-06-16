@@ -97,7 +97,7 @@ public class Data {
 		fargate_seq = "BWBWBBWBWBBWBWB";
 		isRefreshed = false;
 		multiplier = 1;
-		pitstop = 5;
+		pitstop = 20;
 		main_seq="BWBWBBWBWBBWBWB";
 		main_L=0;
 		main_W=0;

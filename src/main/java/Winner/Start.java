@@ -31,7 +31,7 @@ public class Start {
 		Data data = new Data();
 		double multiplier = sc.nextDouble();
 		data.multiplier = multiplier;
-		LoginService.LogIn(driver,"csgoempire_september", "L@k$hm!V!shnu_2023");
+//		LoginService.LogIn(driver,"csgoempire_september", "L@k$hm!V!shnu_2023");
 		data = new Algo().run(data, driver);
 		
 		int round = 1;
