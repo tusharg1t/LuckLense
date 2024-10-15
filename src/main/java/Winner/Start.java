@@ -14,6 +14,8 @@ import Winner.Data;
 public class Start {
 
 	public static void main(String[] args) {
+		
+		//START: CHROME CONFIG
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("start-maximized");
 		options.addArguments("--incognito");
@@ -27,16 +29,26 @@ public class Start {
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
 		System.out.print("Enter bet_amount : ");
+		//END: CHROME CONFIG
 		
+		
+		//START: LOGIN SETUP
 		Data data = new Data();
 		double multiplier = sc.nextDouble();
 		data.multiplier = multiplier;
-//		LoginService.LogIn(driver,"csgoempire_september", "L@k$hm!V!shnu_2023");
+		LoginService.LogIn(driver,"csgoempire_september", "L@k$hm!V!shnu_2023");
 		data = new Algo().run(data, driver);
+		//END: LOGIN SETUP
 		
+		
+		//START: INFINITY RUN LOGIC
 		int round = 1;
-		while(true) {
-			
+		double initialMultiplier = multiplier;
+		//
+		while(multiplier > 0.00) {
+			if(data.multiplier > 5 * initialMultiplier && data.global_win_cnt > data.global_loss_cnt) {
+				System.out.println("Om Shreem Saubhagya Lakshmi SaoumMangalaiye Fatt");
+			}
 			if(data.global_wallet <= 0)
 				multiplier = data.multiplier * 0.5;
 			else
@@ -44,6 +56,7 @@ public class Start {
 			
 			multiplier = Math.floor(multiplier * 100) / 100;
 			String result = data.global_win_cnt > data.global_loss_cnt ? "WON":"LOST";
+			System.out.println(">>>>>>>>>> FLAG "+result+" <<<<<<<<<<<<");
 			String fileName = "Round"+(round++)+"_"+result+".txt";
 			FileWriter fileWriter;
 			try {
@@ -61,7 +74,8 @@ public class Start {
 			newData.multiplier = multiplier;
 			data = new Algo().run(newData, driver);
 		}
-//		driver.close();
+		
+		//END: INFINITY RUN LOGIC
 	}
 
 }
