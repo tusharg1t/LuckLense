@@ -47,6 +47,9 @@ public class Data {
 	Map<Integer,Integer> players_L = new HashMap<Integer,Integer>();
 	Map<Integer,Integer> players_W = new HashMap<Integer,Integer>();
 	
+	//To keep track of max amount bet by player so far
+	Map<String, Double> playerMaxBetRecord = new HashMap<>();
+	
 	int continuous_algo;
 	int switching_algo;
 	boolean fargate;

@@ -28,14 +28,14 @@ public class Start {
 		WebDriver driver = new ChromeDriver(options);
 		Scanner sc = new Scanner(System.in);
 		driver.get("https://csgoempire.com");
-		System.out.print("Enter bet_amount : ");
+		System.out.print("Enter Total Risk Amount : ");
 		//END: CHROME CONFIG
 		
 		
 		//START: LOGIN SETUP
 		Data data = new Data();
-		double multiplier = sc.nextDouble();
-		data.multiplier = multiplier;
+		double riskAmount = sc.nextDouble();
+		data.multiplier = riskAmount/200;
 		LoginService.LogIn(driver,"csgoempire_september", "L@k$hm!V!shnu_2023");
 		data = new Algo().run(data, driver);
 		//END: LOGIN SETUP
@@ -43,18 +43,18 @@ public class Start {
 		
 		//START: INFINITY RUN LOGIC
 		int round = 1;
-		double initialMultiplier = multiplier;
+		double initialRiskAmount = riskAmount;
 		//
-		while(multiplier > 0.00) {
-			if(data.multiplier > 5 * initialMultiplier && data.global_win_cnt > data.global_loss_cnt) {
+		while(data.multiplier > 0.00) {
+			if(data.global_win_cnt > data.global_loss_cnt) {
 				System.out.println("Om Shreem Saubhagya Lakshmi SaoumMangalaiye Fatt");
 			}
 			if(data.global_wallet <= 0)
-				multiplier = data.multiplier * 0.5;
+				data.multiplier = data.multiplier * 0.5;
 			else
-				multiplier = data.multiplier*1.5;
+				data.multiplier = data.multiplier*1.5;
 			
-			multiplier = Math.floor(multiplier * 100) / 100;
+			data.multiplier = Math.floor(data.multiplier * 100) / 100;
 			String result = data.global_win_cnt > data.global_loss_cnt ? "WON":"LOST";
 			System.out.println(">>>>>>>>>> FLAG "+result+" <<<<<<<<<<<<");
 			String fileName = "Round"+(round++)+"_"+result+".txt";
@@ -65,13 +65,12 @@ public class Start {
 				PrintWriter printWriter = new PrintWriter(fileWriter);
 			    printWriter.print(data.toString());
 			    printWriter.close();
-			    Thread.sleep(100000);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			Data newData = new Data();
-			newData.multiplier = multiplier;
+			newData.multiplier = data.multiplier;
 			data = new Algo().run(newData, driver);
 		}
 		

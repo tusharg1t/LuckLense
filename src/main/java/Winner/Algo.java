@@ -63,6 +63,8 @@ public class Algo {
 		String predictionBy = "";
 		int ct_techStat_wins = 0;
 		int t_techStat_wins = 0;
+		int ctIncrementalBetters = 0;
+		int tIncrementalBetters = 0;
 		try {
 
 			String timer = "";
@@ -80,12 +82,14 @@ public class Algo {
 			Map<String, Integer> ct_name_amount_map = new HashMap<String, Integer>();
 			Map<String, Integer> t_name_amount_map = new HashMap<String, Integer>();
 			
-			
 			int t_vote = 0;
 			int ct_vote = 0;
 			int winsum_max =0;
 			String winsum_strat = "";
-			
+			WebElement diceCount = driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[3]/div/div[2]/div[5]"));
+			int currentDiceCount = Integer.parseInt(diceCount.getText());
+			int ctInTechStat = 0;
+			int tInTechStat = 0;
 			while (true) {
 
 				// exact div in which time element is there
@@ -238,11 +242,18 @@ public class Algo {
 					
 					t_ragers = 0;
 					ct_ragers = 0;
+					
+					ctInTechStat = 0;
+					tInTechStat = 0;
 
 					int temp_t_xp = 0;
 					int temp_ct_xp = 0;
-					scan_1 = true;
 					
+					ctIncrementalBetters = 0;
+					tIncrementalBetters = 0;
+					scan_1 = true;
+					diceCount = driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div/div/div[1]/div[2]/div/div[3]/div/div[2]/div[5]"));
+					currentDiceCount = Integer.parseInt(diceCount.getText());
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
 					for (int i = 0; i < ct_players.length; i += 3) {
@@ -252,8 +263,24 @@ public class Algo {
 							
 							if(data.amountRecord.get(ct_players[i+1])!= null && Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1]))
 								ct_ragers++;
-							data.amountRecord.replace(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
 							
+							if(data.amountRecord.get(ct_players[i+1]) != null)
+								data.amountRecord.replace(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+							else
+								data.amountRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+							
+							if(data.playerMaxBetRecord.containsKey(ct_players[i+1])) {
+								double maxBetByPlayer = data.playerMaxBetRecord.get(ct_players[i+1]);
+								if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > maxBetByPlayer) {
+									data.playerMaxBetRecord.replace(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+									ctIncrementalBetters++;
+								}else
+								if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1])) {
+									ctIncrementalBetters++;
+								}
+							}else {
+								data.playerMaxBetRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+							}
 							ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
 							temp_ct_xp += Integer.parseInt(ct_players[i]);
 						}
@@ -266,7 +293,24 @@ public class Algo {
 						if (!t_name_rank_map.containsKey(t_players[i + 1])) {
 							if(data.amountRecord.get(t_players[i+1])!= null && Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1]))
 								t_ragers++;
-							data.amountRecord.replace(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "").replaceAll(",", "")));
+							
+							if(data.amountRecord.get(t_players[i+1]) != null)
+								data.amountRecord.replace(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "").replaceAll(",", "")));
+							else
+								data.amountRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "").replaceAll(",", "")));
+							
+							if(data.playerMaxBetRecord.containsKey(t_players[i+1])) {
+								double maxBetByPlayer = data.playerMaxBetRecord.get(t_players[i+1]);
+								if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > maxBetByPlayer) {
+									data.playerMaxBetRecord.replace(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+									tIncrementalBetters++;
+								}else
+									if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1])) {
+										tIncrementalBetters++;
+									}
+							}else {
+								data.playerMaxBetRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+							}
 							
 							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
 							temp_t_xp = Integer.parseInt(t_players[i]);
@@ -296,6 +340,19 @@ public class Algo {
 							data.amountRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
 							
 							ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+							
+							if(data.playerMaxBetRecord.containsKey(ct_players[i+1])) {
+								double maxBetByPlayer = data.playerMaxBetRecord.get(ct_players[i+1]);
+								if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > maxBetByPlayer) {
+									data.playerMaxBetRecord.replace(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+									ctIncrementalBetters++;
+								}else
+									if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1])) {
+										ctIncrementalBetters++;
+									}
+							}else {
+								data.playerMaxBetRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+							}
 						
 						}
 							
@@ -310,6 +367,19 @@ public class Algo {
 							data.amountRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
 							
 							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
+							
+							if(data.playerMaxBetRecord.containsKey(t_players[i+1])) {
+								double maxBetByPlayer = data.playerMaxBetRecord.get(t_players[i+1]);
+								if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > maxBetByPlayer) {
+									data.playerMaxBetRecord.replace(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+									tIncrementalBetters++;
+								}else
+									if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1])) {
+										tIncrementalBetters++;
+									}
+							}else {
+								data.playerMaxBetRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+							}
 						}
 
 						
@@ -326,6 +396,19 @@ public class Algo {
 							data.amountRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
 							
 							ct_name_rank_map.put(ct_players[i + 1], Integer.parseInt(ct_players[i]));
+							
+							if(data.playerMaxBetRecord.containsKey(ct_players[i+1])) {
+								double maxBetByPlayer = data.playerMaxBetRecord.get(ct_players[i+1]);
+								if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > maxBetByPlayer) {
+									data.playerMaxBetRecord.replace(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+									ctIncrementalBetters++;
+								}else
+									if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1])) {
+										ctIncrementalBetters++;
+									}
+							}else {
+								data.playerMaxBetRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+							}
 						}
 				
 					}
@@ -337,6 +420,19 @@ public class Algo {
 							data.amountRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
 							
 							t_name_rank_map.put(t_players[i + 1], Integer.parseInt(t_players[i]));
+							
+							if(data.playerMaxBetRecord.containsKey(t_players[i+1])) {
+								double maxBetByPlayer = data.playerMaxBetRecord.get(t_players[i+1]);
+								if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > maxBetByPlayer) {
+									data.playerMaxBetRecord.replace(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+									tIncrementalBetters++;
+								}else
+									if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1])) {
+										tIncrementalBetters++;
+									}
+							}else {
+								data.playerMaxBetRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+							}
 						}
 						
 					}
@@ -403,7 +499,7 @@ public class Algo {
 							if (!current_coin.equals("bonus")) {
 								main_seq += "L";
 							}else {
-								main_seq += "L";
+								main_seq += "B";
 							}
 							
 							int total = t_betters + ct_betters;
@@ -465,33 +561,37 @@ public class Algo {
 
 						if (current_coin.equals(predicted)) {
 
-							wallet += data.multiplier;
+							wallet += data.multiplier * 0;
 
 						} else {
-
-							wallet -= data.multiplier;
+							if(current_coin.equals("bonus"))
+								wallet += data.multiplier * 13;
+							else
+								wallet -= data.multiplier * 2;
 
 						}
 
 					}
 
-					if ( fargate && !data.predict_l3.equals("")) {
+					if ( fargate && !data.predict_l3.equals("") && bet_amount > 0) {
 
 						if (current_coin.equals(data.predict_l3)) {
 
-							data.wallet_l3 += bet_amount;
+							data.wallet_l3 += bet_amount*0;
 							data.wallet_l3 = (data.wallet_l3 * 100) / 100;
 							data.fargate_seq += "W";
 
 						} else {
-
-							data.wallet_l3 -= bet_amount;
-							data.wallet_l3 = (data.wallet_l3 * 100) / 100;
+							
 							if (!current_coin.equals("bonus")) {
-
+								data.wallet_l3 -= bet_amount*2;
+								data.wallet_l3 = (data.wallet_l3 * 100) / 100;
 								data.fargate_seq += "L";
-							} else
+							} else {
+								data.wallet_l3 += bet_amount*13;
+								data.wallet_l3 = (data.wallet_l3 * 100) / 100;
 								data.fargate_seq += "B";
+							}
 						}
 
 						if (current_coin.equals("bonus") && bet_amount > 0)
@@ -506,16 +606,16 @@ public class Algo {
 						if (current_coin.equals("bonus")) {
 
 							// In case of bonus what to do on fargate
-							data.fargate_wallet -= data.multiplier;
+							data.fargate_wallet += data.multiplier*13;
 						} else if (current_coin.equals(predict_l2)) {
 
-							data.fargate_wallet += data.multiplier;
+							data.fargate_wallet += data.multiplier*0;
 							win_count++;
 							if (bet_amount > 0)
 								data.win_cnt_commited++;
 						} else {
 
-							data.fargate_wallet -= data.multiplier;
+							data.fargate_wallet -= data.multiplier*2;
 							lost_count++;
 							if (bet_amount > 0)
 								data.loss_cnt_commited++;
@@ -544,18 +644,32 @@ public class Algo {
 
 					String[] ct_players = scanCTPlayers(driver);
 					String[] t_players = scanTPlayers(driver);
+					
+					
+					
 					for (int i = 0; i < ct_players.length; i += 3) {
 						if (!ct_name_rank_map.containsKey(ct_players[i + 1])){
 							if(data.amountRecord.get(ct_players[i+1])!= null && Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1]))
 								t_ragers++;
 							data.amountRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+							
+							if(data.playerMaxBetRecord.containsKey(ct_players[i+1])) {
+								double maxBetByPlayer = data.playerMaxBetRecord.get(ct_players[i+1]);
+								if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > maxBetByPlayer) {
+									data.playerMaxBetRecord.replace(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+									ctIncrementalBetters++;
+								}else
+									if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1])) {
+										ctIncrementalBetters++;
+									}
+							}else {
+								data.playerMaxBetRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
+							}
 						}
 						
 //													   <Name,Rank>
 						ct_name_rank_map.putIfAbsent(ct_players[i + 1], Integer.parseInt(ct_players[i]));
 						ct_xp += Integer.parseInt(ct_players[i]);
-
-						
 						
 						
 						if (Integer.parseInt(ct_players[i]) > max_ct_xp)
@@ -567,6 +681,19 @@ public class Algo {
 							if(data.amountRecord.get(t_players[i+1])!= null && Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1]))
 								t_ragers++;
 							data.amountRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+							
+							if(data.playerMaxBetRecord.containsKey(t_players[i+1])) {
+								double maxBetByPlayer = data.playerMaxBetRecord.get(t_players[i+1]);
+								if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > maxBetByPlayer) {
+									data.playerMaxBetRecord.replace(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+									tIncrementalBetters++;
+								}else
+									if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1])) {
+										tIncrementalBetters++;
+									}
+							}else {
+								data.playerMaxBetRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
+							}
 						}
 						
 						t_name_rank_map.putIfAbsent(t_players[i + 1], Integer.parseInt(t_players[i]));
@@ -582,9 +709,9 @@ public class Algo {
 					
 					
 					//ALGO: Session Exit Logic
-					if (Math.ceil(data.wallet_l3 * 100) / 100 >= Math.floor(5 * data.multiplier * 100) / 100) {
+					if (Math.ceil(data.wallet_l3 * 100) / 100 >= Math.floor(100 * data.multiplier * 100) / 100) {
 						System.out.println("\n\n\n\n\n\n******==Success==********" + data.wallet_l3);
-						data.global_wallet += 5 * data.multiplier;
+						data.global_wallet += 100 * data.multiplier;
 
 						data.wallet_l3 = 0;
 						data.nextOpportunity = main_seq.length() + 50;
@@ -598,9 +725,9 @@ public class Algo {
 							return data;
 					}
 
-					if (Math.floor(data.wallet_l3 * 100) / 100 <= Math.ceil(-5 * data.multiplier * 100) / 100) {
+					if (Math.floor(data.wallet_l3 * 100) / 100 <= Math.ceil(-100 * data.multiplier * 100) / 100) {
 						System.out.println("---------==THINK==---------" + data.wallet_l3);
-						data.global_wallet -= 5 * data.multiplier;
+						data.global_wallet -= 100 * data.multiplier;
 						data.wallet_l3 = 0;
 						data.nextOpportunity = main_seq.length() + 50;
 						data.start = false;
@@ -823,39 +950,48 @@ public class Algo {
 						int ct_continuityCriteria = 0;
 						int t_continuityCriteria = 0;
 						
+						
+						
 						for(Map.Entry<String, TechniqueStats> entry : data.techStat.entrySet()) {
 							
 							TechniqueStats techStatObj = entry.getValue();
 							boolean isPositive =  techStatObj.winCount >= 0?true:false;
 							if(Math.abs(techStatObj.winCount) >= 4) {
 								
-								if(techStatObj.prediction.equals("ct"))
+								if(techStatObj.prediction.equals("ct")) {
 								if(isPositive)
 									ct_continuityCriteria++;
 								else
 									t_continuityCriteria++;
 								
-
-								if(techStatObj.prediction.equals("t"))
+								ctInTechStat++;
+								}
+								if(techStatObj.prediction.equals("t")) {
 								if(isPositive)
 									t_continuityCriteria++;
 								else
 									ct_continuityCriteria++;
+								
+								tInTechStat++;
+								}
 									
 							}else
 							if(Math.abs(techStatObj.winCount) < 4){
-								if(techStatObj.prediction.equals("ct"))
+								if(techStatObj.prediction.equals("ct")) {
 								if(isPositive)
 									t_continuityCriteria++;
 								else
 									ct_continuityCriteria++;
-								
+								ctInTechStat++;
+								}
 
-								if(techStatObj.prediction.equals("t"))
+								if(techStatObj.prediction.equals("t")) {
 								if(isPositive)
 									ct_continuityCriteria++;
 								else
 									t_continuityCriteria++;
+								tInTechStat++;
+								}
 							}
 							
 							if(entry.getValue().winCount > max) {
@@ -875,25 +1011,30 @@ public class Algo {
 							
 							
 											
-								System.out.println("CRITERIA > ct:t  "+ct_continuityCriteria+":"+t_continuityCriteria);
-								if(ct_continuityCriteria > t_continuityCriteria && predicted.equals("t"))
-									predicted = "ct";
-								else
-								if(ct_continuityCriteria < t_continuityCriteria && predicted.equals("ct"))
-										predicted = "t";
-								else
-									predicted = "";
+//								System.out.println("CRITERIA > ct:t  "+ct_continuityCriteria+":"+t_continuityCriteria);
+//								if(ct_continuityCriteria > t_continuityCriteria )
+//									predicted = "ct";
+//								else
+//								if(ct_continuityCriteria < t_continuityCriteria )
+//										predicted = "t";
 								
-							predicted = predicted.equals("t")? "ct":predicted.equals("ct")? "t":"";
+							System.out.println("Incremental Betters > ct:t  "+ctIncrementalBetters+":"+tIncrementalBetters);
+							if(tIncrementalBetters > ctIncrementalBetters )
+								predicted = "ct";
+							else
+							if(tIncrementalBetters < ctIncrementalBetters )
+								predicted = "t";
+							else
+								predicted = "";
+							
+							
 							degree = 1;
 								
 							if(predicted.equals(""))
 								degree = 0;
 							
-							if(data.techStat.get("RAGE").sequence.length() < 20  || data.pitstop-- > 0)
+							if(data.techStat.get("RAGE").sequence.length() < 5  || data.pitstop-- > 0 || currentDiceCount < 7)
 								degree = 0;
-							
-							
 							
 							
 							predict_l2 = predicted;
@@ -944,12 +1085,13 @@ public class Algo {
 						
 
 						for(Map.Entry<String, TechniqueStats> entry: data.techStat.entrySet()) {
-							int offset = 10-entry.getKey().length();
+							int offset = 75-(entry.getKey().length()+(entry.getValue().sequence.length()>50?50:entry.getValue().sequence.length()));
 							String str = "";
 							for(int x = 0 ; x < offset ; x++)
-								str+=" ";
+								str+="-";
 							System.out.println("Sequence   "+entry.getKey()+": " +str+ entry.getValue().sequence
-									.substring(entry.getValue().sequence.length() - (entry.getValue().sequence.length() > 50 ? 50 : entry.getValue().sequence.length())) + "  >>>>> " + entry.getValue().prediction);
+									.substring(entry.getValue().sequence.length() - (entry.getValue().sequence.length() > 50 ? 50 : entry.getValue().sequence.length())) + "  >>>>> " + entry.getValue().prediction
+									+(entry.getValue().prediction.equals("")?"":(entry.getValue().prediction.equals("t")&&(ctInTechStat>tInTechStat)?"("+ctInTechStat+")":entry.getValue().prediction.equals("t")&&(ctInTechStat<tInTechStat)? "("+tInTechStat+")":""))) ;
 							
 						}
 //						System.out.println("Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length()
