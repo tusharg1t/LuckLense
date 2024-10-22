@@ -2,6 +2,7 @@ package Winner;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -21,6 +22,10 @@ import javax.tools.JavaFileManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.netty.util.internal.MathUtil;
 import Winner.Data;
@@ -105,11 +110,11 @@ public class Algo {
 					current_coin = current_coin_elements.get(9).getAttribute("innerHTML").contains("-ct") ? "ct"
 							: current_coin_elements.get(9).getAttribute("innerHTML").contains("-t") ? "t" : "bonus";
 
-					for (int ind = 0; ind < 9; ind++) {
+					for (int ind = 0; ind < 109; ind++) {
 						data.outcome_cache[ind] = data.outcome_cache[ind + 1];
 					}
 
-					data.outcome_cache[9] = current_coin.toUpperCase().charAt(0);
+					data.outcome_cache[109] = current_coin.toUpperCase().charAt(0);
 					
 					if(!predicted.equals("")){
 						// update audit logs for those with predection same
@@ -1083,7 +1088,7 @@ public class Algo {
 						System.out.println("Sequence         : " + main_seq
 								.substring(main_seq.length() - (main_seq.length() > 50 ? 50 : main_seq.length()))+"  >>>>>  "+data.predict_l3+"\n");
 						
-
+						System.out.println(Arrays.toString(data.outcome_cache));
 						for(Map.Entry<String, TechniqueStats> entry: data.techStat.entrySet()) {
 							int offset = 75-(entry.getKey().length()+(entry.getValue().sequence.length()>50?50:entry.getValue().sequence.length()));
 							String str = "";

@@ -59,7 +59,7 @@ public class Data {
 	double empire_wallet;
 	boolean start;
 	Character[] prediction_cache = new Character[10];
-	Character[] outcome_cache = new Character[10];
+	Character[] outcome_cache = new Character[110];
 	double global_wallet;
 	String global_outcome_seq;
 	int global_win_cnt;
