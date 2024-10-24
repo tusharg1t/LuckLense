@@ -59,7 +59,7 @@ public class Data {
 	double empire_wallet;
 	boolean start;
 	Character[] prediction_cache = new Character[10];
-	Character[] outcome_cache = new Character[110];
+	Character[] outcome_cache = new Character[310];
 	double global_wallet;
 	String global_outcome_seq;
 	int global_win_cnt;
@@ -71,7 +71,7 @@ public class Data {
 		global_loss_cnt=0;
 		global_wallet = 0;
 		Arrays.fill(prediction_cache, 'B');
-		Arrays.fill(outcome_cache, 'B');
+		Arrays.fill(outcome_cache, 'X');
 		start = false;
 		win_cnt_commited = 0;
 		loss_cnt_commited = 0;

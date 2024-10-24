@@ -110,11 +110,11 @@ public class Algo {
 					current_coin = current_coin_elements.get(9).getAttribute("innerHTML").contains("-ct") ? "ct"
 							: current_coin_elements.get(9).getAttribute("innerHTML").contains("-t") ? "t" : "bonus";
 
-					for (int ind = 0; ind < 109; ind++) {
+					for (int ind = 0; ind < 309; ind++) {
 						data.outcome_cache[ind] = data.outcome_cache[ind + 1];
 					}
 
-					data.outcome_cache[109] = current_coin.toUpperCase().charAt(0);
+					data.outcome_cache[309] = current_coin.toUpperCase().charAt(0);
 					
 					if(!predicted.equals("")){
 						// update audit logs for those with predection same
@@ -1037,8 +1037,28 @@ public class Algo {
 								
 							if(predicted.equals(""))
 								degree = 0;
+
+							boolean prox = false;
+							int proxCnt = 0;
+							for(int i = 96; i < 106 ; i++)
+								if(data.outcome_cache[i] == 'B') {
+									proxCnt++;
+									break;
+								}
 							
-							if(data.techStat.get("RAGE").sequence.length() < 5  || data.pitstop-- > 0 || currentDiceCount < 7)
+							for(int i = 196; i < 206 ; i++)
+								if(data.outcome_cache[i] == 'B'){
+									proxCnt++;
+									break;
+								}
+							
+							for(int i = 296; i < 306 ; i++)
+								if(data.outcome_cache[i] == 'B'){
+									proxCnt++;
+									break;
+								}
+							
+							if(data.techStat.get("RAGE").sequence.length() < 5  || data.pitstop-- > 0 || proxCnt < 2)
 								degree = 0;
 							
 							
@@ -1088,7 +1108,7 @@ public class Algo {
 						System.out.println("Sequence         : " + main_seq
 								.substring(main_seq.length() - (main_seq.length() > 50 ? 50 : main_seq.length()))+"  >>>>>  "+data.predict_l3+"\n");
 						
-						System.out.println(Arrays.toString(data.outcome_cache));
+						System.out.println(Arrays.toString(data.outcome_cache).substring(200));
 						for(Map.Entry<String, TechniqueStats> entry: data.techStat.entrySet()) {
 							int offset = 75-(entry.getKey().length()+(entry.getValue().sequence.length()>50?50:entry.getValue().sequence.length()));
 							String str = "";
