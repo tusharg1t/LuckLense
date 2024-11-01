@@ -14,6 +14,8 @@ public class Data {
 	Map<String, TechniqueStats> techStat = new HashMap<>();
 	
 	List<Double> wallet_graph_data = new ArrayList<Double>();
+	List<Character> rolls = new ArrayList<>();
+	boolean diceRollRatioFlag = false;
 	double wallet_together;
 	double target;
 	int chase_wins;

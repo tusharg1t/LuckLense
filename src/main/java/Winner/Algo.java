@@ -95,6 +95,8 @@ public class Algo {
 			int currentDiceCount = Integer.parseInt(diceCount.getText());
 			int ctInTechStat = 0;
 			int tInTechStat = 0;
+			Double currentDiceRollRatio = -1.0;
+			int range = 500;
 			while (true) {
 
 				// exact div in which time element is there
@@ -115,6 +117,49 @@ public class Algo {
 					}
 
 					data.outcome_cache[309] = current_coin.toUpperCase().charAt(0);
+					
+					if(current_coin.equals("t")) {
+						data.rolls.add('T');
+					}else
+						if(current_coin.equals("ct")) {
+							data.rolls.add('C');
+						}else
+							data.rolls.add('B');
+					
+					if(data.rolls.size() > range){
+						int cnt = 0;
+						for(int i = data.rolls.size()-1; i > data.rolls.size()-range; i--)
+							if(data.rolls.get(i) == 'B')
+								cnt++;
+						
+						currentDiceRollRatio = ((double)range)/cnt;
+						
+						int partitions = 5;
+						int internalRange = 100;
+						int itr = data.rolls.size()-1;
+						List<Double> partitionRatio = new ArrayList<>();
+						for(int i = 0 ; i < partitions; i++) {
+							int partitionDiceCount = 0;
+							for(int j = itr; j > itr-internalRange; j--) {
+								if(data.rolls.get(j) == 'B')
+									partitionDiceCount++;
+							}
+							itr -= 100;
+							
+							partitionRatio.add((double)internalRange/partitionDiceCount);
+						}
+						
+						double startSum = (double)(partitionRatio.get(0) + partitionRatio.get(1)+ partitionRatio.get(2));
+						double endSum = (double)(partitionRatio.get(3)  + partitionRatio.get(4));
+						
+						if((endSum/2)* 1.5 < (startSum/3)) {
+							data.diceRollRatioFlag = true;
+						}else
+							data.diceRollRatioFlag = false;
+						
+						//Bhagwaan ji aapke bharose ab
+					}
+						
 					
 					if(!predicted.equals("")){
 						// update audit logs for those with predection same
@@ -282,7 +327,8 @@ public class Algo {
 								}else
 								if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1])) {
 									ctIncrementalBetters++;
-								}
+								}else
+									ctIncrementalBetters--;
 							}else {
 								data.playerMaxBetRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
 							}
@@ -312,7 +358,9 @@ public class Algo {
 								}else
 									if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1])) {
 										tIncrementalBetters++;
-									}
+									}else
+										tIncrementalBetters--;
+										
 							}else {
 								data.playerMaxBetRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
 							}
@@ -354,7 +402,8 @@ public class Algo {
 								}else
 									if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1])) {
 										ctIncrementalBetters++;
-									}
+									}else
+										ctIncrementalBetters--;
 							}else {
 								data.playerMaxBetRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
 							}
@@ -381,7 +430,8 @@ public class Algo {
 								}else
 									if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1])) {
 										tIncrementalBetters++;
-									}
+									}else
+										tIncrementalBetters--;
 							}else {
 								data.playerMaxBetRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
 							}
@@ -410,7 +460,8 @@ public class Algo {
 								}else
 									if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1])) {
 										ctIncrementalBetters++;
-									}
+									}else
+										ctIncrementalBetters--;
 							}else {
 								data.playerMaxBetRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
 							}
@@ -434,7 +485,8 @@ public class Algo {
 								}else
 									if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1])) {
 										tIncrementalBetters++;
-									}
+									}else
+										tIncrementalBetters--;
 							}else {
 								data.playerMaxBetRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
 							}
@@ -666,7 +718,8 @@ public class Algo {
 								}else
 									if(Double.parseDouble(ct_players[i+2].replaceAll(",", "")) > data.amountRecord.get(ct_players[i+1])) {
 										ctIncrementalBetters++;
-									}
+									}else
+										ctIncrementalBetters--;
 							}else {
 								data.playerMaxBetRecord.put(ct_players[i+1], Double.parseDouble(ct_players[i+2].replaceAll(",", "")));
 							}
@@ -695,7 +748,8 @@ public class Algo {
 								}else
 									if(Double.parseDouble(t_players[i+2].replaceAll(",", "")) > data.amountRecord.get(t_players[i+1])) {
 										tIncrementalBetters++;
-									}
+									}else
+										tIncrementalBetters--;
 							}else {
 								data.playerMaxBetRecord.put(t_players[i+1], Double.parseDouble(t_players[i+2].replaceAll(",", "")));
 							}
@@ -836,8 +890,6 @@ public class Algo {
 							predicted = "";
 
 						
-						boolean enable = false;
-						enable = enableRound(data.outcome_cache);
 						String tempVote ="";
 						String maxWagerers = "";
 						if (t_ragers > ct_ragers)
@@ -867,14 +919,14 @@ public class Algo {
 							data.techStat.get("WINSUM").prediction = "ct";
 						}
 						
-						if (predicted.equals("t") && t_betters+ct_betters > 25) {
+						if (predicted.equals("t") ) {
 //							ct_vote += 27;
 //							System.out.println("SCORE CT : T ==> "+ct_vote+" :: "+t_vote);
 //							predictionBy = "SCORE";
 							
 
 							data.techStat.get("SCORE").prediction = "ct";
-						}else if (predicted.equals("ct") && t_betters+ct_betters > 25) {
+						}else if (predicted.equals("ct") ) {
 //							t_vote += 27;
 //							System.out.println("SCORE CT : T ==> "+ct_vote+" :: "+t_vote);
 //							predictionBy = "SCORE";
@@ -1016,12 +1068,6 @@ public class Algo {
 							
 							
 											
-//								System.out.println("CRITERIA > ct:t  "+ct_continuityCriteria+":"+t_continuityCriteria);
-//								if(ct_continuityCriteria > t_continuityCriteria )
-//									predicted = "ct";
-//								else
-//								if(ct_continuityCriteria < t_continuityCriteria )
-//										predicted = "t";
 								
 							System.out.println("Incremental Betters > ct:t  "+ctIncrementalBetters+":"+tIncrementalBetters);
 							if(tIncrementalBetters > ctIncrementalBetters )
@@ -1030,38 +1076,21 @@ public class Algo {
 							if(tIncrementalBetters < ctIncrementalBetters )
 								predicted = "t";
 							else
-								predicted = "";
-							
+								if(t_continuityCriteria < ct_continuityCriteria )
+									predicted = "t";
+								else
+								if(t_continuityCriteria > ct_continuityCriteria )
+									predicted = "ct";
+								
 							
 							degree = 1;
 								
 							if(predicted.equals(""))
 								degree = 0;
-
-							boolean prox = false;
-							int proxCnt = 0;
-							for(int i = 96; i < 106 ; i++)
-								if(data.outcome_cache[i] == 'B') {
-									proxCnt++;
-									break;
-								}
 							
-							for(int i = 196; i < 206 ; i++)
-								if(data.outcome_cache[i] == 'B'){
-									proxCnt++;
-									break;
-								}
-							
-							for(int i = 296; i < 306 ; i++)
-								if(data.outcome_cache[i] == 'B'){
-									proxCnt++;
-									break;
-								}
-							
-							if(data.techStat.get("RAGE").sequence.length() < 5  || data.pitstop-- > 0 || proxCnt < 2)
+							if(data.techStat.get("RAGE").sequence.length() < 5  || data.pitstop-- > 0  || !data.diceRollRatioFlag)
 								degree = 0;
-							
-							
+
 							predict_l2 = predicted;
 							data.predict_l3 = predict_l2;
 							
@@ -1070,7 +1099,7 @@ public class Algo {
 							bet_amount = Double.parseDouble(df.format(data.multiplier * degree));
 
 							// IF YOU ARE NOT DEAD YOU ARE GOING TO WIN! OM SHREEM SAUBHAGYA LAKSHMI SAUM MANGALAYA FAT
-							execution.placeBet(driver, data.predict_l3 , bet_amount);
+//							execution.placeBet(driver, data.predict_l3 , bet_amount);
 							if (!data.predict_l3.equals(""))
 								for (int ind = 0; ind < 9; ind++) {
 									data.prediction_cache[ind] = data.prediction_cache[ind + 1];
@@ -1110,13 +1139,28 @@ public class Algo {
 						
 						System.out.println(Arrays.toString(data.outcome_cache).substring(200));
 						for(Map.Entry<String, TechniqueStats> entry: data.techStat.entrySet()) {
+							int continuousCnt = 0;
+							String techStatSeq = entry.getValue().sequence;
+							int seqLen =  techStatSeq.length();
+							for( int i = seqLen - 1; i > seqLen - (seqLen > 20 ? 20: 0); i-- )
+								if(techStatSeq.charAt(i) == techStatSeq.charAt(i-1))
+									continuousCnt++;
+							
+						
+								
 							int offset = 75-(entry.getKey().length()+(entry.getValue().sequence.length()>50?50:entry.getValue().sequence.length()));
 							String str = "";
 							for(int x = 0 ; x < offset ; x++)
 								str+="-";
 							System.out.println("Sequence   "+entry.getKey()+": " +str+ entry.getValue().sequence
-									.substring(entry.getValue().sequence.length() - (entry.getValue().sequence.length() > 50 ? 50 : entry.getValue().sequence.length())) + "  >>>>> " + entry.getValue().prediction
-									+(entry.getValue().prediction.equals("")?"":(entry.getValue().prediction.equals("t")&&(ctInTechStat>tInTechStat)?"("+ctInTechStat+")":entry.getValue().prediction.equals("t")&&(ctInTechStat<tInTechStat)? "("+tInTechStat+")":""))) ;
+									.substring(entry.getValue().sequence.length() - (
+									entry.getValue().sequence.length() > 50 ? 
+											50 : entry.getValue().sequence.length())) + "  >>>>> " + entry.getValue().prediction
+									+(entry.getValue().prediction.equals("")?
+											"":
+									(entry.getValue().prediction.equals("t")?
+											"("+ctInTechStat+")":entry.getValue().prediction.equals("t")? 
+											"("+tInTechStat+")":""))) ;
 							
 						}
 //						System.out.println("Fargate Sequence : " + data.fargate_seq.substring(data.fargate_seq.length()
@@ -1125,6 +1169,7 @@ public class Algo {
 								+ df.format(data.wallet_l3) + "  :: " + "Displacement:" + df.format(displacement)
 								+ "  ::  " + "Wallet Max:" + df.format(wallet_max) + "  ::  " + "Wallet Min : "
 								+ df.format(wallet_min));
+						System.out.println("Dice Roll Ratio 1000: "+ currentDiceRollRatio);
 						System.out.println(
 								"=======================================================================================================");
 
